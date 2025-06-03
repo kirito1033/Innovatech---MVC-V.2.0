@@ -1,0 +1,435 @@
+/* Colores */
+:root{
+    --encabezados-piedepagina: #020f1f;
+    --Color--texto: #ffffff;
+    --bright-turquoise: #04ebec;
+    --Color-enlaces-menu: #272727;
+    --atoll: #0a6069;
+    --blue-chill: #0f838c;
+    --gossamer: #048d94;
+    --tarawera: #053543;
+    --tarawera: #0b4454;
+    --ebony-clay: #2c3443;
+    --gris-:#5a626b;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+body, div, ul, li, a, h1,h2,h3,h4{
+    margin: 0;
+    padding: 0;
+}
+body{ 
+    
+    background-color: var(--tarawera);
+}
+/* HEADER CELULAR*/
+.offcanvas__nav-ul{
+    height: 100%;
+    justify-content: space-evenly;
+    align-items: initial;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+a{
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: var(--Color-enlaces-menu);
+    
+}
+/* Estilo del ítem del menú principal */
+.header-pc__nav-ul-li {
+    position: relative;
+    list-style: none;
+  }
+  
+  /* Enlace del dropdown (Texto "Categorías") */
+  .header-pc__nav-ul-li > .nav-link {
+    color: #272727; /* Aquí está el cambio */
+    font-weight: 600;
+    padding: 10px 15px;
+    text-decoration: none;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .header-pc__nav-ul-li > .nav-link:hover {
+    color: #04ebec;
+  }
+  
+  /* Ícono dentro del enlace */
+  .header-pc__nav-ul-li i {
+    font-size: 1.2rem;
+  }
+  
+  /* Menú desplegable */
+  .header-pc__nav-ul-li .dropdown-menu {
+    background-color: #0b4454;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 0;
+    min-width: 220px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Ítems dentro del menú */
+  .header-pc__nav-ul-li .dropdown-item {
+    color: #ffffff;
+    background-color: #0b4454;
+    padding: 10px 20px;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 5px;
+  }
+  
+  .header-pc__nav-ul-li .dropdown-item:hover {
+    background-color: #04ebec;
+    color: #053543;
+  }
+  
+  /* Línea divisoria del menú */
+  .header-pc__nav-ul-li .dropdown-divider {
+    border-top: 1px solid #048d94;
+    margin: 10px 0;
+  }
+  
+.nav-link{
+    margin: 0;
+    padding: 0;
+    font-size: 1.2rem;
+    
+}
+.offcanvas-header{
+    padding-bottom: 0;
+}
+i{
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
+.offcanvas-body{
+    padding-top: 0;
+}
+.header__nav-ul{
+    background-color: var(--encabezados-piedepagina);
+}
+.header__boton-abrir{
+    border: transparent;
+    background-color: transparent
+    
+
+
+}
+.logo-menu{
+    font-size: 2rem;
+   
+
+}
+ul{
+     list-style-type: none; /* Quita los puntos de la lista */
+    padding-left: 0; /* Elimina el espacio de sangría por defecto */
+}
+.logo{
+    width: 100%;
+}
+.header__nav-li--form{
+    display: flex;
+    align-items: center;
+    
+}
+.logo-celular{
+    width:50%;
+
+}
+.buscar{
+    background-color: transparent;
+    border: transparent;
+    color: var(--Color--texto);
+ 
+}
+.boton-buscar{
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: end;
+  
+}
+
+.input-buscar{
+    display: none;
+}
+.header-pc{
+    display: none;
+}
+/* HEADER CELULAR FIN*/
+@media (min-width: 700px){
+    .header__boton-abrir{
+        display: none;
+    }
+    .logo-celular{
+        margin-left: 10%;
+        width: 20%;
+    }
+    .logo{
+        width: 100%;
+      
+    }
+    .input-buscar{
+        display: flex;
+        width: 90%;
+        border: none;
+        border-radius: 50px;
+        background-color: var(--encabezados-piedepagina);
+        color: var(--Color--texto);
+        font-size: 1.3rem;
+    }
+    .boton-buscar{
+        border: 3px solid var(--bright-turquoise);
+        border-radius: 50px;
+        background-color: transparent;
+        width: 50%;
+    }
+    input:focus {
+        outline: none;
+        border: none; /* Opcional: si deseas quitar también el borde normal */
+    }
+    input[type="search"]::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    .carrito-compras{
+        display: flex;
+        width: 15%;
+        justify-content: center;
+    }
+    .header-pc{
+        display: flex;
+        margin-top: 1%;
+        background-color: var(--bright-turquoise);
+        
+    }
+    .header-pc__nav-ul{
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+    }
+    .header__pc-li-link{
+        color: var(--encabezados-piedepagina);  
+        height: 100%;
+    }
+    .header__pc-li-link:hover{
+        color: #333333;
+    }
+    .header-pc__nav-ul-li:hover{
+        background-color: #03d1d1
+    }
+    .header-pc__nav-ul-li{
+        padding: 12px;
+   
+    }
+    .dropdown-toggle{
+        color: var(--encabezados-piedepagina);
+     
+    }
+    
+}
+@media (max-width: 400px){
+    .logo-celular{
+        width:100%;
+    
+    }
+}
+/* main productos */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    
+    width: 5vw;   
+    height: 5vh; 
+    background-size: 100%; 
+    filter: invert(100%) sepia(30%) saturate(700%) hue-rotate(120deg) brightness(100%) contrast(50%);
+}
+
+.carousel-control-prev{
+    justify-content: initial;
+    width: 4%;
+}
+.carousel-control-next{
+    justify-content: end;
+    width: 4%;
+}
+.carousel-ofertas {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: transparent;
+}
+
+.carousel-ofertas .carousel-item img {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    border-radius: 10px;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .carousel-ofertas .carousel-item img {
+        max-height: 300px;
+    }
+}
+.card-title {
+    font-size: 1rem;
+    height: 2.8em; /* altura fija para dos líneas de texto */
+    line-height: 1.4em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* máximo dos líneas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.card-text {
+    font-size: 1.1rem;
+    line-height: 1.4em;
+    height: 4.2em; /* aprox. 3 líneas */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* máximo 3 líneas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.5rem;
+}
+.descuento{
+    text-decoration: line-through;
+}
+.color-verde{
+    color: #019649;
+    font-size:18px;
+}
+.precio{
+    font-size: 25px
+}
+.card-body{
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    flex-wrap: wrap;
+}
+.productos-ofertas{
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.card{
+    width: 100%;
+    border: none;
+    flex-wrap: wrap;
+    
+}
+.card:hover{
+    box-shadow: 0px 10px 30px 0px #1117;
+}
+.cards{
+    background-color: transparent;
+    padding: 2%;
+   
+}
+.ofertas-title{
+    background-color: #04ebec;
+    
+}
+.title-ofertas{
+   text-align: start;
+   padding: 2%;
+   
+}
+.carrucel-productos{
+    background-color: var(--Color--texto);
+    border-radius: 7px;
+    margin-top: 2%;
+}
+
+/* Para quepan 5 columnas exactas */
+.custom-col-5 {
+    flex: 0 0 20%;
+    max-width: 20%;
+}
+
+/* Para que las imágenes tengan mismo tamaño y se recorten */
+.producto-img {
+    width: 100% !important;
+    height: 49% !important;
+    object-fit: cover !important;
+    border-radius: 10px 10px 0 0 !important;
+}
+
+
+
+/* footer */
+.ul-icon{
+    justify-content: space-around;
+    margin-top: 5%;
+}
+.footer{
+    color: var(--Color--texto);
+    padding: 5%;
+    margin-top: 2%;
+    background-color: #020f1f;
+}
+
+.encuentranos{
+    font-weight: 700;
+}
+.fab{
+    color: var(--Color--texto);
+    font-size: 30px;
+  
+}
+.tienda{
+    color: var(--Color--texto);
+  
+   
+}
+.tienda-ul{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    
+}
+.tienda-li{
+   margin-left: 25%;
+   padding: 3%;
+}
+.preguntas-link{
+    color: var(--Color--texto);
+}
+.Copyright{
+    color: var(--Color--texto);
+    font-weight: 500;
+    font-size: 20px;
+}
+.logo-footer{
+    width: 20px;
+}
+.logo-info{
+    color: var(--Color--texto);
+    font-size: 50px;
+}
+.informacion{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+.contacto{
+    font-size: 25px;
+    text-align: justify;
+    margin-left: 27px;
+}
+
+
+/* footer  fin */

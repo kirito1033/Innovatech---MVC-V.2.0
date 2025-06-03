@@ -1,0 +1,158 @@
+:root{
+    --encabezados-piedepagina: #020f1f;
+    --Color--texto: #ffffff;
+    --bright-turquoise: #04ebec;
+    --Color-enlaces-menu: #272727;
+    --atoll: #0a6069;
+    --blue-chill: #0f838c;
+    --gossamer: #048d94;
+    --tarawera: #053543;
+    --tarawera: #0b4454;
+    --ebony-clay: #2c3443;
+    --gris-:#5a626b;
+}
+
+
+.preload {
+  display: none;
+}
+
+
+.container {
+  border-radius: 8px;
+
+}
+.btn-warning {
+        background-color: var(--atoll); /* Darker teal for primary buttons */
+        color: var(--Color--texto);
+        border: 1px solid var(--atoll);
+}
+.btn-warning:hover{
+        background-color: #0d7884; /* Darker teal for primary buttons */
+                color: var(--Color--texto);
+        border: 1px solid #0d7884;
+}
+.btn-danger{
+ background-color: #2c3443;
+  color: var(--Color--texto);
+  border: 1px solid #2c3443;
+}
+.btn-danger:hover{
+   background-color: #48556c;
+  border: 1px solid #48556c;
+}
+.btn-primary{
+  background-color: #04ebec; /* Darker teal for primary buttons */
+  color: var(--Color--texto);
+  margin-left: 10px;
+  border: 1px solid #04ebec;
+  padding: 1%;
+}
+.btn-primary:hover{
+  background-color: #02caca;
+  border: 1px solid #02caca;
+}
+
+.btn-success{
+  background-color: var(--gris-) ; /* Gray for secondary buttons */
+  color: var(--Color--texto);
+   border: 1px solid var(--gris-);
+  }
+.btn-success:hover{
+   background-color: #808b97 ; /* Gray for secondary buttons */
+   border: 1px solid #808b97;
+}
+
+/* Tabla (mismo estilo que antes) */
+#table-index {
+
+  border-collapse: separate;
+  border-spacing: 0;
+
+
+}
+
+#table-index th {
+  background-color: #053543;
+  color: #ffffff;
+  border: 1px solid #333333;
+}
+
+#table-index td {
+  background-color: #158fb575;
+  color: #000000;
+  border: 1px solid #cccccc;
+}
+
+#table-index .table-striped tbody tr:nth-of-type(odd) {
+  background-color: #e5e5e5;
+}
+
+#table-index .table-hover tbody tr:hover {
+  background-color: #d5d5d5;
+}
+
+.btn-group .btn {
+  margin: 0 2px;
+}
+
+[name="table-index_length"] {
+   color: #ffffff;
+    background-color: #053543 !important;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+    margin-bottom: 15px;
+}
+#table-index_filter label {
+  color: #ffffff;
+}
+
+/* Cambiar el color del texto y el fondo del input */
+#table-index_filter input {
+   background-color: #053543 !important;  /* fondo oscuro */
+  color: #ffffff;           /* texto amarillo */
+  border: 1px solid #053543;  /* borde en tono de la paleta */
+  border-radius: 5px;
+  padding: 4px 8px;
+}
+
+/* Estilo al enfocar el input */
+#table-index_filter input:focus {
+  outline: none;
+  border-color: #053543;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+.paginate_button{
+      background-color: #053543; 
+}
+#table-index_paginate .paginate_button.current {
+  background-color: #053543;     /* Color de fondo activo */
+  border: 1px solid #053543;     /* Borde con tono de la paleta */
+  border-radius: 5px;
+  padding: 6px 12px;
+  font-weight: bold;
+  box-shadow: 0 0 4px rgba(115, 64, 2, 0.4);
+}
+
+/* Estilo general para los botones de paginación */
+#table-index_paginate .paginate_button {
+  background-color: #053543;
+  color: #b5b4b4 !important;
+  border: 1px solid #053543;
+  border-radius: 5px;
+  padding: 6px 12px;
+  margin: 0 2px;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+/* Hover en botones de paginación */
+#table-index_paginate .paginate_button:hover {
+  background-color: #053543;
+    color: #ffffff !important;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+.dataTables_info{
+   color: #ffffff !important;
+}
+

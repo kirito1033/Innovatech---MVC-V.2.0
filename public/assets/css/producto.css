@@ -1,0 +1,99 @@
+:root{
+    --encabezados-piedepagina: #020f1f;
+    --Color--texto: #ffffff;
+    --bright-turquoise: #04ebec;
+    --Color-enlaces-menu: #272727;
+    --atoll: #0a6069;
+    --blue-chill: #0f838c;
+    --gossamer: #048d94;
+    --tarawera: #053543;
+    --tarawera: #0b4454;
+    --ebony-clay: #2c3443;
+    --gris-:#5a626b;
+}
+
+.main-producto{
+    background-color: var(--Color--texto);
+    padding: 3%;
+    margin-top: 2%;
+    border: 1px solid #ffff;
+    border-radius: 10px;
+    
+}
+div{
+    text-align: justify;
+}
+.precio-p{
+    font-size: 40px;
+}
+.titulo-producto{
+    font-size: 25px;
+    font-weight: 600;
+}
+a{
+color: var(--blue-chill);
+}
+a:hover{
+   color: #02bebe; 
+}
+.li-caracteristicas{
+    margin: 4%;
+    list-style-type: disc;
+}
+.comprar-btn, .carrito-btn{
+    width: 100%;
+    margin-top: 2%;
+}
+.comprar-col{
+    border: 1px solid #1114;
+    border-radius: 5px;
+    padding: 2%;
+}
+.borde1, .borde2{
+    border-bottom: 1px solid #1114;
+}
+.borde2{
+    margin-right: 3%;
+}
+table {
+    width: 470px; 
+    border-collapse: collapse; 
+    table-layout: fixed;
+}
+th, td {
+    border: 1px solid black; 
+    padding: 6px;
+    text-align: left; 
+    overflow: hidden; 
+}
+th {
+    background-color: #f2f2f2; 
+}
+.img-tarjetas-credito,.img-tarjeta-debito,.img-efectivo{
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+h6{
+    font-weight: 700;
+}
+#inputpregunta{
+    width: 100%;
+  
+}
+.preguntas-col{
+    margin-top: 2%;
+}
+.form-preguntas{
+    margin-top: 1%;
+}
+
+.medios-pago-img{
+    height: 60%;
+    border-radius: 5px;
+    border: 1px solid #1114
+}
+.productos-carac{
+    border-bottom: 1px solid #1114 ;
+    margin-top: 2%;
+}
