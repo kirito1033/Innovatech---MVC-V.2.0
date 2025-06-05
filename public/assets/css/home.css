@@ -64,7 +64,7 @@ a{
   
   /* Ícono dentro del enlace */
   .header-pc__nav-ul-li i {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
   
   /* Menú desplegable */
@@ -214,21 +214,28 @@ ul{
     .header-pc__nav-ul{
         display: flex;
         width: 100%;
+        height: 8vh;
         justify-content: center;
         align-items: center;
     }
     .header__pc-li-link{
         color: var(--encabezados-piedepagina);  
         height: 100%;
+        
     }
     .header__pc-li-link:hover{
         color: #333333;
+        padding: 5px;
+        
     }
     .header-pc__nav-ul-li:hover{
-        background-color: #03d1d1
+        background-color: #03d1d1;
+        border-radius: 5px;
+        
     }
     .header-pc__nav-ul-li{
-        padding: 12px;
+      margin-left: 2%;
+    
    
     }
     .dropdown-toggle{
