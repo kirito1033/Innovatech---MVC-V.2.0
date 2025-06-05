@@ -145,7 +145,8 @@ class ProductoController extends Controller
                     "id_ram" => $this->request->getVar("id_ram"),
                     "id_sistema_operativo" => $this->request->getVar("id_sistema_operativo"),
                     "id_resolucion" => $this->request->getVar("id_resolucion"),
-                "updated_at" => $today
+                     "precio_original" => $this->request->getVar("precio"),
+                    "updated_at" => $today
             ];
             if ($this->productosModel->update($id, $dataModel)) {
                 $data["message"] = "success";
@@ -210,6 +211,7 @@ class ProductoController extends Controller
             "id_ram" => $this->request->getVar("id_ram"),
             "id_sistema_operativo" => $this->request->getVar("id_sistema_operativo"),
             "id_resolucion" => $this->request->getVar("id_resolucion"),
+            "precio_original" => $this->request->getVar("precio"),
             "updated_at" => date("Y-m-d H:i:s")
         ];
         return $data;
@@ -284,7 +286,169 @@ public function preguntar($id)
     $pregunta = $this->request->getPost('pregunta');
     return redirect()->to("/producto/ver/$id")->with('message', 'Pregunta enviada');
 }
+
 public function listarProductos($id = null)
+{
+    $productoModel = new ProductosModel();
+    $categoriaModel = new CategoriaModel();
+    $marcaModel = new MarcaModel();
+    $colorModel = new ColorModel();
+    $ramModel = new AlmacenamientoAleatorioModel();
+    $almacenamientoModel = new AlmacenamientoModel();
+    $estadoModel = new EstadoProductoModel();
+    $garantiaModel = new GarantiaModel();
+    $sistemaOperativoModel = new SistemaOperativoModel();
+    $resolucionModel = new ResolucionModel();
+
+    $session = session();
+
+    $data['categorias'] = $categoriaModel->findAll();
+    $data['usuario'] = $session->get('usuario');
+
+    if ($id !== null) {
+        $categoria = $categoriaModel->find($id);
+        if (!$categoria) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Categoría con ID $id no encontrada");
+        }
+        $data['categoriaSeleccionada'] = $categoria;
+
+        // Filtro por categoría
+        $productoModel->where('id_categoria', $id);
+    }
+
+    // Obtener filtros desde GET
+    $filtros = [
+        'nom' => $this->request->getGet('nom'),
+        'precio_min' => $this->request->getGet('precio_min'),
+        'precio_max' => $this->request->getGet('precio_max'),
+        'id_marca' => $this->request->getGet('id_marca'),
+        'id_color' => $this->request->getGet('id_color'),
+        'id_ram' => $this->request->getGet('id_ram'),
+        'id_almacenamiento' => $this->request->getGet('id_almacenamiento'),
+        'tam' => $this->request->getGet('tam'),
+        'tampantalla' => $this->request->getGet('tampantalla'),
+        'id_estado' => $this->request->getGet('id_estado'),
+        'id_garantia' => $this->request->getGet('id_garantia'),
+        'id_sistema_operativo' => $this->request->getGet('id_sistema_operativo'),
+        'id_resolucion' => $this->request->getGet('id_resolucion'),
+    ];
+
+    // Búsqueda por nombre y marcas relacionadas
+   if (!empty($filtros['nom'])) {
+    // Buscar marcas que coincidan con el término
+    $marcasCoincidentes = $marcaModel->like('nom', $filtros['nom'])->findAll();
+    $marcasIdsCoincidentes = array_column($marcasCoincidentes, 'id');
+
+    // Buscar categorías que coincidan con el término
+    $categoriasCoincidentes = $categoriaModel->like('nom', $filtros['nom'])->findAll();
+    $categoriasIdsCoincidentes = array_column($categoriasCoincidentes, 'id');
+
+    // Agrupar condiciones para el producto
+    $productoModel->groupStart()
+                  ->like('nom', $filtros['nom']); // nombre producto
+                  
+    // Si hay marcas coincidentes, agregarlas a la búsqueda con OR
+    if (!empty($marcasIdsCoincidentes)) {
+        $productoModel->orWhereIn('id_marca', $marcasIdsCoincidentes);
+    }
+
+    // Si hay categorías coincidentes, agregarlas también con OR
+    if (!empty($categoriasIdsCoincidentes)) {
+        $productoModel->orWhereIn('id_categoria', $categoriasIdsCoincidentes);
+    }
+
+    $productoModel->groupEnd();
+}
+
+
+    // Aplicar los demás filtros
+    if (!empty($filtros['precio_min'])) {
+        $productoModel->where('precio >=', $filtros['precio_min']);
+    }
+    if (!empty($filtros['precio_max'])) {
+        $productoModel->where('precio <=', $filtros['precio_max']);
+    }
+    if (!empty($filtros['id_marca'])) {
+        $productoModel->where('id_marca', $filtros['id_marca']);
+    }
+    if (!empty($filtros['id_color'])) {
+        $productoModel->where('id_color', $filtros['id_color']);
+    }
+    if (!empty($filtros['id_ram'])) {
+        $productoModel->where('id_ram', $filtros['id_ram']);
+    }
+    if (!empty($filtros['id_almacenamiento'])) {
+        $productoModel->where('id_almacenamiento', $filtros['id_almacenamiento']);
+    }
+    if (!empty($filtros['tam'])) {
+        $productoModel->where('tam', $filtros['tam']);
+    }
+    if (!empty($filtros['tampantalla'])) {
+        $productoModel->where('tampantalla', $filtros['tampantalla']);
+    }
+    if (!empty($filtros['id_estado'])) {
+        $productoModel->where('id_estado', $filtros['id_estado']);
+    }
+    if (!empty($filtros['id_garantia'])) {
+        $productoModel->where('id_garantia', $filtros['id_garantia']);
+    }
+    if (!empty($filtros['id_sistema_operativo'])) {
+        $productoModel->where('id_sistema_operativo', $filtros['id_sistema_operativo']);
+    }
+    if (!empty($filtros['id_resolucion'])) {
+        $productoModel->where('id_resolucion', $filtros['id_resolucion']);
+    }
+
+    $data['productos'] = $productoModel->findAll();
+
+    // Solo generar los filtros dinámicos si hay categoría
+    if ($id !== null) {
+        $productosCategoria = new ProductosModel();
+
+        $productosCategoria->select('id_marca, id_color, id_ram, id_almacenamiento, id_estado, id_garantia, id_sistema_operativo, id_resolucion')
+                           ->where('id_categoria', $id)
+                           ->groupBy('id_marca, id_color, id_ram, id_almacenamiento, id_estado, id_garantia, id_sistema_operativo, id_resolucion');
+
+        $resultados = $productosCategoria->findAll();
+
+        $marcasIds = $coloresIds = $ramsIds = $almacenamientosIds = $estadosIds = $garantiasIds = $soIds = $resolucionesIds = [];
+
+        foreach ($resultados as $item) {
+            if (!empty($item['id_marca'])) $marcasIds[] = $item['id_marca'];
+            if (!empty($item['id_color'])) $coloresIds[] = $item['id_color'];
+            if (!empty($item['id_ram'])) $ramsIds[] = $item['id_ram'];
+            if (!empty($item['id_almacenamiento'])) $almacenamientosIds[] = $item['id_almacenamiento'];
+            if (!empty($item['id_estado'])) $estadosIds[] = $item['id_estado'];
+            if (!empty($item['id_garantia'])) $garantiasIds[] = $item['id_garantia'];
+            if (!empty($item['id_sistema_operativo'])) $soIds[] = $item['id_sistema_operativo'];
+            if (!empty($item['id_resolucion'])) $resolucionesIds[] = $item['id_resolucion'];
+        }
+
+        $data['marcas'] = !empty($marcasIds) ? $marcaModel->whereIn('id', $marcasIds)->findAll() : [];
+        $data['colores'] = !empty($coloresIds) ? $colorModel->whereIn('id_color', $coloresIds)->findAll() : [];
+        $data['rams'] = !empty($ramsIds) ? $ramModel->whereIn('id', $ramsIds)->findAll() : [];
+        $data['almacenamientos'] = !empty($almacenamientosIds) ? $almacenamientoModel->whereIn('id', $almacenamientosIds)->findAll() : [];
+        $data['estados'] = !empty($estadosIds) ? $estadoModel->whereIn('id', $estadosIds)->findAll() : [];
+        $data['garantias'] = !empty($garantiasIds) ? $garantiaModel->whereIn('id', $garantiasIds)->findAll() : [];
+        $data['sistemas_operativos'] = !empty($soIds) ? $sistemaOperativoModel->whereIn('id', $soIds)->findAll() : [];
+        $data['resoluciones'] = !empty($resolucionesIds) ? $resolucionModel->whereIn('id', $resolucionesIds)->findAll() : [];
+    } else {
+        // Si no hay categoría, puedes cargar todas las opciones posibles o dejarlas vacías
+        $data['marcas'] = $marcaModel->findAll();
+        $data['colores'] = $colorModel->findAll();
+        $data['rams'] = $ramModel->findAll();
+        $data['almacenamientos'] = $almacenamientoModel->findAll();
+        $data['estados'] = $estadoModel->findAll();
+        $data['garantias'] = $garantiaModel->findAll();
+        $data['sistemas_operativos'] = $sistemaOperativoModel->findAll();
+        $data['resoluciones'] = $resolucionModel->findAll();
+    }
+
+    return view('producto/listarproducto', $data);
+}
+
+
+public function listarOfertas($id = 6)
 {
     $productoModel = new ProductosModel();
     $categoriaModel = new CategoriaModel();
@@ -436,9 +600,8 @@ public function listarProductos($id = null)
     // $data['tams'] = $tamsIds;
 
 
-    return view('producto/listarproducto', $data);
+    return view('oferta/oferta_home', $data);
 }
-
 }
 
    

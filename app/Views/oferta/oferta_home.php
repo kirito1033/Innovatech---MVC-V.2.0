@@ -207,7 +207,6 @@
 
 <!-- Two-column layout container -->
 <div class="main-container container">
-    
     <!-- Filters Main Section -->
     <main class="filters-main">
         <div class="card p-2 shadow-sm">

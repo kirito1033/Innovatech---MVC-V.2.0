@@ -154,8 +154,23 @@
                     <h2 class="titulo-producto"><?= esc($producto['nom']) ?></h2>
                 </div>
                 <div class="precio">
-                    <p class="precio-p">$<?= number_format($producto['precio'], 0, ',', '.') ?></p>
-                </div>
+                <?php if (isset($producto['precio_original']) && $producto['precio'] != $producto['precio_original']): ?>
+                    <?php
+                        $porcentaje_descuento = round((($producto['precio_original'] - $producto['precio']) / $producto['precio_original']) * 100);
+                    ?>
+                    <p class="precio_original" style="text-decoration: line-through; color: gray;">
+                        $<?= number_format($producto['precio_original'], 0, ',', '.') ?>
+                    </p>
+                    <p class="precio color-verde" style="font-weight: bold;">
+                        $<?= number_format($producto['precio'], 0, ',', '.') ?>
+                        <span class="descuento-porcentaje" style="color: red; margin-left: 10px;">-<?= $porcentaje_descuento ?>%</span>
+                    </p>
+                <?php else: ?>
+                    <p class="precio color-verde" style="font-weight: bold;">
+                        $<?= number_format($producto['precio'], 0, ',', '.') ?>
+                    </p>
+                <?php endif; ?>
+            </div>
                 <div class="medios-pago">
                     <a class="medios-pago-a" href="#">Ver medios de pago</a>
                 </div>

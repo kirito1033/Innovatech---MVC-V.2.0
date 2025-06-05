@@ -271,6 +271,7 @@ $routes->post('producto/updateImage', 'ProductoController::updateImage');
 
 $routes->get('producto/ver/(:num)', 'ProductoController::ver/$1');
 
+$routes->get('categorias', 'ProductoController::listarProductos');
 $routes->get('categoria/(:num)', 'ProductoController::listarProductos/$1');
 
 
@@ -295,3 +296,6 @@ $routes->group('userapi', function($routes) {
     $routes->post("update", "ApiUserController::update");
     $routes->post('updateImage', 'ApiUserController::updateImage');
 });
+
+ $routes->get("ofertas/(:num)", "ProductoController::listarOfertas/$1");
+ 
