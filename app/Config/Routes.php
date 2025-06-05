@@ -299,3 +299,9 @@ $routes->group('userapi', function($routes) {
 
  $routes->get("ofertas/(:num)", "ProductoController::listarOfertas/$1");
  
+ $routes->get('olvide-password', 'AuthController::showForgotForm');
+$routes->post('send-reset-link', 'AuthController::sendResetLink');
+$routes->get('reset-password/(:any)', 'AuthController::showResetForm/$1');
+$routes->post('update-password', 'AuthController::updatePassword');
+
+$routes->get('test-email', 'TestEmailController::index');

@@ -217,12 +217,10 @@ class ProductoController extends Controller
         return $data;
     }
     
-    public function updateImage()
-    {
-
+   public function updateImage()
+{
     if ($this->request->isAJAX()) {
 
-      
         $id = $this->request->getVar('id');
 
         // Verificar si el producto existe
@@ -239,8 +237,21 @@ class ProductoController extends Controller
 
         if ($img && $img->isValid() && !$img->hasMoved()) {
             $newName = $img->getRandomName();
-            $img->move(ROOTPATH . 'public/uploads/', $newName);
-          
+
+            // Ruta carpeta donde están las imágenes
+            $uploadPath = ROOTPATH . 'public/uploads/';
+
+            // Borrar imagen anterior si existe
+            if (!empty($producto['imagen'])) {
+                $oldImagePath = $uploadPath . $producto['imagen'];
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            // Mover nueva imagen
+            $img->move($uploadPath, $newName);
+
             // Actualizar en la base de datos
             $this->productosModel->update($id, ['imagen' => $newName]);
 
@@ -263,6 +274,7 @@ class ProductoController extends Controller
         'response' => ResponseInterface::HTTP_BAD_REQUEST
     ]);
 }
+
 
 public function ver($id = null)
 {

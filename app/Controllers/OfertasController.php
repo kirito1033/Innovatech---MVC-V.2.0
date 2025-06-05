@@ -268,11 +268,12 @@ class OfertasController extends Controller
         return $data; 
     }
 
-    public function updateImage()
+public function updateImage()
 {
     if ($this->request->isAJAX()) {
         $id = $this->request->getVar('id');
 
+        // Buscar oferta
         $oferta = $this->OfertaModel->find($id);
         if (!$oferta) {
             return $this->response->setJSON([
@@ -281,12 +282,30 @@ class OfertasController extends Controller
             ]);
         }
 
+        // Obtener nueva imagen
         $img = $this->request->getFile('imagen');
 
         if ($img && $img->isValid() && !$img->hasMoved()) {
             $newName = $img->getRandomName();
-            $img->move(ROOTPATH . 'public/uploads/', $newName);
+            $uploadPath = ROOTPATH . 'public/uploads/';
 
+            // Borrar imagen anterior si existe
+            if (!empty($oferta['imagen'])) {
+                $oldImagePath = $uploadPath . $oferta['imagen'];
+                if (is_file($oldImagePath)) {
+                    unlink($oldImagePath); // Eliminar la imagen anterior
+                }
+            }
+
+            // Mover nueva imagen
+            if (!$img->move($uploadPath, $newName)) {
+                return $this->response->setJSON([
+                    'message' => 'Error al mover la nueva imagen',
+                    'response' => ResponseInterface::HTTP_INTERNAL_SERVER_ERROR
+                ]);
+            }
+
+            // Actualizar nombre de la imagen en la base de datos
             $this->OfertaModel->update($id, ['imagen' => $newName]);
 
             return $this->response->setJSON([
@@ -297,7 +316,7 @@ class OfertasController extends Controller
             ]);
         } else {
             return $this->response->setJSON([
-                'message' => 'Error al subir imagen',
+                'message' => 'Archivo inválido o no se pudo subir',
                 'response' => ResponseInterface::HTTP_NO_CONTENT
             ]);
         }
@@ -308,6 +327,7 @@ class OfertasController extends Controller
         'response' => ResponseInterface::HTTP_BAD_REQUEST
     ]);
 }
+
 
 
  private function actualizarEstadosOfertas() {

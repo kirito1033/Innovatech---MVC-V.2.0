@@ -197,6 +197,7 @@
         .row.g-3 > .col-12 {
             padding-right: 0.5rem;
             padding-left: 0.5rem;
+            margin-bottom: 0.7rem;
         }
     </style>
 </head>
