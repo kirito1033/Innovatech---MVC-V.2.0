@@ -123,48 +123,79 @@ class ProductoController extends Controller
 
     // Método update
     public function update()
-    {
-        if ($this->request->isAJAX()) {
-            $today = date("Y-m-d H:i:s");
-            $id = $this->request->getVar($this->primaryKey);
-            $dataModel = [
-                "id" => $this->request->getVar("id"),
-                    "nom" => $this->request->getVar("nom"),
-                    "descripcion" => $this->request->getVar("descripcion"),
-                    "existencias" => $this->request->getVar("existencias"),
-                    "precio" => $this->request->getVar("precio"),
-                    "caracteristicas" => $this->request->getVar("caracteristicas"),
-                    "tam" => $this->request->getVar("tam"),
-                    "tampantalla" => $this->request->getVar("tampantalla"),
-                    "id_marca" => $this->request->getVar("id_marca"),
-                    "id_estado" => $this->request->getVar("id_estado"),
-                    "id_color" => $this->request->getVar("id_color"),
-                    "id_categoria" => $this->request->getVar("id_categoria"),
-                    "id_garantia" => $this->request->getVar("id_garantia"),
-                    "id_almacenamiento" => $this->request->getVar("id_almacenamiento"),
-                    "id_ram" => $this->request->getVar("id_ram"),
-                    "id_sistema_operativo" => $this->request->getVar("id_sistema_operativo"),
-                    "id_resolucion" => $this->request->getVar("id_resolucion"),
-                     "precio_original" => $this->request->getVar("precio"),
-                    "updated_at" => $today
-            ];
-            if ($this->productosModel->update($id, $dataModel)) {
-                $data["message"] = "success";
-                $data["response"] = ResponseInterface::HTTP_OK;
-                $data["data"] = $dataModel;
-                $data["csrf"] = csrf_hash();
-            } else {
-                $data["message"] = "Error al actualizar producto";
-                $data["response"] = ResponseInterface::HTTP_NO_CONTENT;
-                $data["data"] = "";
-            }
+{
+    if ($this->request->isAJAX()) {
+        $today = date("Y-m-d H:i:s");
+        $id = $this->request->getVar($this->primaryKey);
+
+        // Obtener el producto actual de la base de datos
+        $productoActual = $this->productosModel->find($id);
+
+        if (!$productoActual) {
+            $data["message"] = "Producto no encontrado";
+            $data["response"] = ResponseInterface::HTTP_NOT_FOUND;
+            $data["data"] = "";
+            echo json_encode($data);
+            return;
+        }
+
+        $nuevoPrecio = floatval($this->request->getVar("precio"));
+        $precioOriginalActual = floatval($productoActual['precio_original']);
+
+        // Evaluar si se actualiza el precio original
+        if ($nuevoPrecio > $precioOriginalActual) {
+            $precioOriginalActual = $nuevoPrecio;
+        }
+        $existencias = intval($this->request->getVar("existencias"));
+        $estadoActual = intval($this->request->getVar("id_estado"));
+
+        if ($estadoActual === 4 || $estadoActual === 7) {
+            $idEstado = $estadoActual;
         } else {
-            $data["message"] = "Error Ajax";
-            $data["response"] = ResponseInterface::HTTP_CONFLICT;
+            $idEstado = ($existencias == 0) ? 2 : 1; // 2 = Agotado, 1 = En stock
+        }
+        
+       $dataModel = [
+        "id" => $this->request->getVar("id"),
+        "nom" => $this->request->getVar("nom"),
+        "descripcion" => $this->request->getVar("descripcion"),
+        "existencias" => $existencias,
+        "precio" => $nuevoPrecio,
+        "precio_original" => $precioOriginalActual,
+        "id_estado" => $idEstado,
+        "caracteristicas" => $this->request->getVar("caracteristicas"),
+        "tam" => $this->request->getVar("tam"),
+        "tampantalla" => $this->request->getVar("tampantalla"),
+        "id_marca" => $this->request->getVar("id_marca"),
+        "id_color" => $this->request->getVar("id_color"),
+        "id_categoria" => $this->request->getVar("id_categoria"),
+        "id_garantia" => $this->request->getVar("id_garantia"),
+        "id_almacenamiento" => $this->request->getVar("id_almacenamiento"),
+        "id_ram" => $this->request->getVar("id_ram"),
+        "id_sistema_operativo" => $this->request->getVar("id_sistema_operativo"),
+        "id_resolucion" => $this->request->getVar("id_resolucion"),
+        "updated_at" => $today
+    ];
+
+        if ($this->productosModel->update($id, $dataModel)) {
+            $data["message"] = "success";
+            $data["response"] = ResponseInterface::HTTP_OK;
+            $data["data"] = $dataModel;
+            $data["csrf"] = csrf_hash();
+        } else {
+            $data["message"] = "Error al actualizar producto";
+            $data["response"] = ResponseInterface::HTTP_NO_CONTENT;
             $data["data"] = "";
         }
-        echo json_encode($data);
+    } else {
+        $data["message"] = "Error Ajax";
+        $data["response"] = ResponseInterface::HTTP_CONFLICT;
+        $data["data"] = "";
     }
+    echo json_encode($data);
+}
+
+
 
     // Método delete
     public function delete($id = null)

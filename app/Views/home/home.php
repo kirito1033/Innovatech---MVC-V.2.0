@@ -69,14 +69,20 @@
             <div id="carouselCategoria<?= $categoria['id'] ?>" class="carousel slide carousel-ofertas" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <?php
-                    $chunked = array_chunk($productosPorCategoria, 5);
+                    $validos = array_filter($productosPorCategoria, function($p) {
+                        if (isset($p['existencias']) && $p['existencias'] == 0) {
+                            $p['id_estado'] = 2;
+                        }
+                        return !empty($p['imagen']) && isset($p['id_estado']) && !in_array($p['id_estado'], [2, 4, 7]);
+                    });
+                    $chunked = array_chunk($validos, 5);
                     foreach ($chunked as $index => $grupo):
                     ?>
                         <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
                             <div class="row g-1">
                                 <?php foreach ($grupo as $producto): ?>
                                     <div class="col-6 col-sm-4 col-md custom-col-5">
-                                    <a href="<?= base_url('producto/ver/' . $producto['id']) ?>" class="text-decoration-none text-dark">
+                                        <a href="<?= base_url('producto/ver/' . $producto['id']) ?>" class="text-decoration-none text-dark">
                                             <div class="card h-100">
                                                 <img src="<?= base_url('uploads/' . $producto['imagen']) ?>" class="card-img-top producto-img" alt="<?= esc($producto['nom']) ?>">
                                                 <div class="card-body">
@@ -121,6 +127,7 @@
     <?php endif; ?>
 <?php endforeach; ?>
 </main>
+
 <footer>
 <?php require_once("../app/Views/footer/footerApp.php")?>
 </footer>
