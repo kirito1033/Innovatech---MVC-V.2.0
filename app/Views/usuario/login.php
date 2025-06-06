@@ -65,7 +65,6 @@
 
         .login__logo img {
             width: 250px;
-           
         }
 
         .login__recuperar,
@@ -77,7 +76,6 @@
             color: var(--bright-turquoise);
             text-decoration: underline;
         }
-
     </style>
 </head>
 <body>
@@ -157,5 +155,21 @@
         });
     </script>
 </body>
+<div class="modal fade" id="modalEnDesarrollo" tabindex="-1" aria-labelledby="modalEnDesarrolloLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+            <h5 class="modal-title" id="modalEnDesarrolloLabel">En desarrollo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+    <div class="modal-body text-center">
+        <i class="bi bi-tools" style="font-size: 2rem; color: black;"></i>
+        <p class="mt-3" style="color: black !important;">Esta sección está en desarrollo. ¡Muy pronto estará disponible!</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+    </div>
+    </div>
+</div>
 </html>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
