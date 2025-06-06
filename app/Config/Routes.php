@@ -8,7 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->get('/', 'Home::index');
 
-$routes->group('departamento', function($routes){
+$routes->group('departamento',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "DepartamentoController::index");
     $routes->get("show", "DepartamentoController::index");
     $routes->get("edit/(:num)", "DepartamentoController::singleDepartamento/$1");
@@ -17,7 +17,7 @@ $routes->group('departamento', function($routes){
     $routes->post("update", "DepartamentoController::update");
 });
 
-$routes->group('ciudad', function($routes){
+$routes->group('ciudad',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "CiudadController::index");
     $routes->get("show", "CiudadController::index");
     $routes->get("edit/(:num)", "CiudadController::singleCiudad/$1");
@@ -26,7 +26,7 @@ $routes->group('ciudad', function($routes){
     $routes->post("update", "CiudadController::update");
 });
 
-$routes->group('estadousuario', function($routes){
+$routes->group('estadousuario',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "EstadoUsuarioController::index");
     $routes->get("show", "EstadoUsuarioController::index");
     $routes->get("edit/(:num)", "EstadoUsuarioController::singleEstadoUsuario/$1");
@@ -45,7 +45,7 @@ $routes->group('usuario',['filter' => 'sessionauth'], function($routes){
 });
 
 
-$routes->group('rol', function($routes){
+$routes->group('rol',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "RolController::index");
     $routes->get("show", "RolController::index");
     $routes->get("edit/(:num)", "RolController::singleRol/$1");
@@ -54,7 +54,7 @@ $routes->group('rol', function($routes){
     $routes->post("update", "RolController::update");
 });
 
-$routes->group('tipodocumento', function($routes){
+$routes->group('tipodocumento', ['filter' => 'sessionauth'],function($routes){
     $routes->get("/", "TipoDocumentoController::index");
     $routes->get("show", "TipoDocumentoController::index");
     $routes->get("edit/(:num)", "TipoDocumentoController::singleTipoDocumento/$1");
@@ -63,7 +63,7 @@ $routes->group('tipodocumento', function($routes){
     $routes->post("update", "TipoDocumentoController::update");
 });
 
-$routes->group('marca', function($routes){
+$routes->group('marca',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "MarcaController::index");
     $routes->get("show", "MarcaController::index");
     $routes->get("edit/(:num)", "MarcaController::singleMarca/$1");
@@ -72,7 +72,7 @@ $routes->group('marca', function($routes){
     $routes->post("update", "MarcaController::update");
 });
 
-$routes->group('estadoproducto', function($routes){
+$routes->group('estadoproducto',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "EstadoProductoController::index");
     $routes->get("show", "EstadoProductoController::index");
     $routes->get("edit/(:num)", "EstadoProductoController::singleEstadoProducto/$1");
@@ -81,7 +81,7 @@ $routes->group('estadoproducto', function($routes){
     $routes->post("update", "EstadoProductoController::update");
 });
 
-$routes->group('color', function($routes){
+$routes->group('color',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "ColorController::index");
     $routes->get("show", "ColorController::index");
     $routes->get("edit/(:num)", "ColorController::singleColor/$1");
@@ -90,7 +90,7 @@ $routes->group('color', function($routes){
     $routes->post("update", "ColorController::update");
 });
 
-$routes->group('categoria', function($routes){
+$routes->group('categoria',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "CategoriaController::index");
     $routes->get("show", "CategoriaController::index");
     $routes->get("edit/(:num)", "CategoriaController::singleCategoria/$1");
@@ -99,7 +99,7 @@ $routes->group('categoria', function($routes){
     $routes->post("update", "CategoriaController::update");
 });
 
-$routes->group('garantia', function($routes){
+$routes->group('garantia',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "GarantiaController::index");
     $routes->get("show", "GarantiaController::index");
     $routes->get("edit/(:num)", "GarantiaController::singleGarantia/$1");
@@ -109,7 +109,7 @@ $routes->group('garantia', function($routes){
 });
 
 
-$routes->group('almacenamiento', function($routes){
+$routes->group('almacenamiento',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "AlmacenamientoController::index");
     $routes->get("show", "AlmacenamientoController::index");
     $routes->get("edit/(:num)", "AlmacenamientoController::singleAlmacenamiento/$1");
@@ -118,7 +118,7 @@ $routes->group('almacenamiento', function($routes){
     $routes->post("update", "AlmacenamientoController::update");
 });
 
-$routes->group('almacenamientoaleatorio', function($routes){
+$routes->group('almacenamientoaleatorio',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "AlmacenamientoAleatorioController::index");
     $routes->get("show", "AlmacenamientoAleatorioController::index");
     $routes->get("edit/(:num)", "AlmacenamientoAleatorioController::singleAlmacenamiento/$1");
@@ -128,7 +128,7 @@ $routes->group('almacenamientoaleatorio', function($routes){
 });
 
 
-$routes->group('sistemaoperativo', function($routes){
+$routes->group('sistemaoperativo',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "SistemaOperativoController::index");
     $routes->get("show", "SistemaOperativoController::index");
     $routes->get("edit/(:num)", "SistemaOperativoController::singleSistemaOperativo/$1");
@@ -137,7 +137,7 @@ $routes->group('sistemaoperativo', function($routes){
     $routes->post("update", "SistemaOperativoController::update");
 });
 
-$routes->group('resolucion', function($routes){
+$routes->group('resolucion',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "ResolucionController::index");
     $routes->get("show", "ResolucionController::index");
     $routes->get("edit/(:num)", "ResolucionController::singleResolucion/$1");
@@ -145,7 +145,7 @@ $routes->group('resolucion', function($routes){
     $routes->post("add", "ResolucionController::create");
     $routes->post("update", "ResolucionController::update");
 });
-$routes->group('producto', function($routes){
+$routes->group('producto',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "ProductoController::index");
     $routes->get("show", "ProductoController::index");
     $routes->get("edit/(:num)", "ProductoController::singleProducto/$1");
@@ -156,7 +156,7 @@ $routes->group('producto', function($routes){
 
 });
 
-$routes->group('tipopqrs', function($routes){
+$routes->group('tipopqrs',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "TipoPqrsController::index");
     $routes->get("show", "TipoPqrsController::index");
     $routes->get("edit/(:num)", "TipoPqrsController::singleTipoPqrs/$1");
@@ -166,7 +166,7 @@ $routes->group('tipopqrs', function($routes){
 
 
 });
-$routes->group('estadopqrs', function($routes){
+$routes->group('estadopqrs',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "EstadoPqrsController::index");
     $routes->get("show", "EstadoPqrsController::index");
     $routes->get("edit/(:num)", "EstadoPqrsController::singleEstadoPqrs/$1");
@@ -176,7 +176,7 @@ $routes->group('estadopqrs', function($routes){
 
 
 });
-$routes->group('pqrs', function($routes){
+$routes->group('pqrs',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "PqrsController::index");
     $routes->get("show", "PqrsController::index");
     $routes->get("edit/(:num)", "PqrsController::singlePqrs/$1");
@@ -188,7 +188,7 @@ $routes->group('pqrs', function($routes){
 
 });
 
-$routes->group('estadoenvio', function($routes){
+$routes->group('estadoenvio',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "EstadoEnvioController::index");
     $routes->get("show", "EstadoEnvioController::index");
     $routes->get("edit/(:num)", "EstadoEnvioController::singleEstadoEnvio/$1");
@@ -198,7 +198,7 @@ $routes->group('estadoenvio', function($routes){
 
 
 });
-$routes->group('estadofactura', function($routes){
+$routes->group('estadofactura',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "EstadoFacturaController::index");
     $routes->get("show", "EstadoFacturaController::index");
     $routes->get("edit/(:num)", "EstadoFacturaController::singleEstadoFactura/$1");
@@ -208,7 +208,7 @@ $routes->group('estadofactura', function($routes){
 
 });
 
-$routes->group('modelo', function($routes){
+$routes->group('modelo',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "ModelosController::index");
     $routes->get("show", "ModelosController::index");
     $routes->get("edit/(:num)", "ModelosController::singleModelo/$1");
@@ -217,7 +217,7 @@ $routes->group('modelo', function($routes){
     $routes->post("update", "ModelosController::update");
 
 });
-$routes->group('permisos', function($routes){
+$routes->group('permisos',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "PermisosController::index");
     $routes->get("show", "PermisosController::index");
     $routes->get("edit/(:num)", "PermisosController::singlePermiso/$1");
@@ -226,7 +226,7 @@ $routes->group('permisos', function($routes){
     $routes->post("update", "PermisosController::update");
 
 });
-$routes->group('envio', function($routes){
+$routes->group('envio',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "EnvioController::index");
     $routes->get("show", "EnvioController::index");
     $routes->get("edit/(:num)", "EnvioController::singleEnvio/$1");
@@ -236,7 +236,7 @@ $routes->group('envio', function($routes){
 
 });
 
-$routes->group('factura', function($routes){
+$routes->group('factura',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "FacturaController::index");
     $routes->get("show", "FacturaController::index");
     $routes->get("edit/(:num)", "FacturaController::singleFactura/$1");
@@ -247,7 +247,7 @@ $routes->group('factura', function($routes){
 });
 
 
-$routes->group('ingresoproducto', function($routes){
+$routes->group('ingresoproducto',['filter' => 'sessionauth'], function($routes){
     $routes->get("/", "IngresoProductoController::index");
     $routes->get("show", "IngresoProductoController::index");
     $routes->get("edit/(:num)", "IngresoProductoController::singleIngresoProducto/$1");
@@ -271,10 +271,11 @@ $routes->post('producto/updateImage', 'ProductoController::updateImage');
 
 $routes->get('producto/ver/(:num)', 'ProductoController::ver/$1');
 
+$routes->get('categorias', 'ProductoController::listarProductos');
 $routes->get('categoria/(:num)', 'ProductoController::listarProductos/$1');
 
 
-$routes->group('oferta', function($routes) {
+$routes->group('oferta',['filter' => 'sessionauth'], function($routes) {
     $routes->get("/", "OfertasController::index");
     $routes->get("show", "OfertasController::index");
     $routes->get("edit/(:num)", "OfertasController::singleOferta/$1");
@@ -286,7 +287,7 @@ $routes->group('oferta', function($routes) {
 
 $routes->get('/logout', 'UsuarioController::logout');
 
-$routes->group('userapi', function($routes) {
+$routes->group('userapi', ['filter' => 'sessionauth'],function($routes) {
     $routes->get("/", "ApiUserController::index");
     $routes->get("show", "ApiUserController::index");
     $routes->get("edit/(:num)", "ApiUserController::singleUser/$1");
@@ -295,3 +296,15 @@ $routes->group('userapi', function($routes) {
     $routes->post("update", "ApiUserController::update");
     $routes->post('updateImage', 'ApiUserController::updateImage');
 });
+
+ $routes->get("ofertas/(:num)", "ProductoController::listarOfertas/$1");
+ 
+ $routes->get('olvide-password', 'AuthController::showForgotForm');
+$routes->post('send-reset-link', 'AuthController::sendResetLink');
+$routes->get('reset-password/(:any)', 'AuthController::showResetForm/$1');
+$routes->post('update-password', 'AuthController::updatePassword');
+
+
+$routes->get('terminos', 'LoginTerminos::terminos');
+$routes->get('condiciones', 'LoginTerminos::condiciones');
+

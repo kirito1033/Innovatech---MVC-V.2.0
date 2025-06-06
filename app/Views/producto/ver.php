@@ -154,8 +154,23 @@
                     <h2 class="titulo-producto"><?= esc($producto['nom']) ?></h2>
                 </div>
                 <div class="precio">
-                    <p class="precio-p">$<?= number_format($producto['precio'], 0, ',', '.') ?></p>
-                </div>
+                <?php if (isset($producto['precio_original']) && $producto['precio'] != $producto['precio_original']): ?>
+                    <?php
+                        $porcentaje_descuento = round((($producto['precio_original'] - $producto['precio']) / $producto['precio_original']) * 100);
+                    ?>
+                    <p class="precio_original" style="text-decoration: line-through; color: gray;">
+                        $<?= number_format($producto['precio_original'], 0, ',', '.') ?>
+                    </p>
+                    <p class="precio color-verde" style="font-weight: bold;">
+                        $<?= number_format($producto['precio'], 0, ',', '.') ?>
+                        <span class="descuento-porcentaje" style="color: red; margin-left: 10px;">-<?= $porcentaje_descuento ?>%</span>
+                    </p>
+                <?php else: ?>
+                    <p class="precio color-verde" style="font-weight: bold;">
+                        $<?= number_format($producto['precio'], 0, ',', '.') ?>
+                    </p>
+                <?php endif; ?>
+            </div>
                 <div class="medios-pago">
                     <a class="medios-pago-a" href="#">Ver medios de pago</a>
                 </div>
@@ -182,7 +197,9 @@
                     <a href="#">Más formas de entrega</a>
                 </div>
                 <div class="stock">
-                    <p>Stock disponible (<?= esc($producto['existencias']) ?> unidades)</p>
+                    <p style="color: <?= $producto['existencias'] == 0 ? 'red' : 'inherit' ?>;">
+                        Stock disponible (<?= esc($producto['existencias']) ?> unidades)
+                    </p>
                 </div>
                 <div class="cantidad">
                     <label for="cantidad">Cantidad:</label>
@@ -193,14 +210,23 @@
                         <?php endfor; ?>
                     </select>
                 </div>
-                <div class="comprar">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">
-                        <button type="button" class="btn btn-primary comprar-btn">Comprar ahora</button>
-                    </a>
-                </div>
-                <div class="agregar-carrito">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo" class="btn btn-info carrito-btn">Agregar al carrito</a>
-                </div>
+               <div class="comprar">
+                <button type="button"
+                    class="btn btn-primary comprar-btn"
+                    <?= $producto['existencias'] == 0 ? 'disabled' : '' ?>
+                    <?= $producto['existencias'] > 0 ? 'data-bs-toggle="modal" data-bs-target=\"#modalEnDesarrollo\"' : '' ?>>
+                    Comprar ahora
+                </button>
+            </div>
+
+            <div class="agregar-carrito">
+                <button type="button"
+                    class="btn btn-info carrito-btn"
+                    <?= $producto['existencias'] == 0 ? 'disabled' : '' ?>
+                    <?= $producto['existencias'] > 0 ? 'data-bs-toggle="modal" data-bs-target=\"#modalEnDesarrollo\"' : '' ?>>
+                    Agregar al carrito
+                </button>
+            </div>
                 <div class="devoluciones">
                     <i class="bi bi-skip-backward-circle"></i>
                     <a href="/politicas-devolucion">Devolución gratis. Tienes 30 días desde que lo recibes.</a>

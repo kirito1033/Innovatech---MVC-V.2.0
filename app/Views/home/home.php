@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 </head>
+
 <body>
 <header>
         <?= $this->include('partials/header') ?>
@@ -81,7 +82,20 @@
                                                 <div class="card-body">
                                                     <h5 class="card-title"><?= esc($producto['nom']) ?></h5>
                                                     <p class="card-text"><?= esc($producto['descripcion']) ?></p>
-                                                    <p class="precio color-verde">$<?= number_format($producto['precio'], 0, ',', '.') ?></p>
+                                                    <?php if ($producto['precio'] != $producto['precio_original']): ?>
+                                                        <?php
+                                                            $porcentaje_descuento = round((($producto['precio_original'] - $producto['precio']) / $producto['precio_original']) * 100);
+                                                        ?>
+                                                        <p class="precio_original">
+                                                            $<?= number_format($producto['precio_original'], 0, ',', '.') ?>
+                                                        </p>
+                                                        <p class="precio color-verde">
+                                                            $<?= number_format($producto['precio'], 0, ',', '.') ?>
+                                                            <span class="descuento-porcentaje">-<?= $porcentaje_descuento ?>%</span>
+                                                        </p>
+                                                    <?php else: ?>
+                                                        <p class="precio color-verde">$<?= number_format($producto['precio'], 0, ',', '.') ?></p>
+                                                    <?php endif; ?>
                                                     <div class="btn btn-outline-primary w-100">Ver más</div>
                                                 </div>
                                             </div>

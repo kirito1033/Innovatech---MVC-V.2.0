@@ -197,7 +197,6 @@
         .row.g-3 > .col-12 {
             padding-right: 0.5rem;
             padding-left: 0.5rem;
-            margin-bottom: 0.7rem;
         }
     </style>
 </head>
@@ -208,7 +207,6 @@
 
 <!-- Two-column layout container -->
 <div class="main-container container">
-    
     <!-- Filters Main Section -->
     <main class="filters-main">
         <div class="card p-2 shadow-sm">
@@ -320,6 +318,7 @@
     </main>
 
     <!-- Products Main Section -->
+  <!-- Products Main Section -->
 <main class="productos-ofertas">
     <div class="lista-productos">
         <?php foreach ($categorias as $categoria): ?>
@@ -373,7 +372,6 @@
         <?php endforeach; ?>
     </div>
 </main>
-
 </div>
 
 <footer>
