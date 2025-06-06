@@ -304,7 +304,7 @@ $routes->post('send-reset-link', 'AuthController::sendResetLink');
 $routes->get('reset-password/(:any)', 'AuthController::showResetForm/$1');
 $routes->post('update-password', 'AuthController::updatePassword');
 
-
+$routes->get('test-email', 'TestEmailController::index');
 $routes->get('terminos', 'LoginTerminos::terminos');
 $routes->get('condiciones', 'LoginTerminos::condiciones');
 

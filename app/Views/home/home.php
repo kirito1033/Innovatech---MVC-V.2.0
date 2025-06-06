@@ -60,23 +60,31 @@
     $productosPorCategoria = array_filter($productos, function($producto) use ($categoria) {
         return $producto['id_categoria'] == $categoria['id'];
     });
+
+    // Filtrar productos válidos (con imagen, estado válido, y existencias)
+    $validos = array_filter($productosPorCategoria, function($p) {
+        if (isset($p['existencias']) && $p['existencias'] == 0) {
+            $p['id_estado'] = 2; // Agotado
+        }
+        return !empty($p['imagen']) && isset($p['id_estado']) && !in_array($p['id_estado'], [2, 4, 7]);
+    });
     ?>
 
-    <?php if (!empty($productosPorCategoria)): ?>
+    <?php if (!empty($validos)): ?>
         <div class="container my-5 carrucel-productos" style="width: 95%; margin: 0 auto;">
             <h2 class="mb-4 title-ofertas"><?= esc($categoria['nom']) ?></h2>
 
             <div id="carouselCategoria<?= $categoria['id'] ?>" class="carousel slide carousel-ofertas" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <?php
-                    $chunked = array_chunk($productosPorCategoria, 5);
+                    $chunked = array_chunk($validos, 5);
                     foreach ($chunked as $index => $grupo):
                     ?>
                         <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
                             <div class="row g-1">
                                 <?php foreach ($grupo as $producto): ?>
                                     <div class="col-6 col-sm-4 col-md custom-col-5">
-                                    <a href="<?= base_url('producto/ver/' . $producto['id']) ?>" class="text-decoration-none text-dark">
+                                        <a href="<?= base_url('producto/ver/' . $producto['id']) ?>" class="text-decoration-none text-dark">
                                             <div class="card h-100">
                                                 <img src="<?= base_url('uploads/' . $producto['imagen']) ?>" class="card-img-top producto-img" alt="<?= esc($producto['nom']) ?>">
                                                 <div class="card-body">
@@ -121,8 +129,8 @@
     <?php endif; ?>
 <?php endforeach; ?>
 </main>
+
 <footer>
 <?php require_once("../app/Views/footer/footerApp.php")?>
 </footer>
 </body>
-

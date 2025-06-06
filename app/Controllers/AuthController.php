@@ -12,8 +12,9 @@ class AuthController extends BaseController
         return view('auth/forgot_password');
     }
 
-   public function sendResetLink()
+  public function sendResetLink()
 {
+
     $correo = $this->request->getPost('correo');
 
     $usuarioModel = new UsuarioModel();
@@ -31,10 +32,8 @@ class AuthController extends BaseController
         'reset_token_expiration' => $expira
     ]);
 
-    // Enlace para restablecer la contraseña
     $resetLink = base_url("reset-password/$token");
 
-    // Cuerpo del correo con HTML y estilos
     $mensajeHTML = '
     <!DOCTYPE html>
     <html lang="es">
@@ -60,15 +59,21 @@ class AuthController extends BaseController
     ';
 
     // Enviar correo
-    $email = service('email');
+    $email = \Config\Services::email();
     $email->setTo($correo);
     $email->setSubject('Recuperar contraseña');
     $email->setMessage($mensajeHTML);
-    $email->send();
+    $email->setMailType('html'); 
+    $email->setFrom('so1959373@gmail.com', 'Innovatech Dynamic'); 
 
-    return redirect()->back()->with('success', 'Revisa tu correo para continuar.');
+    if ($email->send()) {
+        return redirect()->back()->with('success', 'Revisa tu correo para continuar.');
+    } else {
+        // Mostrar detalles del error
+        $debug = $email->printDebugger(['headers', 'subject', 'body']);
+        return redirect()->back()->with('error', 'Error al enviar el correo:<br><pre>' . esc($debug) . '</pre>');
+    }
 }
-
 
     public function showResetForm($token)
     {
