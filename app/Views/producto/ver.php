@@ -197,7 +197,9 @@
                     <a href="#">Más formas de entrega</a>
                 </div>
                 <div class="stock">
-                    <p>Stock disponible (<?= esc($producto['existencias']) ?> unidades)</p>
+                    <p style="color: <?= $producto['existencias'] == 0 ? 'red' : 'inherit' ?>;">
+                        Stock disponible (<?= esc($producto['existencias']) ?> unidades)
+                    </p>
                 </div>
                 <div class="cantidad">
                     <label for="cantidad">Cantidad:</label>
@@ -208,14 +210,23 @@
                         <?php endfor; ?>
                     </select>
                 </div>
-                <div class="comprar">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">
-                        <button type="button" class="btn btn-primary comprar-btn">Comprar ahora</button>
-                    </a>
-                </div>
-                <div class="agregar-carrito">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo" class="btn btn-info carrito-btn">Agregar al carrito</a>
-                </div>
+               <div class="comprar">
+                <button type="button"
+                    class="btn btn-primary comprar-btn"
+                    <?= $producto['existencias'] == 0 ? 'disabled' : '' ?>
+                    <?= $producto['existencias'] > 0 ? 'data-bs-toggle="modal" data-bs-target=\"#modalEnDesarrollo\"' : '' ?>>
+                    Comprar ahora
+                </button>
+            </div>
+
+            <div class="agregar-carrito">
+                <button type="button"
+                    class="btn btn-info carrito-btn"
+                    <?= $producto['existencias'] == 0 ? 'disabled' : '' ?>
+                    <?= $producto['existencias'] > 0 ? 'data-bs-toggle="modal" data-bs-target=\"#modalEnDesarrollo\"' : '' ?>>
+                    Agregar al carrito
+                </button>
+            </div>
                 <div class="devoluciones">
                     <i class="bi bi-skip-backward-circle"></i>
                     <a href="/politicas-devolucion">Devolución gratis. Tienes 30 días desde que lo recibes.</a>

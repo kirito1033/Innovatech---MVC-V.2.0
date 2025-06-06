@@ -103,10 +103,11 @@
 
             <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
-                <label class="form-check-label" for="exampleCheck1">
-                    Aceptas las <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">Condiciones de uso</a> y el 
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">Aviso de privacidad</a>.
-                </label>
+               <label class="form-check-label" for="exampleCheck1">
+                Aceptas las <a href="/condiciones" target="_blank" rel="noopener noreferrer">Condiciones de uso</a> y el 
+                <a href="/terminos" target="_blank" rel="noopener noreferrer">Aviso de privacidad</a>.
+            </label>
+
             </div>
 
             <div class="btn-ingresar">
