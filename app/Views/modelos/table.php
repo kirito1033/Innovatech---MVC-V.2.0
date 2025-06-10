@@ -3,7 +3,8 @@
     <thead class="table-primary text-white">
       <tr>
         <th scope="col" class="p-3">#</th>
-        <th scope="col" class="p-3">Name</th>
+        <th scope="col" class="p-3">Ruta</th>
+         <th scope="col" class="p-3">Descripción</th>
         <th scope="col" class="p-3">Actions</th>
       </tr>
     </thead>
@@ -11,6 +12,7 @@
       <?php if ($ModelosModel) : ?>
         <?php foreach ($ModelosModel as $obj) : ?>
           <tr class="fw-bold">
+             <td class="p-3"><?php echo $obj["id"]; ?></td>
             <td class="p-3"><?php echo $obj["Ruta"]; ?></td>
             <td class="p-3"><?php echo $obj["Descripción"]; ?></td>
             <td class="p-3">

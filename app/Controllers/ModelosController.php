@@ -6,6 +6,7 @@ use App\Models\ModelosModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+
 class ModelosController extends Controller
 {
     private $primaryKey;
@@ -26,8 +27,21 @@ class ModelosController extends Controller
     public function index()
     {
         $this->data["title"] = "MODELOS";
-        $this->data[$this->model] = $this->ModelosModel->orderBy($this->primaryKey, "ASC")->findAll();
-        return view("modelos/modelos_view", $this->data);
+
+    $rolId = session()->get('rol_id');
+    $modelosModel = new ModelosModel();
+
+    // Obtener los módulos permitidos para el rol actual
+    $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+    // Agregar los módulos a los datos enviados a la vista
+    $this->data['modulos'] = $modulosPermitidos;
+
+    // Obtener todos los modelos
+    $this->data[$this->model] = $this->ModelosModel->orderBy($this->primaryKey, "ASC")->findAll();
+
+    // Cargar la vista
+    return view("modelos/modelos_view", $this->data);
     }
 
     // Método create

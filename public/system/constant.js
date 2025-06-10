@@ -50,3 +50,5 @@ const URI_INGRESOPRODUCTO = "/ingresoproducto/"
 const URI_OFERTA = "/oferta/"
 
 const URI_USERAPI = "/userapi/"
+
+const URI_MODELOROL = "/modelorol/"

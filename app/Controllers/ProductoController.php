@@ -62,7 +62,14 @@ class ProductoController extends Controller
         $this->data["marcas"] = $this->marcaModel->findAll();
         $this->data["sistemas_operativos"] = $this->sistemaOperativoModel->findAll();
         $this->data["resoluciones"] = $this->resolucionModel->findAll();
+        $rolId = session()->get('rol_id');
+        $modelosModel = new \App\Models\ModelosModel();
 
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
         return view("producto/producto_view", $this->data);
     }
 

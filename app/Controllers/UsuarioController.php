@@ -31,6 +31,14 @@ class UsuarioController extends Controller
     public function index()
     {
         $this->data['title'] = "Usuarios";
+         $rolId = session()->get('rol_id');
+        $modelosModel = new \App\Models\ModelosModel();
+
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->UsuarioModel->orderBy($this->primaryKey, 'ASC')->findAll();
         
         $TipoDocumento = new TipoDocumentoModel();
@@ -206,21 +214,22 @@ class UsuarioController extends Controller
         session()->set([
             'token' => $token,
             'usuario' => $user['usuario'],
-            'rol' => $user['rol_id'],
-            'id_usuario' => $user['id_usuario']
+            'rol_id' => $user['rol_id'],
+            'id_usuario' => $user['id_usuario'],
+            'isLoggedIn' => true,
         ]);
 
         if ($this->request->isAJAX()) {
             // Retorna JSON si es una petición AJAX
             return $this->response->setJSON([
                 'status' => 'success',
-                'message' => 'Autenticación exitosa',
+                'message' => 'Autenticación exitosa',  
                 'token' => $token,
-                'redirect' => $user['rol_id'] == 1 ? '/usuario' : '/',
+                'redirect' => $user['rol_id'] == 1 ? '/admin/dasboard' : '/',
                 'user' => [
                     'id' => $user['id_usuario'],
                     'usuario' => $user['usuario'],
-                    'rol' => $user['rol_id']
+                    'rol_id' => $user['rol_id'], 
                 ]
             ]);
         } else {

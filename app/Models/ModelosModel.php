@@ -21,5 +21,14 @@ class ModelosModel extends Model
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+    public function getModelosByRol($rolId)
+    {
+        return $this->select('modelos.*')
+            ->join('modelos_rol', 'modelos.id = modelos_rol.Modelosid')
+            ->where('modelos_rol.Rolid', $rolId)
+            ->findAll();
+    }
 
 }
+
+// ModelosModel.php

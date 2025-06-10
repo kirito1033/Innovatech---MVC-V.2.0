@@ -36,6 +36,14 @@ class PqrsController extends Controller
         $this->data['Usuario'] = $Usuario->findAll();
 
         $this->data["title"] = "PQRS";
+         $rolId = session()->get('rol_id');
+        $modelosModel = new \App\Models\ModelosModel();
+
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->PqrsModel->orderBy($this->primaryKey, "ASC")->findAll();
         return view("pqrs/pqrs_view", $this->data);
     }

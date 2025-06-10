@@ -26,6 +26,14 @@ class EnvioController extends Controller
     public function index()
     {
         $this->data['title'] = "Envíos";
+         $rolId = session()->get('rol_id');
+        $modelosModel = new \App\Models\ModelosModel();
+
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->EnvioModel->orderBy($this->primaryKey, 'ASC')->findAll();
 
         $EstadoEnvio = new EstadoEnvioModel();

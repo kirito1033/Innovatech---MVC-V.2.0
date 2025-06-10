@@ -29,6 +29,14 @@ class OfertasController extends Controller
         $this->actualizarEstadosOfertas();
 
         $this->data['title'] = "OFERTA"; 
+         $rolId = session()->get('rol_id');
+        $modelosModel = new \App\Models\ModelosModel();
+
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->OfertaModel->orderBy($this->primaryKey, 'ASC')->findAll(); 
 
         $productos = new \App\Models\ProductosModel();

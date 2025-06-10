@@ -7,8 +7,8 @@ use CodeIgniter\Model;
 class ModelosRolModel extends Model
 { 
     protected $table            = 'modelos_rol';
-    protected $primaryKey       = ['Modelosid', 'Rolid'];
-    protected $useAutoIncrement = false;
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;

@@ -26,6 +26,14 @@ class GarantiaController extends Controller
     public function index()
     {
         $this->data["title"] = "GARANTÍA";
+         $rolId = session()->get('rol_id');
+        $modelosModel = new \App\Models\ModelosModel();
+
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->GarantiaModel->orderBy($this->primaryKey, "ASC")->findAll();
         return view("garantia/garantia_view", $this->data);
     }
