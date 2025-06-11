@@ -26,10 +26,10 @@ class Database extends Config
      */
     public array $default = [
         'DSN'          => '',
-        'hostname'     => 'localhost',
-        'username'     => 'root',
-        'password'     => '',
-        'database'     => 'innovatechdb',
+        'hostname'     => 'ba5y5n8oyxxeexbybziu-mysql.services.clever-cloud.com',
+        'username'     => 'uf1lw7xxtlsrtze8',
+        'password'     => 'IIEnygccnY3sIaPnXQQU',
+        'database'     => 'ba5y5n8oyxxeexbybziu',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
