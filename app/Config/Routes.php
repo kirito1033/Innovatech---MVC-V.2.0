@@ -323,3 +323,5 @@ $routes->group('admin', ['filter' => 'roleaccess'], function($routes){
     $routes->get('dasboard  ', 'DashboardController::index');
 });
 $routes->get('no-autorizado', 'DashboardController::error');
+
+$routes->get('carrito', 'ProductoController::carrito');

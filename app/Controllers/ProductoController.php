@@ -336,7 +336,25 @@ public function preguntar($id)
     $pregunta = $this->request->getPost('pregunta');
     return redirect()->to("/producto/ver/$id")->with('message', 'Pregunta enviada');
 }
+public function carrito(){
 
+    $productoModel = new ProductosModel();
+    $categoriaModel = new CategoriaModel();
+    $marcaModel = new MarcaModel();
+    $colorModel = new ColorModel();
+    $ramModel = new AlmacenamientoAleatorioModel();
+    $almacenamientoModel = new AlmacenamientoModel();
+    $estadoModel = new EstadoProductoModel();
+    $garantiaModel = new GarantiaModel();
+    $sistemaOperativoModel = new SistemaOperativoModel();
+    $resolucionModel = new ResolucionModel();
+    $data['productos'] = $productoModel->findAll();
+    $data['categorias'] = $categoriaModel->findAll();
+    $data['marcas'] = $categoriaModel->findAll();
+      $data['colores'] = $categoriaModel->findAll();
+    return view('producto/carrito', $data);
+
+}
 public function listarProductos($id = null)
 {
     $productoModel = new ProductosModel();

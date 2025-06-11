@@ -165,7 +165,7 @@ function getIcon($ruta) {
     }
 
    .container {
-        width: 67%;
+        width: 78%;
         margin: 0 auto; /* Centra horizontalmente */
         margin-left: 20%;
         padding: 1rem;
