@@ -101,7 +101,7 @@ function getIcon($ruta) {
     }
 
     .sidebar {
-      width: 290px;
+      width: 300px;
       background-color: var(--encabezados-piedepagina);
       height: 100vh;
       position: fixed;
@@ -118,6 +118,7 @@ function getIcon($ruta) {
       color: var(--Color--texto);
       border-bottom: 1px solid var(--bright-turquoise);
       padding-bottom: 5px;
+      font-size: 1.5rem;
     }
 
     .sidebar a {
