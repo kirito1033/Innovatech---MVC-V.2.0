@@ -101,7 +101,7 @@ function getIcon($ruta) {
     }
 
     .sidebar {
-      width: 250px;
+      width: 290px;
       background-color: var(--encabezados-piedepagina);
       height: 100vh;
       position: fixed;

@@ -75,26 +75,24 @@ class CiudadController extends Controller
     }
 
     
-    public function singleCiudad($id = null) 
-    { 
-        if ($this->request->isAJAX()) { 
-
-            if ($data[$this->model] = $this->CiudadModel->where($this->primaryKey, $id)->first()) { 
-                $data['message'] = 'success'; 
-                $data['response'] = ResponseInterface::HTTP_OK; 
-                $data['csrf'] = csrf_hash(); 
-            } else { 
-                $data['message'] = 'Error retrieving Ciudad'; 
-                $data['response'] = ResponseInterface::HTTP_NO_CONTENT; 
-                $data['data'] = ''; 
-            } 
-        } else { 
-            $data['message'] = 'Error Ajax'; 
-            $data['response'] = ResponseInterface::HTTP_CONFLICT; 
-            $data['data'] = ''; 
-        } 
-
-        echo json_encode($data);  
+     public function singleCiudad($id = null)
+    {
+        if ($this->request->isAJAX()) {
+            if ($data[$this->model] = $this->CiudadModel->where($this->primaryKey, $id)->first()) {
+                $data["message"] = "success";
+                $data["response"] = ResponseInterface::HTTP_OK;
+                $data["csrf"] = csrf_hash();
+            } else {
+                $data["message"] = "Error al obtener categoría";
+                $data["response"] = ResponseInterface::HTTP_NO_CONTENT;
+                $data["data"] = "";
+            }
+        } else {
+            $data["message"] = "Error Ajax";
+            $data["response"] = ResponseInterface::HTTP_CONFLICT;
+            $data["data"] = "";
+        }
+        echo json_encode($data);
     }
 
 

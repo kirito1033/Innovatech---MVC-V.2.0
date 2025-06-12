@@ -254,6 +254,8 @@ $routes->group('ingresoproducto',['filter' => 'roleaccess'], function($routes){
     $routes->get("delete/(:num)", "IngresoProductoController::delete/$1");
     $routes->post("add", "IngresoProductoController::create");
     $routes->post("update", "IngresoProductoController::update");
+    $routes->post('subirFactura', 'IngresoProductoController::subirFactura');
+
 
 });
 
@@ -305,7 +307,22 @@ $routes->group('modelorol', ['filter' => 'roleaccess'],function($routes) {
     $routes->post("add", "ModelosRolController::create");
     $routes->post("update", "ModelosRolController::update");
 });
-
+$routes->group('modelorolpermisos',['filter' => 'roleaccess'],function($routes) {
+    $routes->get("/", "PermisosModelosRolController::index");
+    $routes->get("show", "PermisosModelosRolController::index");
+    $routes->get("edit/(:num)", "PermisosModelosRolController::singleModelosRolPermisos/$1");
+    $routes->get("delete/(:num)", "PermisosModelosRolController::delete/$1");
+    $routes->post("add", "PermisosModelosRolController::create");
+    $routes->post("update", "PermisosModelosRolController::update");
+});
+$routes->group('productosingresoproductos',function($routes) {
+    $routes->get("/", "ProductosIngresoProductoController::index");
+    $routes->get("show", "ProductosIngresoProductoController::index");
+    $routes->get("edit/(:num)", "ProductosIngresoProductoController::singleProductosIngresoProducto/$1");
+    $routes->get("delete/(:num)", "ProductosIngresoProductoController::delete/$1");
+    $routes->post("add", "ProductosIngresoProductoController::create");
+    $routes->post("update", "ProductosIngresoProductoController::update");
+});
 
  $routes->get("ofertas/(:num)", "ProductoController::listarOfertas/$1");
  
@@ -319,8 +336,7 @@ $routes->get('terminos', 'LoginTerminos::terminos');
 $routes->get('condiciones', 'LoginTerminos::condiciones');
 
 $routes->group('admin', ['filter' => 'roleaccess'], function($routes){
-    $routes->get('modelos', 'ModelosController::index');
-    $routes->get('dasboard  ', 'DashboardController::index');
+    $routes->get('dasboard','DashboardController::index');
 });
 $routes->get('no-autorizado', 'DashboardController::error');
 

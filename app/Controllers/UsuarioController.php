@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UsuarioModel;
+use App\Models\DepartamentoModel;
 use App\Models\EstadoUsuarioModel;
 use App\Models\RolModel;
 use CodeIgniter\Controller;
@@ -45,10 +46,12 @@ class UsuarioController extends Controller
         $Ciudad  = new CiudadModel();
         $Rol = new RolModel();
         $EstadoUsuario = new EstadoUsuarioModel();
+        $Departamentos  = new DepartamentoModel();
         
         $this->data['Rol'] = $Rol->findAll();
         $this->data['EstadoUsuario'] = $EstadoUsuario->findAll();
         $this->data['TipoDocumento'] = $TipoDocumento->findAll();
+          $this->data['Departamentos'] = $Departamentos->findAll();
         $this->data['Ciudad'] = $Ciudad->findAll();
         
         return view('usuario/usuario_view', $this->data);

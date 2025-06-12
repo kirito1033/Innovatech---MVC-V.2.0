@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ProductosIngresoModel extends Model
+class ProductosIngresoProductoModel extends Model
 {
     protected $table            = 'productos_ingreso_producto';
-    protected $primaryKey       = ['ProductosId_Producto', 'Ingreso_productoid_ingreso'];
-    protected $useAutoIncrement = false;
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['ProductosId_Producto', 'Ingreso_productoid_ingreso', 'cantidad'];
+    protected $allowedFields    = ['producto_id', 'ingreso_producto_id', 'cantidad'];
 
     protected bool $allowEmptyInserts = false;
 

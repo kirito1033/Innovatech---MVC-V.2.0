@@ -52,7 +52,29 @@ class ProductoController extends Controller
     public function index()
     {
         $this->data["title"] = "PRODUCTOS";
-        $this->data["productos"] = $this->productosModel->orderBy($this->primaryKey, "ASC")->findAll();
+
+        // Obtener todos los productos
+        $productos = $this->productosModel->orderBy($this->primaryKey, "ASC")->findAll();
+
+        // Verificar y actualizar el estado de cada producto según su stock
+        foreach ($productos as &$producto) {
+            $id = $producto['id'];
+            $existencias = (int)$producto['existencias'];
+            $estadoActual = (int)$producto['id_estado'];
+
+            // Si el estado no es reservado (4) ni devuelto (7), actualizar a En stock (1) o Agotado (2)
+            if ($estadoActual !== 4 && $estadoActual !== 7) {
+                $nuevoEstado = ($existencias === 0) ? 2 : 1;
+
+                if ($estadoActual !== $nuevoEstado) {
+                    $this->productosModel->update($id, ['id_estado' => $nuevoEstado]);
+                    $producto['id_estado'] = $nuevoEstado; // actualizar el array local también
+                }
+            }
+        }
+
+        // Actualizar datos para enviar a la vista
+        $this->data["productos"] = $productos;
         $this->data["almacenamiento_aleatorio"] = $this->almacenamientoAleatorioModel->findAll();
         $this->data["almacenamiento"] = $this->almacenamientoModel->findAll();
         $this->data["categorias"] = $this->categoriaModel->findAll();
@@ -62,16 +84,15 @@ class ProductoController extends Controller
         $this->data["marcas"] = $this->marcaModel->findAll();
         $this->data["sistemas_operativos"] = $this->sistemaOperativoModel->findAll();
         $this->data["resoluciones"] = $this->resolucionModel->findAll();
+
+        // Obtener módulos permitidos según el rol del usuario
         $rolId = session()->get('rol_id');
         $modelosModel = new \App\Models\ModelosModel();
+        $this->data['modulos'] = $modelosModel->getModelosByRol($rolId);
 
-        // Obtener los módulos permitidos para el rol actual
-        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
-
-        // Agregar los módulos a los datos enviados a la vista
-        $this->data['modulos'] = $modulosPermitidos;
         return view("producto/producto_view", $this->data);
     }
+
 
     // Método create
     public function create()
@@ -351,7 +372,7 @@ public function carrito(){
     $data['productos'] = $productoModel->findAll();
     $data['categorias'] = $categoriaModel->findAll();
     $data['marcas'] = $categoriaModel->findAll();
-      $data['colores'] = $categoriaModel->findAll();
+    $data['colores'] = $categoriaModel->findAll();
     return view('producto/carrito', $data);
 
 }

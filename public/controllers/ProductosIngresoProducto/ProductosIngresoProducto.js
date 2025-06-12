@@ -1,6 +1,6 @@
 const formId = 'my-form';
 const modalId = 'my-modal';
-const model = 'ModelosRolModel';
+const model = 'ProductosIngresoProducto';
 const tableId = 'table-index';
 const preloadId = 'preloadId';
 const classEdit = 'edit-input';
@@ -39,7 +39,7 @@ function edit(id) {
 
 async function delete_(id) {
   method = 'GET';
-  url = URI_MODELOROL + LIST_CRUD[3] + '/' + id;
+  url = URI_PRODUCTOSINGRESOPRODUCTOS + LIST_CRUD[3] + '/' + id;
   data = "";
   if (confirm(textConfirm) == true) {
     resultFetch = getData(data, method, url);
@@ -58,12 +58,12 @@ async function delete_(id) {
 
 async function getDataId(id) {
   method = 'GET';
-  url = URI_MODELOROL + LIST_CRUD[1] + '/' + id;
+  url = URI_PRODUCTOSINGRESOPRODUCTOS + LIST_CRUD[1] + '/' + id;
   data = mainApp.getDataFormJson();
   resultFetch = getData(data, method, url);
   resultFetch.then(response => response.json())
     .then(data => {
-    
+      console.log("hola", data);
       mainApp.setDataFormJson(data[model]);
       mainApp.showModal();
       mainApp.hiddenPreload();
@@ -114,14 +114,12 @@ mainApp.getForm().addEventListener('submit', async function (event) {
   if (mainApp.setValidateForm()) {
     mainApp.showPreload();
     if (insertUpdate) {
-        
       method = 'POST';
-      url = URI_MODELOROL + LIST_CRUD[0];
+      url = URI_PRODUCTOSINGRESOPRODUCTOS + LIST_CRUD[0];
       data = mainApp.getDataFormJson();
       resultFetch = getData(data, method, url);
       resultFetch.then(response => response.json())
       .then(data => {
-     console.log("Respuesta del servidor:", data);
         mainApp.hiddenModal();
         reloadPage();
       })
@@ -131,15 +129,12 @@ mainApp.getForm().addEventListener('submit', async function (event) {
       })
       .finally();
     } else {
-  
       method = 'POST';
-      url = URI_MODELOROL + LIST_CRUD[2];
+      url = URI_PRODUCTOSINGRESOPRODUCTOS + LIST_CRUD[2];
       data = mainApp.getDataFormJson();
-   
       const resultFetch = getData(data, method, url);
       resultFetch.then(response => response.json())
       .then(data => {
-        console.log("Respuesta del servidor:", data); 
         mainApp.hiddenModal();
         reloadPage();
       })
