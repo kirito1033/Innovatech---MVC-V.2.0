@@ -232,25 +232,38 @@ function getIcon($ruta) {
     list-style: none;
     padding-left: 0; /* Opcional: elimina el sangrado izquierdo */
     }
+
   </style>
+  
 </head>
 <body>
   <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
 
   <div class="sidebar" id="sidebar">
-  <h2>Módulos disponibles</h2>
-  <ul>
-    <?php foreach ($modulos as $modulo): ?>
-        <li>
-        <a href="<?= base_url($modulo['Ruta']) ?>">
-            <i class="bi <?= getIcon($modulo['Ruta']) ?>"></i>
-            <?= ucfirst(trim(basename($modulo['Ruta']), '/')) ?: 'Home' ?>
-        </a>
-        </li>
-    <?php endforeach; ?>
-    </ul>
 
-    </div>
+    <?php
+    // Agrupar módulos por grupo
+   $grupos = [];
+    foreach ($modulos as $modulo) {
+        $grupo = $modulo['grupo'] ?? 'Sin grupo';
+        $grupos[$grupo][] = $modulo;
+    }
+    ?>
+
+    <?php foreach ($grupos as $grupo => $modulosGrupo): ?>
+        <h2 class="text-center mt-3"><?= htmlspecialchars($grupo) ?></h2>
+        <ul>
+          <?php foreach ($modulosGrupo as $modulo): ?>
+              <li>
+                <a href="<?= base_url($modulo['Ruta']) ?>">
+                    <i class="bi <?= getIcon($modulo['Ruta']) ?>"></i>
+                    <?= ucfirst(trim(basename($modulo['Ruta']), '/')) ?: 'Home' ?>
+                </a>
+              </li>
+          <?php endforeach; ?>
+        </ul>
+    <?php endforeach; ?>
+  </div>
 
   <div class="main-content">
     <!-- Aquí va el contenido principal -->
@@ -263,4 +276,5 @@ function getIcon($ruta) {
     }
   </script>
 </body>
+
 </html>

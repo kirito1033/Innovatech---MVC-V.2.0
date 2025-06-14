@@ -113,6 +113,7 @@ class ModelosRolController extends Controller
         $dataModel = [
             'Modelosid' => $modelosid,
             'Rolid' => $rolid,
+            'grupo' => $this->request->getVar('grupo'),
             "updated_at" => $today
         ];
 
@@ -157,6 +158,7 @@ public function delete($id = null)
         return [
             'Modelosid' => $this->request->getVar('Modelosid'),
             'Rolid' => $this->request->getVar('Rolid'),
+            'grupo' => $this->request->getVar('grupo'),
             'updated_at' => $this->request->getVar('updated_at') ?? date("Y-m-d H:i:s")
         ];
     }

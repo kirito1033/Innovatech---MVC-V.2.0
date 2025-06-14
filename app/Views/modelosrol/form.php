@@ -22,5 +22,21 @@
         </select>
         <label for="Rolid">Rol</label>
     </div>
+    <div class="form-floating mb-3">
+    <select class="form-select" id="grupo" name="grupo" required>
+        <option value="">Seleccione un Grupo</option>
+        <option value="Modelos">Modelos</option>
+        <option value="PQRS">PQRS</option>
+        <option value="Facturacion">Facturación</option>
+        <option value="envios">Envios</option>
+        <option value="Usuarios">Usuarios</option>
+        <option value="Productos">Productos</option>
+        <option value="Roles">Roles</option>
+        <option value="Filtros">Filtros</option>
+    
+    </select>
+    <label for="grupo">Grupo</label>
+</div>
+
 
 </form>
