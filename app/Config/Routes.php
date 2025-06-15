@@ -323,6 +323,27 @@ $routes->group('productosingresoproductos',function($routes) {
     $routes->post("add", "ProductosIngresoProductoController::create");
     $routes->post("update", "ProductosIngresoProductoController::update");
 });
+$routes->group('proveedor',function($routes) {
+    $routes->get("/", "ProveedorController::index");
+    $routes->get("show", "ProveedorController::index");
+    $routes->get("edit/(:num)", "ProveedorController::singleProveedor/$1");
+    $routes->get("delete/(:num)", "ProveedorController::delete/$1");
+    $routes->post("add", "ProveedorController::create");
+    $routes->post("update", "ProveedorController::update");
+});
+$routes->group('pedidoproveedor',function($routes) {
+    $routes->get("/", "PedidoProveedorController::index");
+    $routes->get("show", "PedidoProveedorController::index");
+    $routes->get("edit/(:num)", "PedidoProveedorController::singlePedidoProveedor/$1");
+    $routes->get("delete/(:num)", "PedidoProveedorController::delete/$1");
+    $routes->post("add", "PedidoProveedorController::create");
+    $routes->post("update", "PedidoProveedorController::update");
+});
+
+
+
+$routes->get('pedidoproveedor/listarFacturas', 'PedidoProveedorController::listarFacturas');
+
 
  $routes->get("ofertas/(:num)", "ProductoController::listarOfertas/$1");
  
@@ -341,3 +362,8 @@ $routes->group('admin', ['filter' => 'roleaccess'], function($routes){
 $routes->get('no-autorizado', 'DashboardController::error');
 
 $routes->get('carrito', 'ProductoController::carrito');
+
+$routes->get('pedidoproveedor/generarNumeroFactura', 'PedidoProveedorController::generarNumeroFactura');
+
+
+$routes->get('pedido/factura/(:num)', 'PedidoProveedorController::generarFacturaPDF/$1');

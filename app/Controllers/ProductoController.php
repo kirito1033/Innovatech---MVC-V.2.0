@@ -14,6 +14,7 @@ use App\Models\SistemaOperativoModel;
 use App\Models\ResolucionModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\PedidoProveedorModel;
 
 class ProductoController extends Controller
 {
@@ -49,49 +50,74 @@ class ProductoController extends Controller
     }
 
     // Método index
-    public function index()
-    {
-        $this->data["title"] = "PRODUCTOS";
+   public function index()
+{
+    $this->data["title"] = "PRODUCTOS";
 
-        // Obtener todos los productos
-        $productos = $this->productosModel->orderBy($this->primaryKey, "ASC")->findAll();
+    $productos = $this->productosModel->orderBy($this->primaryKey, "ASC")->findAll();
+    $pedidoProveedorModel = new PedidoProveedorModel(); // Instancia para insertar pedido
 
-        // Verificar y actualizar el estado de cada producto según su stock
-        foreach ($productos as &$producto) {
-            $id = $producto['id'];
-            $existencias = (int)$producto['existencias'];
-            $estadoActual = (int)$producto['id_estado'];
+    foreach ($productos as &$producto) {
+        $id = $producto['id'];
+        $existencias = (int)$producto['existencias'];
+        $estadoActual = (int)$producto['id_estado'];
 
-            // Si el estado no es reservado (4) ni devuelto (7), actualizar a En stock (1) o Agotado (2)
-            if ($estadoActual !== 4 && $estadoActual !== 7) {
-                $nuevoEstado = ($existencias === 0) ? 2 : 1;
+        // Si el estado no es reservado (4) ni devuelto (7), actualizar a En stock (1) o Agotado (2)
+        if ($estadoActual !== 4 && $estadoActual !== 7) {
+            $nuevoEstado = ($existencias === 0) ? 2 : 1;
 
-                if ($estadoActual !== $nuevoEstado) {
-                    $this->productosModel->update($id, ['id_estado' => $nuevoEstado]);
-                    $producto['id_estado'] = $nuevoEstado; // actualizar el array local también
+            if ($estadoActual !== $nuevoEstado) {
+                $this->productosModel->update($id, ['id_estado' => $nuevoEstado]);
+                $producto['id_estado'] = $nuevoEstado;
+            }
+
+            // Si está agotado, insertar pedido automático
+            if ($existencias === 0) {
+                // Verificar si ya existe un pedido pendiente para este producto
+                $pedidoExistente = $pedidoProveedorModel
+                    ->where('producto_id', $id)
+                    ->where('cantidad', 10)
+                    ->where('id_proveedor', 1)
+                    ->first();
+
+                if (!$pedidoExistente) {
+                    $db = \Config\Database::connect();
+                    $builder = $db->table('pedido_proveedor');
+                    $ultimo = $builder->selectMax('numero_factura')->get()->getRow();
+                    $numero_factura = ($ultimo && is_numeric($ultimo->numero_factura))
+                        ? ((int)$ultimo->numero_factura)
+                        : 1;
+
+                    $pedidoProveedorModel->insert([
+                        'numero_factura' => $numero_factura,
+                        'id_proveedor' => 1,
+                        'producto_id' => $id,
+                        'cantidad' => 10,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ]);
                 }
             }
         }
-
-        // Actualizar datos para enviar a la vista
-        $this->data["productos"] = $productos;
-        $this->data["almacenamiento_aleatorio"] = $this->almacenamientoAleatorioModel->findAll();
-        $this->data["almacenamiento"] = $this->almacenamientoModel->findAll();
-        $this->data["categorias"] = $this->categoriaModel->findAll();
-        $this->data["colores"] = $this->colorModel->findAll();
-        $this->data["estado_productos"] = $this->estadoProductoModel->findAll();
-        $this->data["garantias"] = $this->garantiaModel->findAll();
-        $this->data["marcas"] = $this->marcaModel->findAll();
-        $this->data["sistemas_operativos"] = $this->sistemaOperativoModel->findAll();
-        $this->data["resoluciones"] = $this->resolucionModel->findAll();
-
-        // Obtener módulos permitidos según el rol del usuario
-        $rolId = session()->get('rol_id');
-        $modelosModel = new \App\Models\ModelosModel();
-        $this->data['modulos'] = $modelosModel->getModelosByRol($rolId);
-
-        return view("producto/producto_view", $this->data);
     }
+
+    // Resto igual
+    $this->data["productos"] = $productos;
+    $this->data["almacenamiento_aleatorio"] = $this->almacenamientoAleatorioModel->findAll();
+    $this->data["almacenamiento"] = $this->almacenamientoModel->findAll();
+    $this->data["categorias"] = $this->categoriaModel->findAll();
+    $this->data["colores"] = $this->colorModel->findAll();
+    $this->data["estado_productos"] = $this->estadoProductoModel->findAll();
+    $this->data["garantias"] = $this->garantiaModel->findAll();
+    $this->data["marcas"] = $this->marcaModel->findAll();
+    $this->data["sistemas_operativos"] = $this->sistemaOperativoModel->findAll();
+    $this->data["resoluciones"] = $this->resolucionModel->findAll();
+
+    $rolId = session()->get('rol_id');
+    $modelosModel = new \App\Models\ModelosModel();
+    $this->data['modulos'] = $modelosModel->getModelosByRol($rolId);
+
+    return view("producto/producto_view", $this->data);
+}
 
 
     // Método create
