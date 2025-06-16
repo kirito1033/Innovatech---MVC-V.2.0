@@ -1,6 +1,6 @@
 const formId = 'my-form';
 const modalId = 'my-modal';
-const model = 'ciudadModel';
+const model = 'CiudadModel';
 const tableId = 'table-index';
 const preloadId = 'preloadId';
 const classEdit = 'edit-input';

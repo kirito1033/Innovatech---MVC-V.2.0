@@ -1,107 +1,148 @@
-<style>
-:root {
-    --encabezados-piedepagina: #020f1f;
-    --Color--texto: #ffffff;
-    --bright-turquoise: #04ebec;
-    --Color-enlaces-menu: #272727;
-    --atoll: #0a6069;
-    --blue-chill: #0f838c;
-    --gossamer: #048d94;
-    --tarawera: #0b4454;
-    --ebony-clay: #2c3443;
-    --gris-: #5a626b;
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restablecer Contraseña</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-body {
-    background-color: var(--encabezados-piedepagina);
-    color: var(--Color--texto);
-    font-family: Arial, sans-serif;
-}
+    :root {
+      --primary-bg: #1e2a44; /* Dark blue for background */
+      --container-bg: #2a3652; /* Container background */
+      --text-color: #e6edf3; /* Soft white text */
+      --accent-color: #00b4b8; /* Teal accent */
+      --button-primary: #00c4cc; /* Primary button */
+      --button-hover: #008a8e; /* Button hover */
+      --border-color: #6b7280; /* Border gray */
+    }
 
-.form {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5%;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-.mb-3 {
-    width: 250px; /* Ancho fijo para input */
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
-}
+    body {
+      font-family: 'Inter', sans-serif;
+        background-color: #0b4454;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
 
-.mb-3 label {
-    margin-bottom: 0.4rem;
-    font-weight: 600;
-    color: var(--bright-turquoise);
-}
+    .login-container {
+      background: #020f1f;
+      backdrop-filter: blur(8px);
+      color: var(--text-color);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+    }
 
-.mb-3 input[type="email"] {
-    width: 100%;
-    padding: 8px 10px;
-    border-radius: 6px;
-    border: none;
-    font-size: 0.9rem;
-    color: var(--tarawera);
-    outline: none;
-}
+    .login__logo img {
+      width: 180px;
+      margin-bottom: 1rem;
+    }
 
-.mb-3 input[type="email"]:focus {
-    box-shadow: 0 0 5px var(--bright-turquoise);
-}
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--accent-color);
+      margin-bottom: 1.5rem;
+    }
 
-.btn-ingresar {
-    width: 250px; /* Mismo ancho que input */
-    margin-top: 15px;
-    display: flex;
-    justify-content: center;
-}
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--accent-color);
+      text-align: left;
+      font-size: 0.95rem;
+    }
 
-form button, .btn-back {
-    background-color: var(--bright-turquoise);
-    color: var(--encabezados-piedepagina);
-    border: none;
-    padding: 10px 0;
-    font-weight: 600;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 250px; /* Mismo ancho */
-    margin-top: 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-}
+    .form-control {
+      background-color: var(--container-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem;
+      border-radius: 8px;
+      width: 100%;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
 
-form button:hover, .btn-back:hover {
-    background-color: var(--gossamer);
-}
-.btn-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-      font-size: 0.9rem;}
+    .form-control::placeholder {
+      color: #a0aec0;
+    }
 
-        .login__logo{
-            width: 250px;
-           
-        }
-</style>
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 6px rgba(0, 180, 184, 0.3);
+    }
 
+    .btn-ingresar {
+      background-color: var(--button-primary);
+      border: none;
+      width: 100%;
+      padding: 0.85rem;
+      margin-top: 1.25rem;
+      border-radius: 8px;
+      color: var(--text-color);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
 
-<form method="post" action="<?= base_url('send-reset-link') ?>" class="form">
-    <img src ="../assets/img/logo.png" style="color: white" class="login__logo">
-  <?= csrf_field() ?>
-  <div class="mb-3">
-    <label for="correo">Restablecer contraseña</label>
-    <input type="email" name="correo" id="correo" placeholder="Tu correo" required>
+    .btn-ingresar:hover {
+      background-color: var(--button-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      display: block;
+      background-color: var(--container-bg);
+      border: 1px solid var(--border-color);
+      padding: 0.85rem;
+      margin-top: 1rem;
+      border-radius: 8px;
+      color: var(--accent-color);
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--button-hover);
+      color: var(--text-color);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login__logo">
+      <img src="../assets/img/logo.png" alt="Logo">
+    </div>
+    <h1>Restablecer contraseña</h1>
+    
+    <form method="post" action="<?= base_url('send-reset-link') ?>">
+      <?= csrf_field() ?>
+      <div class="mb-3">
+        <label for="correo">Correo electrónico</label>
+        <input type="email" name="correo" id="correo" class="form-control" placeholder="Tu correo" required>
+      </div>
+      <button type="submit" class="btn-ingresar">Enviar enlace</button>
+    </form>
+
+    <a href="<?= base_url('usuario/login') ?>" class="btn-secondary">Volver a login</a>
   </div>
-  <button type="submit">Enviar enlace</button>
-</form>
-
-<div class="btn-container">
-  <a href="<?= base_url('usuario/login') ?>" class="btn-back">Volver a login</a>
-</div>
+</body>
+</html>

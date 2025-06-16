@@ -52,3 +52,11 @@ const URI_OFERTA = "/oferta/"
 const URI_USERAPI = "/userapi/"
 
 const URI_MODELOROL = "/modelorol/"
+
+const URI_MODELOROLPERMISOS = "/modelorolpermisos/"
+
+const URI_PRODUCTOSINGRESOPRODUCTOS = "/productosingresoproductos/"
+
+const URI_PROVEEDOR = "/proveedor/"
+
+const URI_PEDIDOPROVEEDOR = "/pedidoproveedor/"

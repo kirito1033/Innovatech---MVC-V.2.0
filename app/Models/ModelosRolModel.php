@@ -12,7 +12,7 @@ class ModelosRolModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['Modelosid', 'Rolid', 'updated_at'];
+    protected $allowedFields    = ['Modelosid', 'Rolid', 'grupo', 'updated_at'];
 
     protected bool $allowEmptyInserts = false;
 

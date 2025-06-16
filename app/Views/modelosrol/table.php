@@ -5,6 +5,7 @@
         <th scope="col" class="p-3">#</th>
         <th scope="col" class="p-3">Modelo</th>
         <th scope="col" class="p-3">Rol</th>
+        <th scope="col" class="p-3">grupo</th>
         <th scope="col" class="p-3">Actions</th>
       </tr>
     </thead>
@@ -37,7 +38,7 @@
                     echo htmlspecialchars($rolNombre, ENT_QUOTES, 'UTF-8'); 
                 ?>
             </td>
-                                
+             <td class="p-3"><?php echo $obj["grupo"]; ?></td>         
             <td class="p-3">
               <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                 <button type="button" onclick="show(<?php echo $obj['id']; ?>)" class="btn btn-success btn-sm"><i class="bi bi-eye"></i> SHOW</button>
