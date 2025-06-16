@@ -287,6 +287,12 @@ $routes->group('oferta',['filter' => 'roleaccess'], function($routes) {
 
 $routes->get('/logout', 'UsuarioController::logout');
 
+// Carrito
+$routes->get('/carrito', 'CarritoController::carrito');
+$routes->post('/carrito/agregar', 'CarritoController::agregarAlCarrito');
+$routes->post('carrito/eliminarDelCarrito/(:num)', 'CarritoController::eliminarDelCarrito/$1');
+
+
 $routes->group('userapi', ['filter' => 'roleaccess'],function($routes) {
     $routes->get("/", "ApiUserController::index");
     $routes->get("show", "ApiUserController::index");
@@ -323,5 +329,3 @@ $routes->group('admin', ['filter' => 'roleaccess'], function($routes){
     $routes->get('dasboard  ', 'DashboardController::index');
 });
 $routes->get('no-autorizado', 'DashboardController::error');
-
-$routes->get('carrito', 'ProductoController::carrito');

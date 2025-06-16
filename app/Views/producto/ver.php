@@ -196,41 +196,69 @@
                     <p><span class="color-verde">Llega gratis</span> entre el lunes y el jueves</p>
                     <a href="#">Más formas de entrega</a>
                 </div>
+
                 <div class="stock">
                     <p style="color: <?= $producto['existencias'] == 0 ? 'red' : 'inherit' ?>;">
                         Stock disponible (<?= esc($producto['existencias']) ?> unidades)
                     </p>
                 </div>
-                <div class="cantidad">
-                    <label for="cantidad">Cantidad:</label>
-                    <select class="form-select form-select-lg mb-3" id="cantidad" name="cantidad">
-                        <option selected disabled>Seleccionar</option>
-                        <?php for ($i = 1; $i <= min($producto['existencias'], 6); $i++): ?>
-                            <option value="<?= $i ?>"><?= $i ?> unidad<?= $i > 1 ? 'es' : '' ?></option>
-                        <?php endfor; ?>
-                    </select>
-                </div>
-               <div class="comprar">
-                <button type="button"
-                    class="btn btn-primary comprar-btn"
-                    <?= $producto['existencias'] == 0 ? 'disabled' : '' ?>
-                    <?= $producto['existencias'] > 0 ? 'data-bs-toggle="modal" data-bs-target=\"#modalEnDesarrollo\"' : '' ?>>
-                    Comprar ahora
-                </button>
-            </div>
 
-            <div class="agregar-carrito">
-                <button type="button"
-                    class="btn btn-info carrito-btn"
-                    <?= $producto['existencias'] == 0 ? 'disabled' : '' ?>
-                    <?= $producto['existencias'] > 0 ? 'data-bs-toggle="modal" data-bs-target=\"#modalEnDesarrollo\"' : '' ?>>
-                    Agregar al carrito
-                </button>
-            </div>
-                <div class="devoluciones">
+                <!-- Formulario para agregar al carrito -->
+                <?php if ($producto['existencias'] > 0): ?>
+                    <form action="<?= base_url('/carrito/agregar') ?>" method="post">
+                        <input type="hidden" name="producto_id" value="<?= $producto['id'] ?>">
+
+                        <div class="cantidad">
+                            <label for="cantidad">Cantidad:</label>
+                            <select class="form-select form-select-lg mb-3" id="cantidad" name="cantidad" required>
+                                <option value="" selected disabled>Seleccionar</option>
+                                <?php for ($i = 1; $i <= min($producto['existencias'], 6); $i++): ?>
+                                    <option value="<?= $i ?>"><?= $i ?> unidad<?= $i > 1 ? 'es' : '' ?></option>
+                                <?php endfor; ?>
+                            </select>
+                        </div>
+
+                        <div class="comprar">
+                            <button type="submit"
+                                class="btn btn-primary comprar-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalEnDesarrollo">
+                                Comprar ahora
+                            </button>
+                        </div>
+
+                        <div class="agregar-carrito mt-2">
+                            <button type="submit" class="btn btn-info carrito-btn w-100">
+                                <i class="bi bi-cart-plus"></i> Agregar al carrito
+                            </button>
+                        </div>
+                    </form>
+                <?php else: ?>
+                    <div class="cantidad">
+                        <label for="cantidad">Cantidad:</label>
+                        <select class="form-select form-select-lg mb-3" id="cantidad" name="cantidad" disabled>
+                            <option value="">Sin stock</option>
+                        </select>
+                    </div>
+
+                    <div class="comprar">
+                        <button type="submit" class="btn btn-secondary comprar-btn" disabled>
+                            Comprar ahora
+                        </button>
+                    </div>
+
+                    <div class="agregar-carrito mt-2">
+                        <button type="submit" class="btn btn-secondary carrito-btn w-100" disabled>
+                            Agregar al carrito
+                        </button>
+                    </div>
+                <?php endif; ?>
+
+                <div class="devoluciones mt-3">
                     <i class="bi bi-skip-backward-circle"></i>
                     <a href="/politicas-devolucion">Devolución gratis. Tienes 30 días desde que lo recibes.</a>
                 </div>
+
                 <div class="protegida">
                     <i class="bi bi-shield-check"></i>
                     <a href="/politicas-devolucion">Recibe el producto que esperabas o te devolvemos tu dinero.</a>
@@ -356,21 +384,21 @@
 <?php endif; ?>
 </main>
 <div class="modal fade" id="modalEnDesarrollo" tabindex="-1" aria-labelledby="modalEnDesarrolloLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header bg-warning text-dark">
-        <h5 class="modal-title" id="modalEnDesarrolloLabel">En desarrollo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body text-center">
-      <i class="bi bi-tools" style="font-size: 2rem; color: black;"></i>
-      <p class="mt-3" style="color: black !important;">Esta sección está en desarrollo. ¡Muy pronto estará disponible!</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="modalEnDesarrolloLabel">En desarrollo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body text-center">
+                <i class="bi bi-tools" style="font-size: 2rem; color: black;"></i>
+                <p class="mt-3" style="color: black !important;">Esta sección está en desarrollo. ¡Muy pronto estará disponible!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <!-- Bootstrap JS (opcional, solo si necesitas funcionalidades como dropdowns) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
