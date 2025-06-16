@@ -80,56 +80,89 @@
   </body>
 
 <script>
+  const URI_PEDIDOPROVEEDOR = '<?= base_url('pedidoproveedor') ?>';
+</script>
+<script>
 document.addEventListener("DOMContentLoaded", () => {
   const selectFactura = document.getElementById('facturaSelect');
   const inputFactura = document.getElementById('inputFacturaSeleccionada');
   const btnUsar = document.getElementById('btnUsarFactura');
+  const inputFacturaMain = document.getElementById('numero_factura');
 
-  // Cuando el modal se abre, cargar las facturas
   const modalFacturas = document.getElementById('modalFacturas');
-  modalFacturas.addEventListener('show.bs.modal', () => {
-    fetch(URI_PEDIDOPROVEEDOR + '/listarFacturas', {
-      headers: {
-        "X-Requested-With": "XMLHttpRequest"
-      }
-    })
-    .then(res => res.json())
-    .then(data => {
-      selectFactura.innerHTML = '<option value="">Seleccione una factura</option>';
-      data.forEach(factura => {
-        const opt = document.createElement('option');
-        opt.value = factura.numero_factura;
-        opt.textContent = `Factura #${factura.numero_factura}`;
-        selectFactura.appendChild(opt);
+
+  // Detectar cuando se muestra el modal usando Bootstrap Modal instance
+  const observer = new MutationObserver(() => {
+    if (modalFacturas.classList.contains('show')) {
+      // Llamada al backend cuando el modal está visible
+      fetch('<?= base_url('pedidoproveedor/listarFacturas') ?>', {
+        headers: {
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        selectFactura.innerHTML = '<option value="">Seleccione una factura</option>';
+        data.forEach(factura => {
+          const opt = document.createElement('option');
+          opt.value = factura.numero_factura;
+          opt.textContent = `Factura #${factura.numero_factura}`;
+          selectFactura.appendChild(opt);
+        });
+      })
+      .catch(error => {
+        selectFactura.innerHTML = '<option value="">Error al cargar</option>';
+        console.error(error);
       });
-    })
-    .catch(error => {
-      selectFactura.innerHTML = '<option value="">Error al cargar</option>';
-      console.error(error);
-    });
+    }
   });
 
-  // Al seleccionar una factura, mostrarla en el input
+  observer.observe(modalFacturas, { attributes: true, attributeFilter: ['class'] });
+
+  // Mostrar valor seleccionado en input
   selectFactura.addEventListener('change', () => {
     inputFactura.value = selectFactura.value;
   });
 
-  // Al hacer clic en "Usar Factura"
+  // Usar la factura seleccionada y cerrar el modal
   btnUsar.addEventListener('click', () => {
     if (!selectFactura.value) {
       alert('Seleccione un número de factura');
       return;
     }
 
-    // Aquí puedes hacer lo que quieras con el número seleccionado
-    // Por ejemplo, pasarlo al input del formulario principal:
-    document.getElementById('numero_factura').value = selectFactura.value;
+    inputFacturaMain.value = selectFactura.value;
 
-    // Cerrar modal
     const modalInstance = bootstrap.Modal.getInstance(modalFacturas);
     modalInstance.hide();
+
+    // Enviar correo automáticamente después de cerrar modal
+    enviarFacturaPorCorreo(selectFactura.value);
   });
+
+  function enviarFacturaPorCorreo(numeroFactura) {
+    fetch(`<?= base_url('pedidoproveedor/enviarFacturaCorreo') ?>/${numeroFactura}`, {
+      method: 'GET',
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'success') {
+        alert("Factura enviada correctamente al proveedor.");
+      } else {
+        alert("Error al enviar la factura: " + data.message);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error al enviar la factura.");
+    });
+  }
 });
 </script>
+
+
 
 </html>

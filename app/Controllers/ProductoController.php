@@ -80,7 +80,6 @@ class ProductoController extends Controller
                     ->where('id_proveedor', 1)
                     ->first();
 
-                if (!$pedidoExistente) {
                     $db = \Config\Database::connect();
                     $builder = $db->table('pedido_proveedor');
                     $ultimo = $builder->selectMax('numero_factura')->get()->getRow();
@@ -95,7 +94,7 @@ class ProductoController extends Controller
                         'cantidad' => 10,
                         'updated_at' => date("Y-m-d H:i:s")
                     ]);
-                }
+                
             }
         }
     }

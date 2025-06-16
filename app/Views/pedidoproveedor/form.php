@@ -28,4 +28,5 @@
             <input type="number" class="form-control" id="cantidad" name="cantidad" placeholder="Cantidad">
             <label for="cantidad">Cantidad</label>
         </div>
+        
 </form>

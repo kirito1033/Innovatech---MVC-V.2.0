@@ -260,6 +260,7 @@ $routes->group('ingresoproducto',['filter' => 'roleaccess'], function($routes){
 });
 
 $routes->post('usuario/login', 'UsuarioController::login');
+
 $routes->get('usuario/login', function() {
     return view('usuario/login');
 });
@@ -367,3 +368,5 @@ $routes->get('pedidoproveedor/generarNumeroFactura', 'PedidoProveedorController:
 
 
 $routes->get('pedido/factura/(:num)', 'PedidoProveedorController::generarFacturaPDF/$1');
+$routes->get('pedidoproveedor/enviarFacturaCorreo/(:num)', 'PedidoProveedorController::enviarFacturaCorreo/$1');
+

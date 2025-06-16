@@ -7,6 +7,9 @@ use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use CodeIgniter\Email\Email;
+
+
 class PedidoProveedorController extends Controller
 {
     private $primarykey;
@@ -215,4 +218,71 @@ class PedidoProveedorController extends Controller
     $dompdf->stream("factura_{$numero_factura}.pdf", ["Attachment" => false]);
     return;
 }
+
+public function enviarFacturaCorreo($numero_factura)
+{
+    $db = \Config\Database::connect();
+
+    $query = $db->table('pedido_proveedor pp')
+        ->select('pr.email, pr.nombre')
+        ->join('proveedores pr', 'pr.id = pp.id_proveedor')
+        ->where('pp.numero_factura', $numero_factura)
+        ->limit(1)
+        ->get();
+
+    $proveedor = $query->getRowArray();
+
+    if (!$proveedor || empty($proveedor['email'])) {
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Correo no encontrado']);
+    }
+
+    $email = \Config\Services::email();
+
+    // ✅ Línea obligatoria para definir el remitente
+    $email->setFrom('so1959373@gmail.com', 'Innovatech');
+
+    // Destinatario (el proveedor)
+    $email->setTo($proveedor['email']);
+    $email->setSubject('Factura de pedido #' . $numero_factura);
+
+    $enlaceFactura = base_url("pedido/factura/{$numero_factura}");
+    $mensaje = '
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <title>Orden de compra</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+            <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 30px;">
+                <h2 style="color: #0a6069;">Orden de compra</h2>
+                <p>Hola <strong>' . htmlspecialchars($proveedor['nombre']) . '</strong>,</p>
+                <p>Adjuntamos el enlace para ver o descargar la Orden de compra <strong>#' . htmlspecialchars($numero_factura) . '</strong>:</p>
+                <p style="text-align: center; margin: 30px 0;">
+                    <a href="' . $enlaceFactura . '" target="_blank" style="display: inline-block; padding: 12px 25px; background-color: #048d94; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                        Ver factura
+                    </a>
+                </p>
+                <p>Gracias por trabajar con nosotros.</p>
+                <hr style="border: none; border-top: 1px solid #ddd; margin-top: 40px;">
+                <p style="font-size: 12px; color: #aaa;">Innovatech - Todos los derechos reservados</p>
+            </div>
+        </body>
+        </html>
+        ';
+
+    $email->setMessage($mensaje);
+    $email->setMailType('html');
+
+    if ($email->send()) {
+        return $this->response->setJSON(['status' => 'success']);
+    } else {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => $email->printDebugger(['headers'])
+        ]);
+    }
+}
+
+
 }
