@@ -370,3 +370,4 @@ $routes->get('pedidoproveedor/generarNumeroFactura', 'PedidoProveedorController:
 $routes->get('pedido/factura/(:num)', 'PedidoProveedorController::generarFacturaPDF/$1');
 $routes->get('pedidoproveedor/enviarFacturaCorreo/(:num)', 'PedidoProveedorController::enviarFacturaCorreo/$1');
 
+$routes->get('facturas', 'Facturas::index');

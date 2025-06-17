@@ -2,27 +2,61 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
-
-class FacturaModel extends Model
+class FacturaModel
 {
-   
-    protected $table            = 'factura';
-    protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = [
-        'fecha', 'valortl', 'metodopago', 'Estado_facturaId_Estado_factura', 'Pedidoid', 'updated_at'
-    ];
+    private $client_id = '9dec2e75-714c-4902-82d7-dc1fa93474c7';
+    private $client_secret = 'aehxmjZ0XavzxrHsAkeJkn9xJua1VZiLJDkvgjI3';
+
+    private function getToken()
+    {
+        $client = \Config\Services::curlrequest();
+
+        try {
+            $response = $client->post('https://api-sandbox.factus.com.co/oauth/token', [
+                'form_params' => [
+                    'grant_type'    => 'password', // CAMBIA ESTO A 'password' según credenciales
+                    'username'      => 'sandbox@factus.com.co',
+                    'password'      => 'sandbox2024%',
+                    'client_id'     => '9dec2e75-714c-4902-82d7-dc1fa93474c7',
+                    'client_secret' => 'aehxmjZ0XavzxrHsAkeJkn9xJua1VZiLJDkvgjI3',
+                ],
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+            ]);
+
+            $body = json_decode($response->getBody(), true);
+            return $body['access_token'] ?? null;
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error al obtener token: ' . $e->getMessage());
+            return null;
+        }
+    }
 
 
-    protected bool $allowEmptyInserts = false;
+    public function getFacturas()
+    {
+        $token = $this->getToken();
 
+        if (!$token) {
+            return ['error' => 'Token no disponible'];
+        }
 
-    protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+        $client = \Config\Services::curlrequest();
+
+        try {
+            $response = $client->get('https://api-sandbox.factus.com.co/v1/bills', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Accept'        => 'application/json',
+                ],
+            ]);
+
+            return json_decode($response->getBody(), true);
+        } catch (\Exception $e) {
+            return ['error' => 'Error al consumir el API: ' . $e->getMessage()];
+        }
+    }
 
 }

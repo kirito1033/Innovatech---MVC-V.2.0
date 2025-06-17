@@ -24,7 +24,6 @@
     <?php require_once("../app/Views/assets/js/js.php") ?>
     <?php require_once("../app/Views/assets/js/dataTable.php") ?>
 
-    <script src="../controllers/departamento/departamento.js"></script>
   </body>
 
 </html>
