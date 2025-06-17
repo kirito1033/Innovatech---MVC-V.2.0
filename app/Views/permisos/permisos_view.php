@@ -46,7 +46,8 @@
     <?php require_once("../app/Views/assets/js/js.php") ?>
     <?php require_once("../app/Views/assets/js/dataTable.php") ?>
 
-    <script src="../controllers/permisos/permisos.js"></script>
+    <script src="<?=base_url("controllers/permisos/permisos.js") ?>"></script>
+
   </body>
 
 </html>

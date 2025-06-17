@@ -57,7 +57,8 @@ $puedeCrear = isset($permisos_usuario[4]);
     <?php require_once("../app/Views/assets/js/js.php") ?>
     <?php require_once("../app/Views/assets/js/dataTable.php") ?>
 
-    <script src="../controllers/modelosrolpermisos/modelosrolpermisos.js"></script>
+    <script src="<?=base_url("controllers/modelosrolpermisos/modelosrolpermisos.js") ?>"></script>
+
   </body>
 
 </html>

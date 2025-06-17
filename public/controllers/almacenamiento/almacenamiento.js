@@ -120,6 +120,7 @@ mainApp.getForm().addEventListener('submit', async function (event) {
       resultFetch = getData(data, method, url);
       resultFetch.then(response => response.json())
       .then(data => {
+
         mainApp.hiddenModal();
         reloadPage();
       })

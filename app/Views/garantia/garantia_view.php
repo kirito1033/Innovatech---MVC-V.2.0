@@ -46,7 +46,8 @@
     <?php require_once("../app/Views/assets/js/js.php") ?>
     <?php require_once("../app/Views/assets/js/dataTable.php") ?>
 
-    <script src="../controllers/garantia/garantia.js"></script>
+    <script src="<?=base_url("controllers/garantia/garantia.js") ?>"></script>
+
   </body>
 
 </html>

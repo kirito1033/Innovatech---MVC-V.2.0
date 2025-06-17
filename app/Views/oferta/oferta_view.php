@@ -69,7 +69,8 @@
     <?php require_once("../app/Views/assets/js/js.php") ?>
     <?php require_once("../app/Views/assets/js/dataTable.php") ?>
 
-    <script src="../controllers/oferta/oferta.js"></script>
+    <script src="<?=base_url("controllers/oferta/oferta.js") ?>"></script>
+
     
     <script>
 const UPLOAD_URL = "<?= base_url('ofertas/uploadImage') ?>";
