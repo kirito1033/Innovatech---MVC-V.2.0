@@ -45,8 +45,8 @@
 
     <?php require_once("../app/Views/assets/js/js.php") ?>
     <?php require_once("../app/Views/assets/js/dataTable.php") ?>
-
-    <script src="../controllers/categoria/categoria.js"></script>
+    
+    <script src="<?=base_url("controllers/categoria/categoria.js") ?>"></script>
   </body>
 
 </html>

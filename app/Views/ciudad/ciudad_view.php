@@ -46,7 +46,7 @@
     <?php require_once("../app/Views/assets/js/js.php") ?>
     <?php require_once("../app/Views/assets/js/dataTable.php") ?>
 
-    <script src="../controllers/ciudad/ciudad.js"></script>
+     <script src="<?=base_url("controllers/ciudad/ciudad.js") ?>"></script>
   </body>
 
 </html>
