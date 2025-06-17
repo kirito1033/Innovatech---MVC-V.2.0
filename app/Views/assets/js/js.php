@@ -5,5 +5,5 @@
     ></script>
 
 <!-- JS -->
-<script src="../system/constant.js"></script>
-<script src="../system/main.js"></script>
+ <script src="<?=base_url("system/constant.js") ?>"></script>
+ <script src="<?=base_url("system/main.js") ?>"></script>

@@ -46,7 +46,7 @@
     <?php require_once("../app/Views/assets/js/js.php") ?>
     <?php require_once("../app/Views/assets/js/dataTable.php") ?>
 
-    <script src="../controllers/estadopqrs/estadopqrs.js"></script>
+    <script src="<?=base_url("controllers/estadopqrs/estadopqrs.js") ?>"></script>
   </body>
 
 </html>

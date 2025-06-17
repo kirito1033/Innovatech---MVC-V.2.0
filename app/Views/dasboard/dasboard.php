@@ -24,6 +24,7 @@
     <?php require_once("../app/Views/assets/js/js.php") ?>
     <?php require_once("../app/Views/assets/js/dataTable.php") ?>
 
+
   </body>
 
 </html>

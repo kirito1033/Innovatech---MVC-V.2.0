@@ -33,7 +33,7 @@
         </div>
 
             <div class="carrito-compras">
-              <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo" class="buscar"><i class="bi bi-cart"></i></a>
+              <a href="<?= base_url("/carrito")?>"><i class="bi bi-cart"></i></a>
             </div>
             <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
               aria-labelledby="staticBackdropLabel">

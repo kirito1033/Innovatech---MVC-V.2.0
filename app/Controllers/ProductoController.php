@@ -176,77 +176,77 @@ class ProductoController extends Controller
 
     // Método update
     public function update()
-{
-    if ($this->request->isAJAX()) {
-        $today = date("Y-m-d H:i:s");
-        $id = $this->request->getVar($this->primaryKey);
+    {
+        if ($this->request->isAJAX()) {
+            $today = date("Y-m-d H:i:s");
+            $id = $this->request->getVar($this->primaryKey);
 
-        // Obtener el producto actual de la base de datos
-        $productoActual = $this->productosModel->find($id);
+            // Obtener el producto actual de la base de datos
+            $productoActual = $this->productosModel->find($id);
 
-        if (!$productoActual) {
-            $data["message"] = "Producto no encontrado";
-            $data["response"] = ResponseInterface::HTTP_NOT_FOUND;
-            $data["data"] = "";
-            echo json_encode($data);
-            return;
-        }
+            if (!$productoActual) {
+                $data["message"] = "Producto no encontrado";
+                $data["response"] = ResponseInterface::HTTP_NOT_FOUND;
+                $data["data"] = "";
+                echo json_encode($data);
+                return;
+            }
 
-        $nuevoPrecio = floatval($this->request->getVar("precio"));
-        $precioOriginalActual = floatval($productoActual['precio_original']);
+            $nuevoPrecio = floatval($this->request->getVar("precio"));
+            $precioOriginalActual = floatval($productoActual['precio_original']);
 
-        // Evaluar si se actualiza el precio original
-        if ($nuevoPrecio > $precioOriginalActual) {
-            $precioOriginalActual = $nuevoPrecio;
-        }
-        $existencias = intval($this->request->getVar("existencias"));
-        $estadoActual = intval($this->request->getVar("id_estado"));
+            // Evaluar si se actualiza el precio original
+            if ($nuevoPrecio > $precioOriginalActual) {
+                $precioOriginalActual = $nuevoPrecio;
+            }
+            $existencias = intval($this->request->getVar("existencias"));
+            $estadoActual = intval($this->request->getVar("id_estado"));
 
-        if ($estadoActual === 4 || $estadoActual === 7) {
-            $idEstado = $estadoActual;
+            if ($estadoActual === 4 || $estadoActual === 7) {
+                $idEstado = $estadoActual;
+            } else {
+                $idEstado = ($existencias == 0) ? 2 : 1; // 2 = Agotado, 1 = En stock
+            }
+            
+        $dataModel = [
+            "id" => $this->request->getVar("id"),
+            "nom" => $this->request->getVar("nom"),
+            "descripcion" => $this->request->getVar("descripcion"),
+            "existencias" => $existencias,
+            "precio" => $nuevoPrecio,
+            "precio_original" => $precioOriginalActual,
+            "id_estado" => $idEstado,
+            "caracteristicas" => $this->request->getVar("caracteristicas"),
+            "tam" => $this->request->getVar("tam"),
+            "tampantalla" => $this->request->getVar("tampantalla"),
+            "id_marca" => $this->request->getVar("id_marca"),
+            "id_color" => $this->request->getVar("id_color"),
+            "id_categoria" => $this->request->getVar("id_categoria"),
+            "id_garantia" => $this->request->getVar("id_garantia"),
+            "id_almacenamiento" => $this->request->getVar("id_almacenamiento"),
+            "id_ram" => $this->request->getVar("id_ram"),
+            "id_sistema_operativo" => $this->request->getVar("id_sistema_operativo"),
+            "id_resolucion" => $this->request->getVar("id_resolucion"),
+            "updated_at" => $today
+        ];
+
+            if ($this->productosModel->update($id, $dataModel)) {
+                $data["message"] = "success";
+                $data["response"] = ResponseInterface::HTTP_OK;
+                $data["data"] = $dataModel;
+                $data["csrf"] = csrf_hash();
+            } else {
+                $data["message"] = "Error al actualizar producto";
+                $data["response"] = ResponseInterface::HTTP_NO_CONTENT;
+                $data["data"] = "";
+            }
         } else {
-            $idEstado = ($existencias == 0) ? 2 : 1; // 2 = Agotado, 1 = En stock
-        }
-        
-       $dataModel = [
-        "id" => $this->request->getVar("id"),
-        "nom" => $this->request->getVar("nom"),
-        "descripcion" => $this->request->getVar("descripcion"),
-        "existencias" => $existencias,
-        "precio" => $nuevoPrecio,
-        "precio_original" => $precioOriginalActual,
-        "id_estado" => $idEstado,
-        "caracteristicas" => $this->request->getVar("caracteristicas"),
-        "tam" => $this->request->getVar("tam"),
-        "tampantalla" => $this->request->getVar("tampantalla"),
-        "id_marca" => $this->request->getVar("id_marca"),
-        "id_color" => $this->request->getVar("id_color"),
-        "id_categoria" => $this->request->getVar("id_categoria"),
-        "id_garantia" => $this->request->getVar("id_garantia"),
-        "id_almacenamiento" => $this->request->getVar("id_almacenamiento"),
-        "id_ram" => $this->request->getVar("id_ram"),
-        "id_sistema_operativo" => $this->request->getVar("id_sistema_operativo"),
-        "id_resolucion" => $this->request->getVar("id_resolucion"),
-        "updated_at" => $today
-    ];
-
-        if ($this->productosModel->update($id, $dataModel)) {
-            $data["message"] = "success";
-            $data["response"] = ResponseInterface::HTTP_OK;
-            $data["data"] = $dataModel;
-            $data["csrf"] = csrf_hash();
-        } else {
-            $data["message"] = "Error al actualizar producto";
-            $data["response"] = ResponseInterface::HTTP_NO_CONTENT;
+            $data["message"] = "Error Ajax";
+            $data["response"] = ResponseInterface::HTTP_CONFLICT;
             $data["data"] = "";
         }
-    } else {
-        $data["message"] = "Error Ajax";
-        $data["response"] = ResponseInterface::HTTP_CONFLICT;
-        $data["data"] = "";
+        echo json_encode($data);
     }
-    echo json_encode($data);
-}
 
 
 
@@ -270,7 +270,7 @@ class ProductoController extends Controller
             $data["response"] = ResponseInterface::HTTP_CONFLICT;
             $data["data"] = "Error";
         }
-     
+    
         echo json_encode($data);
     }
 
@@ -301,107 +301,91 @@ class ProductoController extends Controller
         return $data;
     }
     
-   public function updateImage()
-{
-    if ($this->request->isAJAX()) {
+    public function updateImage()
+    {
+        if ($this->request->isAJAX()) {
 
-        $id = $this->request->getVar('id');
+            $id = $this->request->getVar('id');
 
-        // Verificar si el producto existe
-        $producto = $this->productosModel->find($id);
-        if (!$producto) {
-            return $this->response->setJSON([
-                'message' => 'Producto no encontrado',
-                'response' => ResponseInterface::HTTP_NOT_FOUND
-            ]);
-        }
-
-        // Obtener imagen
-        $img = $this->request->getFile('imagen');
-
-        if ($img && $img->isValid() && !$img->hasMoved()) {
-            $newName = $img->getRandomName();
-
-            // Ruta carpeta donde están las imágenes
-            $uploadPath = ROOTPATH . 'public/uploads/';
-
-            // Borrar imagen anterior si existe
-            if (!empty($producto['imagen'])) {
-                $oldImagePath = $uploadPath . $producto['imagen'];
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
-                }
+            // Verificar si el producto existe
+            $producto = $this->productosModel->find($id);
+            if (!$producto) {
+                return $this->response->setJSON([
+                    'message' => 'Producto no encontrado',
+                    'response' => ResponseInterface::HTTP_NOT_FOUND
+                ]);
             }
 
-            // Mover nueva imagen
-            $img->move($uploadPath, $newName);
+            // Obtener imagen
+            $img = $this->request->getFile('imagen');
 
-            // Actualizar en la base de datos
-            $this->productosModel->update($id, ['imagen' => $newName]);
+            if ($img && $img->isValid() && !$img->hasMoved()) {
+                $newName = $img->getRandomName();
 
-            return $this->response->setJSON([
-                'message' => 'success',
-                'response' => ResponseInterface::HTTP_OK,
-                'csrf' => csrf_hash(),
-                'imagen' => $newName
-            ]);
-        } else {
-            return $this->response->setJSON([
-                'message' => 'Error al subir imagen',
-                'response' => ResponseInterface::HTTP_NO_CONTENT
-            ]);
+                // Ruta carpeta donde están las imágenes
+                $uploadPath = ROOTPATH . 'public/uploads/';
+
+                // Borrar imagen anterior si existe
+                if (!empty($producto['imagen'])) {
+                    $oldImagePath = $uploadPath . $producto['imagen'];
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+
+                // Mover nueva imagen
+                $img->move($uploadPath, $newName);
+
+                // Actualizar en la base de datos
+                $this->productosModel->update($id, ['imagen' => $newName]);
+
+                return $this->response->setJSON([
+                    'message' => 'success',
+                    'response' => ResponseInterface::HTTP_OK,
+                    'csrf' => csrf_hash(),
+                    'imagen' => $newName
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'message' => 'Error al subir imagen',
+                    'response' => ResponseInterface::HTTP_NO_CONTENT
+                ]);
+            }
         }
+
+        return $this->response->setJSON([
+            'message' => 'Petición inválida',
+            'response' => ResponseInterface::HTTP_BAD_REQUEST
+        ]);
     }
 
-    return $this->response->setJSON([
-        'message' => 'Petición inválida',
-        'response' => ResponseInterface::HTTP_BAD_REQUEST
-    ]);
-}
 
+    public function ver($id = null)
+    {
+        $productoModel = new ProductosModel();
+        $categoriaModel = new CategoriaModel();
+        $session = session();
+        
+        $data['usuario'] = $session->get('usuario'); // O $data['session'] = $session->get();
+        $data['categorias'] = $categoriaModel->findAll();
+        $data['producto'] = $productoModel->getProductoConRelaciones($id);
 
-public function ver($id = null)
-{
-    $productoModel = new ProductosModel();
-    $categoriaModel = new CategoriaModel();
-    $session = session();
-    
-    $data['usuario'] = $session->get('usuario'); // O $data['session'] = $session->get();
-    $data['categorias'] = $categoriaModel->findAll();
-    $data['producto'] = $productoModel->getProductoConRelaciones($id);
+        if (!$data['producto']) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Producto con ID $id no encontrado");
+        }
 
-    if (!$data['producto']) {
-        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Producto con ID $id no encontrado");
+        return view('producto/ver', $data);
     }
 
- 
-    return view('producto/ver', $data);
-}
-public function preguntar($id)
-{
-    $pregunta = $this->request->getPost('pregunta');
-    return redirect()->to("/producto/ver/$id")->with('message', 'Pregunta enviada');
-}
-public function carrito(){
+    // Mensaje
+    public function preguntar($id)
+    {
+        $pregunta = $this->request->getPost('pregunta');
+        return redirect()->to("/producto/ver/$id")->with('message', 'Pregunta enviada');
+    }
 
-    $productoModel = new ProductosModel();
-    $categoriaModel = new CategoriaModel();
-    $marcaModel = new MarcaModel();
-    $colorModel = new ColorModel();
-    $ramModel = new AlmacenamientoAleatorioModel();
-    $almacenamientoModel = new AlmacenamientoModel();
-    $estadoModel = new EstadoProductoModel();
-    $garantiaModel = new GarantiaModel();
-    $sistemaOperativoModel = new SistemaOperativoModel();
-    $resolucionModel = new ResolucionModel();
-    $data['productos'] = $productoModel->findAll();
-    $data['categorias'] = $categoriaModel->findAll();
-    $data['marcas'] = $categoriaModel->findAll();
-    $data['colores'] = $categoriaModel->findAll();
-    return view('producto/carrito', $data);
-
-}
-public function listarProductos($id = null)
+    // ----------- Listar Productos ---------------- //
+    public function listarProductos($id = null)
 {
     $productoModel = new ProductosModel();
     $categoriaModel = new CategoriaModel();
@@ -695,8 +679,7 @@ public function listarOfertas($id = 6)
     }
 
     // Sacar valores únicos para 'tam' y 'tampantalla' desde productos (atributos normales)
-    
-                           
+
 
     // Cargar listas para filtros
     $data['marcas'] = !empty($marcasIds) ? $marcaModel->whereIn('id', $marcasIds)->findAll() : [];
@@ -717,5 +700,3 @@ public function listarOfertas($id = 6)
     return view('oferta/oferta_home', $data);
 }
 }
-
-   

@@ -290,6 +290,12 @@ $routes->group('oferta',['filter' => 'roleaccess'], function($routes) {
 
 $routes->get('/logout', 'UsuarioController::logout');
 
+// Carrito
+$routes->get('/carrito', 'CarritoController::carrito');
+$routes->post('/carrito/agregar', 'CarritoController::agregarAlCarrito');
+$routes->post('carrito/eliminarDelCarrito/(:num)', 'CarritoController::eliminarDelCarrito/$1');
+
+
 $routes->group('userapi', ['filter' => 'roleaccess'],function($routes) {
     $routes->get("/", "ApiUserController::index");
     $routes->get("show", "ApiUserController::index");
@@ -346,9 +352,9 @@ $routes->group('pedidoproveedor',function($routes) {
 $routes->get('pedidoproveedor/listarFacturas', 'PedidoProveedorController::listarFacturas');
 
 
- $routes->get("ofertas/(:num)", "ProductoController::listarOfertas/$1");
- 
- $routes->get('olvide-password', 'AuthController::showForgotForm');
+$routes->get("ofertas/(:num)", "ProductoController::listarOfertas/$1");
+
+$routes->get('olvide-password', 'AuthController::showForgotForm');
 $routes->post('send-reset-link', 'AuthController::sendResetLink');
 $routes->get('reset-password/(:any)', 'AuthController::showResetForm/$1');
 $routes->post('update-password', 'AuthController::updatePassword');
@@ -360,6 +366,9 @@ $routes->get('condiciones', 'LoginTerminos::condiciones');
 $routes->group('admin', ['filter' => 'roleaccess'], function($routes){
     $routes->get('dasboard','DashboardController::index');
 });
+
+$routes->get('no-autorizado', 'DashboardController::error');
+
 $routes->get('no-autorizado', 'DashboardController::error');
 
 $routes->get('carrito', 'ProductoController::carrito');
@@ -371,3 +380,4 @@ $routes->get('pedido/factura/(:num)', 'PedidoProveedorController::generarFactura
 $routes->get('pedidoproveedor/enviarFacturaCorreo/(:num)', 'PedidoProveedorController::enviarFacturaCorreo/$1');
 
 $routes->get('facturas', 'Facturas::index');
+

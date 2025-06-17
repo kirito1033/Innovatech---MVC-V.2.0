@@ -46,7 +46,8 @@
     <?php require_once("../app/Views/assets/js/js.php") ?>
     <?php require_once("../app/Views/assets/js/dataTable.php") ?>
 
-    <script src="../controllers/pqrs/pqrs.js"></script>
+    <script src="<?=base_url("controllers/pqrs/pqrs.js") ?>"></script>
+
   </body>
 
 </html>

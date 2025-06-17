@@ -80,7 +80,8 @@
     <?php require_once("../app/Views/assets/js/js.php") ?>
     <?php require_once("../app/Views/assets/js/dataTable.php") ?>
 
-    <script src="../controllers/ingresoproducto/ingresoproducto.js"></script>
+    <script src="<?=base_url("controllers/ingresoproducto/ingresoproducto.js") ?>"></script>
+
   </body>
 
 </html>
