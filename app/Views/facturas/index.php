@@ -1,3 +1,16 @@
+<?php if (session()->getFlashdata('success')): ?>
+  <div class="alert alert-success">
+    <?= session()->getFlashdata('success') ?>
+  </div>
+<?php endif; ?>
+
+<?php if (session()->getFlashdata('error')): ?>
+  <div class="alert alert-danger">
+    <?= session()->getFlashdata('error') ?>
+  </div>
+<?php endif; ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,12 +41,10 @@
   <!-- Container -->
   <div class="container">
     <h3><?= $title ?></h3>
-    <button type="button" class="btn btn-primary" onclick="add()" style="font-size: 0.5em;">
-      <img src="../assets/img/icons/person-add.svg" style="color: white">
-    </button>
+    <button type="button" class="btn btn-primary" onclick="add()" style="font-size: 0.5em;"><img src ="../assets/img/icons/person-add.svg" style="color: white" ></button>
     <!-- Table -->
     <?php require_once("../app/Views/facturas/table.php") ?>
-  </div>
+  
 
   <!-- Modal -->
   <div class="modal fade" id="my-modal" tabindex="-1" aria-labelledby="my-modalLabel" aria-hidden="true">
@@ -44,15 +55,12 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <!-- Aquí puedes incluir tu formulario -->
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" form="my-form" class="btn btn-primary" id="btnSubmit">Send Data</button>
+          <?php require_once("../app/Views/facturas/form.php") ?>
         </div>
       </div>
     </div>
   </div>
+
 
   <?php require_once("../app/Views/assets/js/js.php") ?>
 
@@ -65,6 +73,7 @@
   <!-- DataTables JS -->
   <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 
+
   <script>
     $(document).ready(function () {
       $('#table-index').DataTable({
@@ -74,6 +83,10 @@
         }
       });
     });
+      function add() {
+      var modal = new bootstrap.Modal(document.getElementById('my-modal'));
+      modal.show();
+    }
   </script>
 
 </body>

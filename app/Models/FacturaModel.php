@@ -14,7 +14,7 @@ class FacturaModel
         try {
             $response = $client->post('https://api-sandbox.factus.com.co/oauth/token', [
                 'form_params' => [
-                    'grant_type'    => 'password', // CAMBIA ESTO A 'password' según credenciales
+                    'grant_type'    => 'password',
                     'username'      => 'sandbox@factus.com.co',
                     'password'      => 'sandbox2024%',
                     'client_id'     => '9dec2e75-714c-4902-82d7-dc1fa93474c7',
@@ -58,5 +58,32 @@ class FacturaModel
             return ['error' => 'Error al consumir el API: ' . $e->getMessage()];
         }
     }
+    public function registrarFactura($dataFactura)
+    {
+        $token = $this->getToken();
+
+        if (!$token) {
+            return ['error' => 'Token no disponible'];
+        }
+
+        $client = \Config\Services::curlrequest();
+
+        try {
+            $response = $client->post('https://api-sandbox.factus.com.co/v1/bills/validate', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Accept'        => 'application/json',
+                    'Content-Type'  => 'application/json',
+                ],
+                'body' => json_encode($dataFactura),
+            ]);
+
+            return json_decode($response->getBody(), true);
+        } catch (\Exception $e) {
+            return ['error' => 'Error al registrar la factura: ' . $e->getMessage()];
+        }
+    }
+
+        
 
 }

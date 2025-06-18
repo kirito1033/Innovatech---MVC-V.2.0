@@ -9,7 +9,6 @@
         <th scope="col" class="p-3">Estado</th>
         <th scope="col" class="p-3">Tipo</th>
         <th scope="col" class="p-3">Pago</th>
-        <th scope="col" class="p-3">Creacion</th>
         <th scope="col" class="p-3">Acciones</th>
     </tr>
     </thead>
@@ -29,7 +28,6 @@
             </td>
             <td class="p-3"><?= esc($factura['document']['name'] ?? '---') ?></td>
             <td class="p-3"><?= esc($factura['payment_form']['name'] ?? '---') ?></td>
-            <td class="p-3"><?= esc($factura['created_at'] ?? '---') ?></td>
             <td class="p-3">
             <div class="btn-group" role="group" aria-label="Botones de acción">
                 <button type="button" onclick="show(<?php echo $factura['number']; ?>)" class="btn btn-success btn-sm"><i class="bi bi-eye"></i> SHOW</button>

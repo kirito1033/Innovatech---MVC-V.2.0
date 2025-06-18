@@ -247,7 +247,7 @@
                 <select class="form-select" id="ciudad_id" name="ciudad_id" required>
                     <option value="">Seleccione una Ciudad</option>
                     <?php foreach ($Ciudad as $Ciu) : ?>
-                        <option value="<?= $Ciu['id']; ?>"><?= $Ciu['nom']; ?></option>
+                        <option value="<?= $Ciu['id']; ?>"><?= $Ciu['name']; ?></option>
                     <?php endforeach; ?>
                 </select>
                

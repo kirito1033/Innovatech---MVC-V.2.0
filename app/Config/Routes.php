@@ -381,3 +381,4 @@ $routes->get('pedidoproveedor/enviarFacturaCorreo/(:num)', 'PedidoProveedorContr
 
 $routes->get('facturas', 'Facturas::index');
 
+$routes->post('facturas/registrar', 'Facturas::registrarFactura');
