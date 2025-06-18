@@ -9,118 +9,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="<?=base_url("/assets/css/pqrs.css") ?>" rel="stylesheet">  
     <style>
-     :root {
-  --encabezados-piedepagina: #020f1f;
-  --Color--texto: #ffffff;
-  --bright-turquoise: #04ebec;
-  --Color-enlaces-menu: #272727;
-  --atoll: #0a6069;
-  --blue-chill: #0f838c;
-  --gossamer: #048d94;
-  --tarawera: #053543;
-  --ebony-clay: #2c3443;
-  --gris-: #5a626b;
-}
-
-body {
-  background-color: var(--ebony-clay);
-  color: var(--Color--texto);
-}
-
-.formulario-pqrs{
-  background-color: var(--Color--texto);
-  color: var(--encabezados-piedepagina);
-  padding: 2%;
-  margin: 2% auto;
-  border: 1px solid var(--encabezados-piedepagina);
-  border-radius: 10px;
-  max-width: 600px;
-}
-
-.form-label {
-  color: var(--encabezados-piedepagina);
-}
-
-input[type="text"],
-textarea,
-select,
-input[type="date"] {
-  border: 1px solid var(--encabezados-piedepagina);
-  border-radius: 5px;
-  padding: 10px;
-  color: var(--encabezados-piedepagina);
-}
-
-button {
-  background-color: var(--bright-turquoise);
-  border: none;
-  color: var(--Color--texto);
-  padding: 10px 20px;
-  border-radius: 5px;
-}
-
-button:hover {
-  background-color: var(--gossamer);
-}
-
-.form-select:focus, input:focus, textarea:focus {
-  border-color: var(--atoll);
-  box-shadow: 0 0 5px var(--blue-chill);
-}
-
-h1 {
-  color: var(--encabezados-piedepagina);
-  margin-bottom: 2%;
-}
-
-.boton-enviar-pqrs{
-    margin-top: 2%;
-    width: 70%;
-    height: 40px;
-}
-.boton-enviar-div{
-    display: flex;
-    justify-content: center;
-}
-.table-rounded {
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-#table-index th, #table-index td {
-  padding: 1rem;
-  vertical-align: middle;
-}
-
-#table-index tr:hover {
-  background-color: var(--bright-turquoise);
-  color: white;
-  cursor: pointer;
-}
-
-/* Modal */
-.modal-custom .modal-content {
-  border-radius: 15px;
-  background-color: var(--Color--texto);
-  color: var(--encabezados-piedepagina);
-}
-
-.modal-header {
-  background-color: var(--atoll);
-  color: white;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-}
-
-.modal-footer {
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-}
+   
     </style>
 </head>
 <body>
+
+
 <header>
 <?= $this->include('partials/header') ?>
 </header>

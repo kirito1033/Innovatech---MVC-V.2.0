@@ -155,7 +155,7 @@ ul{
     height: 100%;
     display: flex;
     justify-content: end;
-  
+    color: var(--bright-turquoise) !important; 
 }
 
 .input-buscar{
@@ -170,7 +170,8 @@ ul{
         display: none;
     }
     .logo-celular{
-        margin-left: 10%;
+        margin-left: 5%;
+        margin-right: 5%;
         width: 20%;
     }
     .logo{
@@ -187,9 +188,8 @@ ul{
         font-size: 1.3rem;
     }
     .boton-buscar{
-        border: 3px solid var(--bright-turquoise);
+        border: 3px solid var(--bright-turquoise) !important;
         border-radius: 50px;
-        background-color: transparent;
         width: 50%;
     }
     input:focus {
@@ -462,3 +462,13 @@ ul{
 
 
 /* footer  fin */
+
+
+
+/*Color del carrito*/
+.bi.bi-cart{
+    color: #04ebec;
+}
+.bi.bi-search{
+    color: var(--bright-turquoise);
+}
