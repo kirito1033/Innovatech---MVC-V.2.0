@@ -71,7 +71,8 @@
     <script>
     const UPLOAD_URL = "<?= base_url('productos/uploadImage') ?>";
     </script>
-    <script src="../controllers/producto/producto.js"></script>
+    <script src="<?=base_url("controllers/producto/producto.js") ?>"></script>
+
   </body>
 <script>
 function showImageModal(id) {

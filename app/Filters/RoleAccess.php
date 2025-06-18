@@ -10,14 +10,28 @@ class RoleAccess implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        $rolId = session()->get('rol_id');
+        $session = session();
 
-        // Permitir acceso total al rol de administrador (por ejemplo, rol_id = 1)
-       
+        // Si no está logueado
+        if (!$session->get('isLoggedIn')) {
+            return redirect()->to('/login')->with('error', 'Debes iniciar sesión para acceder');
+        }
 
+        // Verifica si su estado cambió a inactivo
+        $db = \Config\Database::connect();
+        $userId = $session->get('id_usuario');
+
+        $user = $db->table('usuario')->where('id_usuario', $userId)->get()->getRow();
+
+        if (!$user || (int)$user->estado_usuario_id !== 1) {
+            $session->destroy();
+            return redirect()->to('/logout')->with('error', 'Tu cuenta fue desactivada. Inicia sesión nuevamente o contacta al administrador.');
+        }
+
+        // Verificación de rutas por rol
+        $rolId = $session->get('rol_id');
         $rutaActual = service('request')->getUri()->getPath();
 
-        $db = \Config\Database::connect();
         $builder = $db->table('modelos')
             ->select('modelos.Ruta')
             ->join('modelos_rol', 'modelos.id = modelos_rol.Modelosid')
@@ -26,18 +40,16 @@ class RoleAccess implements FilterInterface
         $resultados = $builder->get()->getResultArray();
 
         foreach ($resultados as $fila) {
-            // Verifica si la ruta actual comienza con una de las rutas autorizadas
             if (strpos($rutaActual, $fila['Ruta']) === 0) {
                 return; // Tiene acceso
             }
         }
 
-        // Si no hay coincidencias, redirige a no-autorizado
         return redirect()->to('/no-autorizado');
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        // Nada
+        // Nada aquí
     }
 }

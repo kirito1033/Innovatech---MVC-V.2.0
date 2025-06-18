@@ -12,7 +12,7 @@ class CiudadModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['nom', 'departamentoid', 'updated_at'];
+    protected $allowedFields    = ['code', 'name','department', 'updated_at'];
 
     protected bool $allowEmptyInserts = false;
 

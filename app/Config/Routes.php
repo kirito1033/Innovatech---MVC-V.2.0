@@ -254,10 +254,13 @@ $routes->group('ingresoproducto',['filter' => 'roleaccess'], function($routes){
     $routes->get("delete/(:num)", "IngresoProductoController::delete/$1");
     $routes->post("add", "IngresoProductoController::create");
     $routes->post("update", "IngresoProductoController::update");
+    $routes->post('subirFactura', 'IngresoProductoController::subirFactura');
+
 
 });
 
 $routes->post('usuario/login', 'UsuarioController::login');
+
 $routes->get('usuario/login', function() {
     return view('usuario/login');
 });
@@ -314,11 +317,47 @@ $routes->group('modelorol', ['filter' => 'roleaccess'],function($routes) {
     $routes->post("add", "ModelosRolController::create");
     $routes->post("update", "ModelosRolController::update");
 });
+$routes->group('modelorolpermisos',['filter' => 'roleaccess'],function($routes) {
+    $routes->get("/", "PermisosModelosRolController::index");
+    $routes->get("show", "PermisosModelosRolController::index");
+    $routes->get("edit/(:num)", "PermisosModelosRolController::singleModelosRolPermisos/$1");
+    $routes->get("delete/(:num)", "PermisosModelosRolController::delete/$1");
+    $routes->post("add", "PermisosModelosRolController::create");
+    $routes->post("update", "PermisosModelosRolController::update");
+});
+$routes->group('productosingresoproductos',function($routes) {
+    $routes->get("/", "ProductosIngresoProductoController::index");
+    $routes->get("show", "ProductosIngresoProductoController::index");
+    $routes->get("edit/(:num)", "ProductosIngresoProductoController::singleProductosIngresoProducto/$1");
+    $routes->get("delete/(:num)", "ProductosIngresoProductoController::delete/$1");
+    $routes->post("add", "ProductosIngresoProductoController::create");
+    $routes->post("update", "ProductosIngresoProductoController::update");
+});
+$routes->group('proveedor',function($routes) {
+    $routes->get("/", "ProveedorController::index");
+    $routes->get("show", "ProveedorController::index");
+    $routes->get("edit/(:num)", "ProveedorController::singleProveedor/$1");
+    $routes->get("delete/(:num)", "ProveedorController::delete/$1");
+    $routes->post("add", "ProveedorController::create");
+    $routes->post("update", "ProveedorController::update");
+});
+$routes->group('pedidoproveedor',function($routes) {
+    $routes->get("/", "PedidoProveedorController::index");
+    $routes->get("show", "PedidoProveedorController::index");
+    $routes->get("edit/(:num)", "PedidoProveedorController::singlePedidoProveedor/$1");
+    $routes->get("delete/(:num)", "PedidoProveedorController::delete/$1");
+    $routes->post("add", "PedidoProveedorController::create");
+    $routes->post("update", "PedidoProveedorController::update");
+});
 
 
- $routes->get("ofertas/(:num)", "ProductoController::listarOfertas/$1");
- 
- $routes->get('olvide-password', 'AuthController::showForgotForm');
+
+$routes->get('pedidoproveedor/listarFacturas', 'PedidoProveedorController::listarFacturas');
+
+
+$routes->get("ofertas/(:num)", "ProductoController::listarOfertas/$1");
+
+$routes->get('olvide-password', 'AuthController::showForgotForm');
 $routes->post('send-reset-link', 'AuthController::sendResetLink');
 $routes->get('reset-password/(:any)', 'AuthController::showResetForm/$1');
 $routes->post('update-password', 'AuthController::updatePassword');
@@ -328,7 +367,21 @@ $routes->get('terminos', 'LoginTerminos::terminos');
 $routes->get('condiciones', 'LoginTerminos::condiciones');
 
 $routes->group('admin', ['filter' => 'roleaccess'], function($routes){
-    $routes->get('modelos', 'ModelosController::index');
-    $routes->get('dasboard  ', 'DashboardController::index');
+    $routes->get('dasboard','DashboardController::index');
 });
+
 $routes->get('no-autorizado', 'DashboardController::error');
+
+$routes->get('no-autorizado', 'DashboardController::error');
+
+$routes->get('carrito', 'ProductoController::carrito');
+
+$routes->get('pedidoproveedor/generarNumeroFactura', 'PedidoProveedorController::generarNumeroFactura');
+
+
+$routes->get('pedido/factura/(:num)', 'PedidoProveedorController::generarFacturaPDF/$1');
+$routes->get('pedidoproveedor/enviarFacturaCorreo/(:num)', 'PedidoProveedorController::enviarFacturaCorreo/$1');
+
+$routes->get('facturas', 'Facturas::index');
+
+$routes->post('facturas/registrar', 'Facturas::registrarFactura');

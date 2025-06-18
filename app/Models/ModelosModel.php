@@ -21,12 +21,14 @@ class ModelosModel extends Model
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
-    public function getModelosByRol($rolId)
+   public function getModelosByRol($rolId)
     {
-        return $this->select('modelos.*')
-            ->join('modelos_rol', 'modelos.id = modelos_rol.Modelosid')
+        return $this->db->table('modelos_rol')
+            ->select('modelos.*, modelos_rol.grupo, modelos_rol.Rolid') // Asegúrate de incluir grupo
+            ->join('modelos', 'modelos.id = modelos_rol.Modelosid')
             ->where('modelos_rol.Rolid', $rolId)
-            ->findAll();
+            ->get()
+            ->getResultArray();
     }
 
 }

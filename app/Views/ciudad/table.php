@@ -3,7 +3,8 @@
     <thead class="table-primary text-white">
       <tr>
         <th scope="col" class="p-3">#</th>
-        <th scope="col" class="p-3">Name</th>
+        <th scope="col" class="p-3">Codigó</th>
+        <th scope="col" class="p-3">Nombre</th>
         <th scope="col" class="p-3">Departamento</th>
         <th scope="col" class="p-3">Actions</th>
       </tr>
@@ -13,21 +14,9 @@
         <?php foreach ($CiudadModel as $obj) : ?>
           <tr class="fw-bold">
             <td class="p-3"><?php echo $obj["id"]; ?></td>
-            <td class="p-3"><?php echo $obj["nom"]; ?></td>
-            <td>
-                <?php 
-                    $DepartamentoNombre = "No asignado"; 
-                    foreach ($DepartamentoModel as $Departamento) {
-                        if ($Departamento['id'] == $obj['departamentoid']) { 
-                            $DepartamentoNombre = $Departamento['nom'];
-                            break;
-                        }
-                    }
-                    echo htmlspecialchars($DepartamentoNombre, ENT_QUOTES, 'UTF-8'); 
-                ?>
-            </td>
-
-                                
+            <td class="p-3"><?php echo $obj["code"]; ?></td>
+            <td class="p-3"><?php echo $obj["name"]; ?></td>
+            <td class="p-3"><?php echo $obj["department"]; ?></td>                 
             <td class="p-3">
               <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                 <button type="button" onclick="show(<?php echo $obj['id']; ?>)" class="btn btn-success btn-sm"><i class="bi bi-eye"></i> SHOW</button>

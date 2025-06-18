@@ -40,7 +40,7 @@ class EnvioController extends Controller
         $Usuario = new UsuarioModel();
         
         $this->data['EstadoEnvio'] = $EstadoEnvio->findAll();
-        $this->data['Usuario'] = $Usuario->findAll();
+       $this->data['Usuario'] = $Usuario->where('rol_id', 5)->findAll();
         
         return view('envio/envio_view', $this->data);
     }
@@ -91,24 +91,37 @@ class EnvioController extends Controller
     {
         if ($this->request->isAJAX()) {
             $id = $this->request->getVar($this->primaryKey);
-            $dataModel = $this->getDataModel();
-            if ($this->EnvioModel->update($id, $dataModel)) {
-                $data['message'] = 'success';
-                $data['response'] = ResponseInterface::HTTP_OK;
-                $data['data'] = $dataModel;
-                $data['csrf'] = csrf_hash();
+            $dataModel = [
+                 'direccion' => $this->request->getVar('direccion'),
+                'fecha' => $this->request->getVar('fecha'),
+                'estado_envio_id' => $this->request->getVar('estado_envio_id'),
+                'usuario_id' => $this->request->getVar('usuario_id'),
+                "updated_at" => date("Y-m-d H:i:s")
+            ];
+            if ($this->EstadoEnvioModel->update($id, $dataModel)) {
+                $data = [
+                    "message" => "success",
+                    "response" => ResponseInterface::HTTP_OK,
+                    "data" => $dataModel,
+                    "csrf" => csrf_hash()
+                ];
             } else {
-                $data['message'] = 'Error al actualizar el envío';
-                $data['response'] = ResponseInterface::HTTP_NO_CONTENT;
-                $data['data'] = '';
+                $data = [
+                    "message" => "Error al actualizar estado de envío",
+                    "response" => ResponseInterface::HTTP_NO_CONTENT,
+                    "data" => ""
+                ];
             }
         } else {
-            $data['message'] = 'Error Ajax';
-            $data['response'] = ResponseInterface::HTTP_CONFLICT;
-            $data['data'] = '';
+            $data = [
+                "message" => "Error Ajax",
+                "response" => ResponseInterface::HTTP_CONFLICT,
+                "data" => ""
+            ];
         }
         echo json_encode($data);
     }
+
 
     public function delete($id = null)
     {
