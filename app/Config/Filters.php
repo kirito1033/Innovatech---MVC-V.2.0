@@ -38,6 +38,7 @@ class Filters extends BaseFilters
         'performance'   => PerformanceMetrics::class,
         'auth'          => AuthFilter::class,
         'sessionauth'   => SessionAuthFilter::class,
+        'roleaccess' => \App\Filters\RoleAccess::class,
     ];
 
     /**
@@ -73,9 +74,7 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
-            // 'honeypot',
-            // 'csrf',
-            // 'invalidchars',
+            
         ],
         'after' => [
             // 'honeypot',

@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Models\ModelosModel;
 use App\Models\ModelosRolModel;
+use App\Models\RolModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -15,7 +17,7 @@ class ModelosRolController extends Controller
 
     public function __construct()
     {
-        $this->primaryKey = ['Modelosid', 'Rolid'];
+        $this->primaryKey = "id";
         $this->ModelosRolModel = new ModelosRolModel();
         $this->data = [];
         $this->model = "ModelosRolModel";
@@ -23,8 +25,24 @@ class ModelosRolController extends Controller
 
     public function index()
     {
-        $this->data['title'] = "MODELOS_ROL";
-        $this->data[$this->model] = $this->ModelosRolModel->findAll();
+        $this->data['title'] = "MODELOS ROL";
+        
+        $rolId = session()->get('rol_id');
+        $modelosModel = new ModelosModel();
+
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
+        $modelos = new ModelosModel();
+        $this->data['modelos'] = $modelos->findAll();
+
+        $rol = new RolModel();
+        $this->data['roles'] = $rol->findAll();
+
+        $this->data[$this->model] = $this->ModelosRolModel->orderBy($this->primaryKey, 'ASC')->findAll();
+
         return view('modelosrol/modelosrol_view', $this->data);
     }
 
@@ -51,17 +69,18 @@ class ModelosRolController extends Controller
         echo json_encode($data);
     }
 
-    public function singleModelosRol($modelosid = null, $rolid = null)
+    public function singleModelosRol($id = null)
     {
         if ($this->request->isAJAX()) {
-            $data[$this->model] = $this->ModelosRolModel->where(['Modelosid' => $modelosid, 'Rolid' => $rolid])->first();
-            
-            if ($data[$this->model]) {
+
+            $record = $this->ModelosRolModel->where($this->primaryKey, $id)->first();
+            if ($record) {
+                $data[$this->model] = $record;
                 $data['message'] = 'success';
                 $data['response'] = ResponseInterface::HTTP_OK;
                 $data['csrf'] = csrf_hash();
             } else {
-                $data['message'] = 'Error retrieving record';
+                $data['message'] = 'Error retrieving Model';
                 $data['response'] = ResponseInterface::HTTP_NO_CONTENT;
                 $data['data'] = '';
             }
@@ -70,58 +89,77 @@ class ModelosRolController extends Controller
             $data['response'] = ResponseInterface::HTTP_CONFLICT;
             $data['data'] = '';
         }
+
         echo json_encode($data);
     }
 
     public function update()
-    {
-        if ($this->request->isAJAX()) {
-            $dataModel = $this->getDataModel();
+{
+    
+    if ($this->request->isAJAX()) {
+        $today = date("Y-m-d H:i:s");
+        $id = $this->request->getVar($this->primaryKey);
 
-            if ($this->ModelosRolModel->update(['Modelosid' => $dataModel['Modelosid'], 'Rolid' => $dataModel['Rolid']], $dataModel)) {
-                $data['message'] = 'success';
-                $data['response'] = ResponseInterface::HTTP_OK;
-                $data['data'] = $dataModel;
-                $data['csrf'] = csrf_hash();
-            } else {
-                $data['message'] = 'Error updating record';
-                $data['response'] = ResponseInterface::HTTP_NO_CONTENT;
-                $data['data'] = '';
-            }
+        $modelosid = $this->request->getVar('Modelosid');
+        $rolid = $this->request->getVar('Rolid');
+
+        if (is_array($modelosid)) {
+            $modelosid = $modelosid[0]; 
+        }
+        if (is_array($rolid)) {
+            $rolid = $rolid[0]; 
+        }
+
+        $dataModel = [
+            'Modelosid' => $modelosid,
+            'Rolid' => $rolid,
+            'grupo' => $this->request->getVar('grupo'),
+            "updated_at" => $today
+        ];
+
+        if ($this->ModelosRolModel->update($id, $dataModel)) {
+            $data["message"] = "success";
+            $data["response"] = ResponseInterface::HTTP_OK;
+            $data["data"] = $dataModel;
+            $data["csrf"] = csrf_hash();
         } else {
-            $data['message'] = 'Error Ajax';
-            $data['response'] = ResponseInterface::HTTP_CONFLICT;
-            $data['data'] = '';
+            $data["message"] = "Error updating model";
+            $data["response"] = ResponseInterface::HTTP_NO_CONTENT;
+            $data["data"] = "";
         }
-        echo json_encode($data);
+    } else {
+        $data["message"] = "Error Ajax";
+        $data["response"] = ResponseInterface::HTTP_CONFLICT;
+        $data["data"] = "";
     }
 
-    public function delete($modelosid = null, $rolid = null)
-    {
-        try {
-            if ($this->ModelosRolModel->where(['Modelosid' => $modelosid, 'Rolid' => $rolid])->delete()) {
-                $data['message'] = 'success';
-                $data['response'] = ResponseInterface::HTTP_OK;
-                $data['data'] = 'OK';
-                $data['csrf'] = csrf_hash();
-            } else {
-                $data['message'] = 'Error deleting record';
-                $data['response'] = ResponseInterface::HTTP_CONFLICT;
-                $data['data'] = 'error';
-            }
-        } catch (\Exception $e) {
-            $data['message'] = $e->getMessage();
-            $data['response'] = ResponseInterface::HTTP_CONFLICT;
-            $data['data'] = 'Error';
+    echo json_encode($data);
+}
+public function delete($id = null)
+{
+    if ($this->request->isAJAX()) {
+        if ($this->ModelosRolModel->delete($id)) {
+            $data['message'] = 'success';
+            $data['response'] = ResponseInterface::HTTP_OK;
+        } else {
+            $data['message'] = 'Error deleting record';
+            $data['response'] = ResponseInterface::HTTP_NO_CONTENT;
         }
-        echo json_encode($data);
+    } else {
+        $data['message'] = 'Error Ajax';
+        $data['response'] = ResponseInterface::HTTP_CONFLICT;
     }
+
+    echo json_encode($data);
+}
 
     private function getDataModel()
     {
         return [
             'Modelosid' => $this->request->getVar('Modelosid'),
-            'Rolid' => $this->request->getVar('Rolid')
+            'Rolid' => $this->request->getVar('Rolid'),
+            'grupo' => $this->request->getVar('grupo'),
+            'updated_at' => $this->request->getVar('updated_at') ?? date("Y-m-d H:i:s")
         ];
     }
 }

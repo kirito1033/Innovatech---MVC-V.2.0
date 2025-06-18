@@ -21,14 +21,7 @@
         <label for="descripcion">Descripción</label>
     </div>
 
-    <div class="form-floating mb-3">
-        <select class="form-select" id="estado" name="estado">
-            <option value="">Seleccione Estado</option>
-            <option value="1">Activo</option>
-            <option value="0">Inactivo</option>
-        </select>
-        <label for="estado">Estado</label>
-    </div>
+    
 
     <div class="form-floating mb-3">
         <select class="form-select" id="productos_id" name="productos_id">

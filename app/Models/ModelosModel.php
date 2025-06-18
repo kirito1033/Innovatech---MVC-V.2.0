@@ -21,5 +21,16 @@ class ModelosModel extends Model
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
+   public function getModelosByRol($rolId)
+    {
+        return $this->db->table('modelos_rol')
+            ->select('modelos.*, modelos_rol.grupo, modelos_rol.Rolid') // Asegúrate de incluir grupo
+            ->join('modelos', 'modelos.id = modelos_rol.Modelosid')
+            ->where('modelos_rol.Rolid', $rolId)
+            ->get()
+            ->getResultArray();
+    }
 
 }
+
+// ModelosModel.php

@@ -197,6 +197,7 @@
         .row.g-3 > .col-12 {
             padding-right: 0.5rem;
             padding-left: 0.5rem;
+            margin-bottom: 0.7rem;
         }
     </style>
 </head>
@@ -207,6 +208,7 @@
 
 <!-- Two-column layout container -->
 <div class="main-container container">
+    
     <!-- Filters Main Section -->
     <main class="filters-main">
         <div class="card p-2 shadow-sm">
@@ -318,45 +320,60 @@
     </main>
 
     <!-- Products Main Section -->
-    <main class="productos-ofertas">
-        <div class="lista-productos">
-            <?php foreach ($categorias as $categoria): ?>
-                <?php
-                $productosPorCategoria = array_filter($productos, function($producto) use ($categoria) {
-                    return $producto['id_categoria'] == $categoria['id'];
-                });
-                ?>
-                <?php if (!empty($productosPorCategoria)): ?>
-                    <h2 class="mb-3 title-ofertas"><?= esc($categoria['nom']) ?></h2>
-                    <div class="row g-3">
-                        <?php foreach ($productosPorCategoria as $producto): ?>
-                            <div class="col-12">
-                                <a href="<?= base_url('producto/ver/' . $producto['id']) ?>" class="card-link">
-                                    <div class="card mb-2 shadow-sm">
-                                        <div class="row g-0">
-                                            <div class="col-md-3">
-                                                <img src="<?= base_url('Uploads/' . $producto['imagen']) ?>" class="img-fluid rounded-start" alt="<?= esc($producto['nom']) ?>">
-                                            </div>
-                                            <div class="col-md-9">
-                                                <div class="card-body">
-                                                    <h5 class="card-title"><?= esc($producto['nom']) ?></h5>
-                                                    <p class="card-text"><?= esc($producto['descripcion']) ?></p>
-                                                    <p class="card-text">
-                                                        <small class="text-precio">Precio: $<?= number_format($producto['precio'], 0, ',', '.') ?></small>
-                                                    </p>
-                                                    <span class="btn btn-sm btn-outline-primary mt-1">Ver más</span>
-                                                </div>
+<main class="productos-ofertas">
+    <div class="lista-productos">
+        <?php foreach ($categorias as $categoria): ?>
+            <?php
+            $productosPorCategoria = array_filter($productos, function($producto) use ($categoria) {
+                return $producto['id_categoria'] == $categoria['id'];
+            });
+            ?>
+            <?php if (!empty($productosPorCategoria)): ?>
+                <h2 class="mb-3 title-ofertas"><?= esc($categoria['nom']) ?></h2>
+                <div class="row g-3">
+                    <?php foreach ($productosPorCategoria as $producto): ?>
+                        <?php if ($producto['id_estado'] != 1) continue; // Solo mostrar productos con estado 1 ?>
+                        <div class="col-12">
+                            <a href="<?= base_url('producto/ver/' . $producto['id']) ?>" class="card-link">
+                                <div class="card mb-2 shadow-sm">
+                                    <div class="row g-0">
+                                        <div class="col-md-3">
+                                            <img src="<?= base_url('Uploads/' . $producto['imagen']) ?>" class="img-fluid rounded-start" alt="<?= esc($producto['nom']) ?>">
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="card-body">
+                                                <h5 class="card-title"><?= esc($producto['nom']) ?></h5>
+                                                <p class="card-text"><?= esc($producto['descripcion']) ?></p>
+                                                <p class="card-text">
+                                                    <?php if ($producto['precio'] != $producto['precio_original']): ?>
+                                                        <?php
+                                                        $porcentaje_descuento = round((($producto['precio_original'] - $producto['precio']) / $producto['precio_original']) * 100);
+                                                        ?>
+                                                        <p class="precio_original">
+                                                            $<?= number_format($producto['precio_original'], 0, ',', '.') ?>
+                                                        </p>
+                                                        <p class="text-precio">
+                                                            $<?= number_format($producto['precio'], 0, ',', '.') ?>
+                                                            <span class="descuento-porcentaje">-<?= $porcentaje_descuento ?>%</span>
+                                                        </p>
+                                                    <?php else: ?>
+                                                        <p class="precio color-verde">$<?= number_format($producto['precio'], 0, ',', '.') ?></p>
+                                                    <?php endif; ?>
+                                                </p>
+                                                <span class="btn btn-sm btn-outline-primary mt-1">Ver más</span>
                                             </div>
                                         </div>
                                     </div>
-                                </a>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </div>
-    </main>
+                                </div>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </div>
+</main>
+
 </div>
 
 <footer>

@@ -15,8 +15,7 @@ class DepartamentoModel extends Model
     protected $allowedFields    = ['nom', 'updated_at'];
 
     protected bool $allowEmptyInserts = false;
-
-
+    protected $useTimestamps = true;
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 

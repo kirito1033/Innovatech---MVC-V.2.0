@@ -31,6 +31,14 @@ class UsuarioController extends Controller
     public function index()
     {
         $this->data['title'] = "Usuarios";
+         $rolId = session()->get('rol_id');
+        $modelosModel = new \App\Models\ModelosModel();
+
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->UsuarioModel->orderBy($this->primaryKey, 'ASC')->findAll();
         
         $TipoDocumento = new TipoDocumentoModel();
@@ -40,8 +48,8 @@ class UsuarioController extends Controller
         
         $this->data['Rol'] = $Rol->findAll();
         $this->data['EstadoUsuario'] = $EstadoUsuario->findAll();
-        $this->data['TipoDocumento'] = $TipoDocumento->findAll();
-        $this->data['Ciudad'] = $Ciudad->findAll();
+        $this->data['TipoDocumento'] = $TipoDocumento->orderBy('nom', 'ASC')->findAll();
+        $this->data['Ciudad'] = $Ciudad->orderBy('name', 'ASC')->findAll();
         
         return view('usuario/usuario_view', $this->data);
     }
@@ -171,22 +179,21 @@ class UsuarioController extends Controller
             'updated_at' => date("Y-m-d H:i:s")
         ];
     }
-        public function login()
+    public function login()
     {
         $usuario = $this->request->getVar('usuario');
         $password = $this->request->getVar('password');
 
         $user = $this->UsuarioModel->where('usuario', $usuario)->first();
 
+        // Verifica si el usuario existe y la contraseña es correcta
         if (!$user || !password_verify($password, $user['password'])) {
-            if ($this->request->isAJAX()) {
-                return $this->response->setJSON([
-                    'status' => 'error',
-                    'message' => 'Usuario o contraseña incorrectos'
-                ])->setStatusCode(401);
-            } else {
-                return redirect()->back()->with('error', 'Usuario o contraseña incorrectos');
-            }
+            return $this->handleLoginError('Usuario o contraseña incorrectos');
+        }
+
+        // Verifica si el usuario está activo (estado == 1)
+        if ((int)$user['estado_usuario_id'] !== 1) {
+            return $this->handleLoginError('Tu cuenta está inactiva o suspendida');
         }
 
         $key = getenv('JWT_SECRET') ?? 'clave_secreta_demo';
@@ -206,28 +213,42 @@ class UsuarioController extends Controller
         session()->set([
             'token' => $token,
             'usuario' => $user['usuario'],
-            'rol' => $user['rol_id'],
-            'id_usuario' => $user['id_usuario']
+            'rol_id' => $user['rol_id'],
+            'id_usuario' => $user['id_usuario'],
+            'isLoggedIn' => true,
+            'estado_usuario_id' => $user['estado_usuario_id'], // Opcional: guardar también el estado por si se quiere usar después
         ]);
 
         if ($this->request->isAJAX()) {
-            // Retorna JSON si es una petición AJAX
             return $this->response->setJSON([
                 'status' => 'success',
                 'message' => 'Autenticación exitosa',
                 'token' => $token,
-                'redirect' => $user['rol_id'] == 1 ? '/usuario' : '/',
+                'redirect' => $user['rol_id'] == 1 ? '/admin/dasboard' : '/',
                 'user' => [
                     'id' => $user['id_usuario'],
                     'usuario' => $user['usuario'],
-                    'rol' => $user['rol_id']
+                    'rol_id' => $user['rol_id'],
                 ]
             ]);
         } else {
-            // Redirección si viene desde formulario normal
             return redirect()->to($user['rol_id'] == 1 ? '/usuario' : '/home');
         }
     }
+
+// Función auxiliar para manejar errores de login
+private function handleLoginError($message)
+{
+    if ($this->request->isAJAX()) {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => $message
+        ])->setStatusCode(401);
+    } else {
+        return redirect()->back()->with('error', $message);
+    }
+}
+
     public function logout()
     {
         // Destruye toda la sesión
@@ -253,8 +274,9 @@ class UsuarioController extends Controller
         $EstadoUsuario = new EstadoUsuarioModel();
         $this->data['Rol'] = $Rol->findAll();
         $this->data['EstadoUsuario'] = $EstadoUsuario->findAll();
-        $this->data['TipoDocumento'] = $TipoDocumento->findAll();
-        $this->data['Ciudad'] = $Ciudad->findAll();
+         $this->data['TipoDocumento'] = $TipoDocumento->orderBy('nom', 'ASC')->findAll();
+        $this->data['Ciudad'] = $Ciudad->orderBy('name', 'ASC')->findAll();
+
 
          return view('usuario/register', $this->data);
     }

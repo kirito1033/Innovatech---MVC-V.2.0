@@ -28,14 +28,18 @@ class CiudadController extends Controller
     public function index() 
     { 
     $this->data['title'] = "CIUDAD"; 
-    $this->data[$this->model] = $this->CiudadModel->orderBy($this->primaryKey, 'ASC')->findAll(); 
+     $rolId = session()->get('rol_id');
+        $modelosModel = new \App\Models\ModelosModel();
 
-    // Cargar modelos de roles y estados
-    $DepartamentoModel = new \App\Models\DepartamentoModel();
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
 
-    $this->data['DepartamentoModel'] = $DepartamentoModel->findAll();
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
+        $this->data[$this->model] = $this->CiudadModel->orderBy($this->primaryKey, 'ASC')->findAll(); 
 
-    return view('ciudad/ciudad_view', $this->data); 
+
+        return view('ciudad/ciudad_view', $this->data); 
     }
     
     
@@ -67,26 +71,24 @@ class CiudadController extends Controller
     }
 
     
-    public function singleCiudad($id = null) 
-    { 
-        if ($this->request->isAJAX()) { 
-
-            if ($data[$this->model] = $this->CiudadModel->where($this->primaryKey, $id)->first()) { 
-                $data['message'] = 'success'; 
-                $data['response'] = ResponseInterface::HTTP_OK; 
-                $data['csrf'] = csrf_hash(); 
-            } else { 
-                $data['message'] = 'Error retrieving Ciudad'; 
-                $data['response'] = ResponseInterface::HTTP_NO_CONTENT; 
-                $data['data'] = ''; 
-            } 
-        } else { 
-            $data['message'] = 'Error Ajax'; 
-            $data['response'] = ResponseInterface::HTTP_CONFLICT; 
-            $data['data'] = ''; 
-        } 
-
-        echo json_encode($data);  
+     public function singleCiudad($id = null)
+    {
+        if ($this->request->isAJAX()) {
+            if ($data[$this->model] = $this->CiudadModel->where($this->primaryKey, $id)->first()) {
+                $data["message"] = "success";
+                $data["response"] = ResponseInterface::HTTP_OK;
+                $data["csrf"] = csrf_hash();
+            } else {
+                $data["message"] = "Error al obtener categoría";
+                $data["response"] = ResponseInterface::HTTP_NO_CONTENT;
+                $data["data"] = "";
+            }
+        } else {
+            $data["message"] = "Error Ajax";
+            $data["response"] = ResponseInterface::HTTP_CONFLICT;
+            $data["data"] = "";
+        }
+        echo json_encode($data);
     }
 
 
@@ -100,8 +102,9 @@ class CiudadController extends Controller
             
             $dataModel = [
                 'id' => $this->request->getVar('id'), 
-                'nom' => $this->request->getVar('nom'), 
-                'departamentoid' => $this->request->getVar('departamentoid'), 
+                'code' => $this->request->getVar('code'), 
+                'name' => $this->request->getVar('name'), 
+                'department' => $this->request->getVar('department'), 
                 'updated_at' => $today 
             ]; 
             
@@ -152,8 +155,9 @@ class CiudadController extends Controller
     { 
         $data = [ 
             'id' => $this->request->getVar('id'), 
-            'nom' => $this->request->getVar('nom'), 
-            'departamentoid' => $this->request->getVar('departamentoid'), 
+            'code' => $this->request->getVar('code'), 
+            'name' => $this->request->getVar('name'), 
+            'department' => $this->request->getVar('department'), 
             "updated_at" => $this->request->getVar("update_at")
         ]; 
         return $data; 

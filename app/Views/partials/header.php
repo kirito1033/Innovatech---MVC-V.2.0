@@ -23,14 +23,17 @@
               <i class="bi bi-list logo-menu"></i>
             </button>
             <div class="logo-celular">
-              <img class="logo"src ="/assets/img/logo-celular.png" alt="">
+             <a href="<?= base_url('/') ?>"><img class="logo"src ="/assets/img/logo-celular.png" alt=""></a> 
             </div>
-            <div class="boton-buscar">
-              <input class="input-buscar" type="search" placeholder="Buscar productos">
-              <button type="button" class="buscar"><i class="bi bi-search"></i></button>
-            </div>
+         <div class="boton-buscar">
+          <input class="input-buscar" id="buscadorNav" type="text" placeholder="Buscar productos" >
+          <button type="button" class="buscar" onclick="buscarProductos()" id="botonBuscar">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+
             <div class="carrito-compras">
-              <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo" class="buscar"><i class="bi bi-cart"></i></a>
+              <a href="<?= base_url("/carrito")?>"><i class="bi bi-cart"></i></a>
             </div>
             <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
               aria-labelledby="staticBackdropLabel">
@@ -68,13 +71,6 @@
         </li>
         <li>
 
-        </li>
-        <li class="nav-item offcanvas__nav-ul-li">
-          <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">
-            <i class="bi bi-cone-striped"></i> Sección sin función
-          </a>
-        </li>
-
         <li class="nav-item offcanvas__nav-ul-li">
         <a href="<?= base_url('/logout') ?>"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</a>
         </li>
@@ -109,14 +105,14 @@
           <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">  <i class="bi bi-bag"></i>Mis compras</a>
           </li>
           <li class="nav-item header-pc__nav-ul-li">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo"> <i class="bi bi-tags"></i>ofertas</a>
+             <a href="<?= base_url('ofertas/6') ?>"><i class="bi bi-tags"></i>ofertas</a>
           </li>
           <li class="nav-item header-pc__nav-ul-li">
-          <a href="<?= base_url('pqrs/Cpqrs') ?>"><i class="bi bi-info-circle icon"></i>Ayuda / PQR</a>
+          <a href="<?= base_url('pqrs/Cpqrs') ?>"><i class="bi bi-info-circle icon"></i>Ayuda/PQR</a>
           </li>
-          <li class="nav-item offcanvas__nav-ul-li">
+          <li class="nav-item  header-pc__nav-ul-li">
           <?php if (isset($_SESSION['usuario'])): ?>
-          <li class="nav-item offcanvas__nav-ul-li">
+          <li class="nav-item  header-pc__nav-ul-li">
             <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">
               <i class="bi bi-person-circle"></i> Mi perfil
             </a>
@@ -148,4 +144,21 @@
 
 <!-- Bootstrap JS Bundle (al final del body) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  
+<script>
+  // Detectar Enter en el input
+  document.getElementById("buscadorNav").addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault(); // evita comportamiento por defecto (en caso de formulario)
+      document.getElementById("botonBuscar").click(); // simula clic en el botón
+    }
+  });
+
+  function buscarProductos() {
+    const valor = document.getElementById('buscadorNav').value.trim();
+    const baseUrl = "<?= base_url('categorias') ?>";
+
+    if (valor !== '') {
+      window.location.href = baseUrl + '?nom=' + encodeURIComponent(valor);
+    }
+  }
+</script>

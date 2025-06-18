@@ -5,26 +5,26 @@
     <title>Registro de Usuario</title>
     <style>
     :root {
-        --encabezados-piedepagina: #020f1f;
-        --Color--texto: #ffffff;
-        --bright-turquoise: #04ebec;
-        --Color-enlaces-menu: #272727;
-        --atoll: #0a6069;
-        --blue-chill: #0f838c;
-        --gossamer: #048d94;
-        --tarawera: #0b4454;
-        --ebony-clay: #2c3443;
-        --gris-: #5a626b;
+    --encabezados-piedepagina: #020f1f;
+    --Color--texto: #ffffff;
+    --bright-turquoise: #04ebec;
+    --Color-enlaces-menu: #272727;
+    --atoll: #0a6069;
+    --blue-chill: #0f838c;
+    --gossamer: #048d94;
+    --tarawera: #0b4454;
+    --ebony-clay: #2c3443;
+    --gris-: #5a626b;
     }
 
     body {
         margin: 0;
         font-family: 'Segoe UI', Roboto, sans-serif;
-        background-color: var(--encabezados-piedepagina);
-        min-height: 100vh;
+        background-color: #0b4454;
         display: flex;
         justify-content: center;
         align-items: center;
+        min-height: 100vh;
     }
 
     body, div {
@@ -32,35 +32,54 @@
     }
 
     .registrar-container {
-        font-size: 15px;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        max-width: 550px;
-        padding: 25px 30px;
+        background-color: var(--encabezados-piedepagina);
         color: var(--Color--texto);
-        border-radius: 12px;
-        background-color: rgba(44, 52, 67, 0.85);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        margin: auto;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+        text-align: center;
     }
 
     .titulo {
         text-align: center;
-        margin-bottom: 25px;
-        font-size: 1.6rem;
+        margin-bottom: 30px;
+        font-size: 1.8rem;
         color: var(--bright-turquoise);
+        font-weight: bold;
     }
 
-    .form-control,
-    .form-select {
-        border: 1px solid var(--gris-);
-        border-radius: 6px;
-        padding: 10px;
-        width: 100%;
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: var(--bright-turquoise);
+        text-align: left;
+    }
+
+    .form-control {
         background-color: var(--ebony-clay);
         color: var(--Color--texto);
-        transition: border 0.2s, background-color 0.2s;
+        border: 1px solid var(--gris-);
+        padding: 15px 18px;
+        border-radius: 8px;
+        width: 30vh;
+        transition: all 0.3s ease;
+    }
+    .form-select{
+        background-color: var(--ebony-clay);
+        color: var(--Color--texto);
+        border: 1px solid var(--gris-);
+        padding: 15px 18px;
+        border-radius: 8px;
+        width: 35vh;
+        transition: all 0.3s ease;
+    }
+
+    .form-control::placeholder {
+        color: #ccc;
     }
 
     .form-control:focus,
@@ -70,24 +89,37 @@
         background-color: #3a465a;
     }
 
-    label {
-        margin-top: 6px;
-        color: var(--bright-turquoise);
+    .form-floating {
+        margin-bottom: 20px;
+        width: 100%;
+        max-width: 220px;
     }
 
-    .form-floating {
-        margin-bottom: 15px;
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        justify-content: center;
+        justify-items: center;
+    }
+
+    @media (min-width: 768px) {
+        .form-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
     }
 
     #boton1 {
         background-color: var(--blue-chill);
         border: none;
         width: 100%;
+        max-width: 300px;
+        padding: 14px;
         margin-top: 20px;
-        padding: 12px;
-        border-radius: 6px;
+        border-radius: 8px;
         color: var(--Color--texto);
         font-weight: bold;
+        font-size: 1rem;
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
@@ -99,55 +131,36 @@
     #boton-regresar {
         display: block;
         text-align: center;
-        background-color: var(--gossamer);
-        padding: 10px;
-        margin-top: 12px;
-        border-radius: 6px;
+        background-color: #0a6069;
+        padding: 12px;
+        margin: 15px auto 0;
+        border-radius: 8px;
         color: var(--Color--texto);
         text-decoration: none;
         font-weight: bold;
+        font-size: 1rem;
         transition: background-color 0.3s ease;
+        max-width: 300px;
     }
 
     #boton-regresar:hover {
         background-color: var(--tarawera);
     }
-
-    .logo-registrar {
-        margin-bottom: 10px;
-    }
-
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    @media (min-width: 768px) {
-        .form-grid {
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+     .login__logo img {
+            width: 250px;
         }
 
-        .registrar-container {
-            max-width: 600px;
-            padding: 30px;
-        }
-    }
-
-    @media (min-width: 1024px) {
-        .registrar-container {
-            max-width: 650px;
-            padding: 35px;
-        }
-    }
 </style>
 </head>
 <body>
 <div class="registrar-container">
+     <div class="login__logo">
+            <img src ="../assets/img/logo.png" style="color: white" >
+    </div>
     <h2 class="titulo">Registro de Usuario</h2>
     <form id="my-form" method="post" action="<?= base_url('usuario/add') ?>">
         <?= csrf_field() ?>
+       
         <input type="hidden" id="id_usuario" name="id_usuario" value="">
         <input type="hidden" id="updated_at" name="updated_at" value="">
 
@@ -234,7 +247,7 @@
                 <select class="form-select" id="ciudad_id" name="ciudad_id" required>
                     <option value="">Seleccione una Ciudad</option>
                     <?php foreach ($Ciudad as $Ciu) : ?>
-                        <option value="<?= $Ciu['id']; ?>"><?= $Ciu['nom']; ?></option>
+                        <option value="<?= $Ciu['id']; ?>"><?= $Ciu['name']; ?></option>
                     <?php endforeach; ?>
                 </select>
                

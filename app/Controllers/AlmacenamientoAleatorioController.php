@@ -13,6 +13,8 @@ class AlmacenamientoAleatorioController extends Controller
     private $data;
     private $model;
 
+    
+
     // Constructor
     public function __construct()
     {
@@ -26,6 +28,14 @@ class AlmacenamientoAleatorioController extends Controller
     public function index()
     {
         $this->data["title"] = "ALMACENAMIENTO";
+        $rolId = session()->get('rol_id');
+        $modelosModel = new \App\Models\ModelosModel();
+
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->AlmacenamientoAleatorioModel->orderBy($this->primaryKey, "ASC")->findAll();
         return view("almacenamientoaleatorio/almacenamientoaleatorio_view", $this->data);
     }

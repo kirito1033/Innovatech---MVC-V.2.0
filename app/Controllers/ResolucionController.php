@@ -26,6 +26,14 @@ class ResolucionController extends Controller
     public function index()
     {
         $this->data["title"] = "RESOLUCIÓN";
+         $rolId = session()->get('rol_id');
+        $modelosModel = new \App\Models\ModelosModel();
+
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->ResolucionModel->orderBy($this->primaryKey, "ASC")->findAll();
         return view("resolucion/resolucion_view", $this->data);
     }

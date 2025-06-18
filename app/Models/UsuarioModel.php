@@ -15,7 +15,7 @@ class UsuarioModel extends Model
     protected $allowedFields    = [
         'primer_nombre', 'segundo_nombre', 'primer_apellido', 'segundo_apellido', 
         'documento', 'correo', 'telefono1', 'telefono2', 'direccion', 
-        'usuario', 'password', 'tipo_documento_id', 'ciudad_id', 'rol_id', 'estado_usuario_id', 'updated_at'
+        'usuario', 'password', 'tipo_documento_id', 'ciudad_id', 'rol_id', 'estado_usuario_id', 'reset_token', 'reset_token_expiration', 'updated_at'
     ];
 
     protected bool $allowEmptyInserts = false;

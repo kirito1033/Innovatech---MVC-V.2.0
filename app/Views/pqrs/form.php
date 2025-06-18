@@ -8,9 +8,8 @@
     </div>
 
     <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="comentario_respuesta" name="comentario_respuesta" placeholder="Comentario de respuesta">
+        <input type="hidder" class="form-control" id="comentario_respuesta" name="comentario_respuesta" placeholder="Comentario de respuesta">
         <label for="comentario_respuesta">Comentario de Respuesta</label>
-    </div>
 
     <div class="form-floating mb-3">
         <select class="form-select" id="tipo_pqrs_id" name="tipo_pqrs_id" required>

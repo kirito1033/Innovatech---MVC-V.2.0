@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\DepartamentoModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\ModelosModel;
 
 class DepartamentoController extends Controller
 {
@@ -26,6 +27,14 @@ class DepartamentoController extends Controller
     public function index()
     {
         $this->data["title"] = "DEPARTAMENTO";
+        $rolId = session()->get('rol_id');
+        $modelosModel = new ModelosModel();
+
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->DepartamentoModel->orderBy($this->primaryKey, "ASC")->findAll();
         return view("departamento/departamento_view", $this->data);
     }

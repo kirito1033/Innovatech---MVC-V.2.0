@@ -27,6 +27,14 @@ class IngresoProductoController extends Controller
         $Usuario = new UsuarioModel();
         $this->data['usuario'] = $Usuario->findAll();
         $this->data['title'] = "Ingreso de Producto"; 
+         $rolId = session()->get('rol_id');
+        $modelosModel = new \App\Models\ModelosModel();
+
+        // Obtener los módulos permitidos para el rol actual
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // Agregar los módulos a los datos enviados a la vista
+        $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->IngresoProductoModel->orderBy($this->primaryKey, 'ASC')->findAll();
 
         return view('ingresoproducto/ingresoproducto_view', $this->data); 
@@ -84,7 +92,8 @@ class IngresoProductoController extends Controller
             $dataModel = [
                 'id' => $this->request->getVar('id'), 
                 'factura' => $this->request->getVar('factura'), 
-                'UsuarioId_usuario2' => $this->request->getVar('UsuarioId_usuario2'), 
+                'usuario_id' => $this->request->getVar('usuario_id'), 
+                'nombre_factura' => $this->request->getVar('nombre_factura'), 
                 'updated_at' => $today 
             ]; 
             
@@ -131,9 +140,37 @@ class IngresoProductoController extends Controller
     { 
         $data = [ 
             'factura' => $this->request->getVar('factura'), 
-            'UsuarioId_usuario2' => $this->request->getVar('UsuarioId_usuario2'), 
+            'usuario_id' => $this->request->getVar('usuario_id'), 
+              'nombre_factura' => $this->request->getVar('nombre_factura'), 
             'updated_at' => $this->request->getVar('updated_at')
         ]; 
         return $data; 
     }
+    public function subirFactura()
+    {
+        helper(['form', 'url']);
+
+        $file = $this->request->getFile('factura_file');
+        $usuario_id = $this->request->getPost('usuario_id');
+        $nombreFactura  = $this->request->getPost('nombre_factura');
+
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $ruta = 'uploads/facturas/';
+            $file->move($ruta, $newName);
+
+            // Guardar en la base de datos
+            $this->IngresoProductoModel->insert([
+                'factura' => base_url($ruta . $newName),
+                'usuario_id' => $usuario_id,
+                'nombre_factura'=> $nombreFactura,
+                'updated_at' => date("Y-m-d H:i:s")
+            ]);
+
+            return redirect()->back()->with('success', 'Factura subida correctamente.');
+        }
+
+        return redirect()->back()->with('error', 'Error al subir la factura.');
+    }
+
 }

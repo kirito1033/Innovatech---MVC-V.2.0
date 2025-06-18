@@ -147,10 +147,6 @@ h1 {
         </div>
 
         <!-- Comentario Respuesta (solo lectura) -->
-        <div class="mb-3">
-            <label for="comentario_respuesta" class="form-label">Comentario Respuesta</label>
-            <textarea class="form-control" id="comentario_respuesta" name="comentario_respuesta" rows="2" readonly placeholder="Campo destinado para la respuesta a su PQRS"></textarea>
-        </div>
 
         <!-- Estado (oculto, predeterminado a 'Pendiente') -->
         <input type="hidden" id="estado_pqrs_id" name="estado_pqrs_id" value="1">

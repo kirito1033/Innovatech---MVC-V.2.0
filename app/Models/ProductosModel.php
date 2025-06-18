@@ -30,6 +30,7 @@ class ProductosModel extends Model
         'id_ram',
         'id_sistema_operativo',
         'id_resolucion',
+        'precio_original',
         'updated_at'
     ];
     public function getProductoConRelaciones($id)
