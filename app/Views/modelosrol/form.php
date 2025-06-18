@@ -33,6 +33,7 @@
         <option value="Productos">Productos</option>
         <option value="Roles">Roles</option>
         <option value="Filtros">Filtros</option>
+        <option value="Facturas">Facturas</option>
     
     </select>
     <label for="grupo">Grupo</label>

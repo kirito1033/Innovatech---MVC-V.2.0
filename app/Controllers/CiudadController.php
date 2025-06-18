@@ -36,14 +36,10 @@ class CiudadController extends Controller
 
         // Agregar los módulos a los datos enviados a la vista
         $this->data['modulos'] = $modulosPermitidos;
-    $this->data[$this->model] = $this->CiudadModel->orderBy($this->primaryKey, 'ASC')->findAll(); 
+        $this->data[$this->model] = $this->CiudadModel->orderBy($this->primaryKey, 'ASC')->findAll(); 
 
-    // Cargar modelos de roles y estados
-    $DepartamentoModel = new \App\Models\DepartamentoModel();
 
-    $this->data['DepartamentoModel'] = $DepartamentoModel->findAll();
-
-    return view('ciudad/ciudad_view', $this->data); 
+        return view('ciudad/ciudad_view', $this->data); 
     }
     
     
@@ -106,8 +102,9 @@ class CiudadController extends Controller
             
             $dataModel = [
                 'id' => $this->request->getVar('id'), 
-                'nom' => $this->request->getVar('nom'), 
-                'departamentoid' => $this->request->getVar('departamentoid'), 
+                'code' => $this->request->getVar('code'), 
+                'name' => $this->request->getVar('name'), 
+                'department' => $this->request->getVar('department'), 
                 'updated_at' => $today 
             ]; 
             
@@ -158,8 +155,9 @@ class CiudadController extends Controller
     { 
         $data = [ 
             'id' => $this->request->getVar('id'), 
-            'nom' => $this->request->getVar('nom'), 
-            'departamentoid' => $this->request->getVar('departamentoid'), 
+            'code' => $this->request->getVar('code'), 
+            'name' => $this->request->getVar('name'), 
+            'department' => $this->request->getVar('department'), 
             "updated_at" => $this->request->getVar("update_at")
         ]; 
         return $data; 

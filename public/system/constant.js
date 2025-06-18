@@ -43,7 +43,7 @@ const URI_PERMISOS= "/permisos/"
 
 const URI_ENVIO = "/envio/"
 
-const URI_FACTURA = "/factura/"
+const URI_FACTURA = "/facturas/"
 
 const URI_INGRESOPRODUCTO = "/ingresoproducto/"
 

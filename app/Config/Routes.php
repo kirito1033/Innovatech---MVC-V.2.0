@@ -294,6 +294,9 @@ $routes->get('/logout', 'UsuarioController::logout');
 $routes->get('/carrito', 'CarritoController::carrito');
 $routes->post('/carrito/agregar', 'CarritoController::agregarAlCarrito');
 $routes->post('carrito/eliminarDelCarrito/(:num)', 'CarritoController::eliminarDelCarrito/$1');
+// Metodos de pago
+$routes->get('pago/contraentrega', 'CarritoController::contraentrega');
+$routes->get('pago/tarjeta', 'CarritoController::tarjeta');
 
 
 $routes->group('userapi', ['filter' => 'roleaccess'],function($routes) {
@@ -378,3 +381,7 @@ $routes->get('pedidoproveedor/generarNumeroFactura', 'PedidoProveedorController:
 
 $routes->get('pedido/factura/(:num)', 'PedidoProveedorController::generarFacturaPDF/$1');
 $routes->get('pedidoproveedor/enviarFacturaCorreo/(:num)', 'PedidoProveedorController::enviarFacturaCorreo/$1');
+
+$routes->get('facturas', 'Facturas::index');
+
+$routes->post('facturas/registrar', 'Facturas::registrarFactura');
