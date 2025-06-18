@@ -183,6 +183,21 @@
             font-weight: bold;
         }
 
+        /* Metodo de pago */
+        #modalPago .modal-content {
+            border-radius: 1rem !important;
+            overflow: hidden;
+        }
+
+        #modalPago .modal-header {
+            background-color: #0b4454;
+        }
+
+        #modalPago .btn-light:hover {
+            background-color: #e0f0ff;
+            border-color: #04ebec;
+        }
+
         /* Responsivo */
         @media (max-width: 768px) {
             .producto-card {
@@ -267,11 +282,57 @@
             <div class="card card-resumen">
                 <h5 class="mb-3">Resumen del Carrito</h5>
                 <p class="mb-1">Subtotal: <strong id="subtotal">$0</strong></p>
-                <button class="btn btn-success w-100 mt-3" onclick="redirigirPago()">Comprar Ahora</button>
+                <button class="btn btn-success w-100 mt-3" data-bs-toggle="modal" data-bs-target="#modalPago">Comprar Ahora</button>
             </div>
         </div>
     </div>
 </div>
+
+
+<!-- Modal de pago -->
+<div class="modal fade" id="modalPago" tabindex="-1" aria-labelledby="modalPagoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header text-white rounded-top-4">
+                <h5 class="modal-title" id="modalPagoLabel">Elige el método de pago</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <div class="row g-3 justify-content-center">
+
+                    <!-- Pago Contraentrega -->
+                    <div class="col-6 col-md-4">
+                        <button class="btn btn-light shadow-sm w-100 border border-2 rounded-3 d-flex flex-column align-items-center py-3"
+                        onclick="seleccionarMetodo('contraentrega')">
+                        <i class="fas fa-truck fa-2x text-primary mb-2"></i>
+                        <span class="fw-semibold">Contraentrega</span>
+                        </button>
+                    </div>
+
+                    <!-- Tarjeta Débito -->
+                    <div class="col-6 col-md-4">
+                        <button class="btn btn-light shadow-sm w-100 border border-2 rounded-3 d-flex flex-column align-items-center py-3"
+                        onclick="seleccionarMetodo('tarjeta')">
+                        <i class="fas fa-credit-card fa-2x text-primary mb-2"></i>
+                        <span class="fw-semibold">Tarjeta Débito</span>
+                        </button>
+                    </div>
+
+                    <!-- Tarjeta Crédito -->
+                    <div class="col-6 col-md-4">
+                        <button class="btn btn-light shadow-sm w-100 border border-2 rounded-3 d-flex flex-column align-items-center py-3"
+                        onclick="seleccionarMetodo('tarjeta')">
+                        <i class="far fa-credit-card fa-2x text-primary mb-2"></i>
+                        <span class="fw-semibold">Tarjeta Crédito</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <footer>
     <?php require_once("../app/Views/footer/footerApp.php") ?>
@@ -372,6 +433,20 @@
             alert("Hubo un error al eliminar el producto: " + error.message);
             console.error(error);
         });
+    }
+
+    // Selección de metodo
+    function seleccionarMetodo(metodo) {
+        switch (metodo) {
+            case 'contraentrega':
+                window.location.href = "<?= base_url('pago/contraentrega') ?>";
+                break;
+            case 'tarjeta':
+                window.location.href = "<?= base_url('pago/tarjeta') ?>";
+                break;
+            default:
+                alert("Método de pago no válido");
+        }
     }
 
     // Al cargar la página
