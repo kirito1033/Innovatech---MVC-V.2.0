@@ -321,5 +321,12 @@ private function handleLoginError($message)
         ]);
     }   
   
-    
+    public function getUsuarioActual()
+        {
+            $usuarioModel = new \App\Models\UsuarioModel();
+            $idUsuario = session()->get('id_usuario'); // O usa el campo que manejes
+            $usuario = $usuarioModel->find($idUsuario);
+
+            return $usuario;
+        }
 }
