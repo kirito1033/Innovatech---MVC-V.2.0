@@ -30,11 +30,21 @@
             <td class="p-3"><?= esc($factura['payment_form']['name'] ?? '---') ?></td>
             <td class="p-3">
             <div class="btn-group" role="group" aria-label="Botones de acción">
-                <button type="button" onclick="show(<?php echo $factura['number']; ?>)" class="btn btn-success btn-sm"><i class="bi bi-eye"></i> SHOW</button>
-                <button type="button" onclick="edit(<?php echo $factura['number']; ?>)" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i> EDIT</button>
-                <button type="button" onclick="delete_(<?php echo $factura['number']; ?>)" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> DELETE</button>
+                <a href="<?= base_url('facturas/verQR/' . urlencode($factura['number'])) ?>" target="_blank" class="btn btn-primary btn-sm">
+                <i class="bi bi-qr-code"></i> DIAN
+                </a>
+                <a href="<?= site_url('facturas/pdf/' . $factura['number']) ?>" 
+                    target="_blank" 
+                    class="btn btn-info btn-sm">
+                        <i class="bi bi-file-earmark-pdf"></i> PDF
+                    </a>
+                   
             </div>
+           
+
             </td>
+            
+            
         </tr>
         <?php endforeach ?>
     <?php else: ?>

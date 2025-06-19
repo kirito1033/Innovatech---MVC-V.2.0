@@ -275,6 +275,8 @@ function getIcon($ruta) {
       sidebar.classList.toggle('active');
     }
   </script>
+
+  
 </body>
 
 </html>
