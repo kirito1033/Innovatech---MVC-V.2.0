@@ -65,10 +65,11 @@
             height: 200px !important;
             max-width: 200px !important;
             max-height: 200px !important;
-            object-fit: cover !important;
+            object-fit: contain !important;
             border-radius: 12px !important;
             overflow: hidden !important;
             display: block;
+            margin: auto;
         }
 
         .producto-info {
@@ -243,8 +244,7 @@
                     <!-- Imagen del producto -->
                     <img src="<?= base_url('Uploads/' . $producto['imagen']) ?>" 
                         alt="<?= esc($producto['nom']) ?>" 
-                        class="producto-img me-3" 
-                        style="width: 100px; height: 100px; object-fit: cover;">
+                        class="producto-img me-3">
 
                     <!-- Información del producto -->
                     <div class="producto-info flex-grow-1">

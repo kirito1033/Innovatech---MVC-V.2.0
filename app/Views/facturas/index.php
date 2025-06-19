@@ -1,15 +1,3 @@
-<?php if (session()->getFlashdata('success')): ?>
-  <div class="alert alert-success">
-    <?= session()->getFlashdata('success') ?>
-  </div>
-<?php endif; ?>
-
-<?php if (session()->getFlashdata('error')): ?>
-  <div class="alert alert-danger">
-    <?= session()->getFlashdata('error') ?>
-  </div>
-<?php endif; ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,6 +16,7 @@
 
   <!-- Tu CSS personalizado -->
   <link href="../assets/css/style.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 
   <title><?= $title ?></title>
 </head>
@@ -44,7 +33,12 @@
     <button type="button" class="btn btn-primary" onclick="add()" style="font-size: 0.5em;"><img src ="../assets/img/icons/person-add.svg" style="color: white" ></button>
     <!-- Table -->
     <?php require_once("../app/Views/facturas/table.php") ?>
-  
+      <?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-success">
+      <?= session()->getFlashdata('success') ?>
+    </div>
+  <?php endif; ?>
+
 
   <!-- Modal -->
   <div class="modal fade" id="my-modal" tabindex="-1" aria-labelledby="my-modalLabel" aria-hidden="true">
@@ -86,7 +80,34 @@
       function add() {
       var modal = new bootstrap.Modal(document.getElementById('my-modal'));
       modal.show();
+      // Este ejemplo asume que tienes un input con ID reference_code
+      const refInput = document.getElementById('reference_code');
+      if (refInput) {
+        refInput.value = getNextReferenceCode();
+      }
+
+      // Aquí puedes agregar más lógica que ejecutas al hacer clic en el botón "Add"
+      console.log('Código generado:', refInput.value);
     }
+
+  if (!localStorage.getItem('last_reference_code')) {
+    localStorage.setItem('last_reference_code', 'I900');
+  }
+
+  function getNextReferenceCode() {
+    let lastCode = localStorage.getItem('last_reference_code');
+
+    // Obtener número actual y sumarle 1
+    const currentNumber = parseInt(lastCode.substring(1)) + 1;
+    const nextCode = 'I' + String(currentNumber).padStart(3, '0');
+
+    // Guardar el nuevo código
+    localStorage.setItem('last_reference_code', nextCode);
+    return nextCode;
+  }
+
+
+  
   </script>
 
 </body>

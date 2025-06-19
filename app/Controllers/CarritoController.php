@@ -127,4 +127,13 @@ class CarritoController extends Controller
         ]);
     }
 
+    public function entrega()
+    {
+        $categoriaModel = new CategoriaModel();
+        $categorias = $categoriaModel->findAll();
+        return view('pago/entrega', [
+            'categorias' => $categorias
+        ]);
+    }
+
 }

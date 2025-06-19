@@ -417,7 +417,7 @@
 <script>
     document.querySelector('.btn-enviar').addEventListener('click', function(event) {
         event.preventDefault(); // Evita el envío del formulario
-        window.location.href = 'facturas.html'; // Redirige al archivo deseado
+        window.location.href = '<?= base_url('pago/entrega') ?>';
     });
 
 
