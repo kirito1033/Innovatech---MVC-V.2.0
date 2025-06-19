@@ -136,7 +136,7 @@
 
 /* Estilo general para los botones de paginación */
 #table-index_paginate .paginate_button {
-  background-color: #053543 ;
+  background-color: #053543;
   color: #b5b4b4 !important;
   border: 1px solid #053543;
   border-radius: 5px;
@@ -155,4 +155,5 @@
 .dataTables_info{
    color: #ffffff !important;
 }
+
 

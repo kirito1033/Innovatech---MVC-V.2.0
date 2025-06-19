@@ -25,9 +25,9 @@ class CarritoController extends Controller
         $usuario_id = $session->get('id_usuario');
 
         // Validación de sesión si deseas forzar login
-        // if (!$usuario_id) {
-        //     return redirect()->to('/logout');
-        // }
+        if (!$usuario_id) {
+            return redirect()->to('/logout');
+        }
 
         $carritoModel = new CarritoModel();
         $categoriaModel = new CategoriaModel();
@@ -58,6 +58,11 @@ class CarritoController extends Controller
 
         $carritoModel = new CarritoModel();
 
+        // Validación de sesión si deseas forzar login
+        if (!$usuario_id) {
+            return redirect()->to('/logout');
+        }
+        
         // Verifica si ya existe ese producto en el carrito
         $existente = $carritoModel
             ->where('usuario_id', $usuario_id)
@@ -102,4 +107,24 @@ class CarritoController extends Controller
             return redirect()->back()->with('error', 'Error al eliminar el producto.');
         }
     }
+
+    // Métodos de redirección de pago
+    public function contraentrega()
+    {
+        $categoriaModel = new CategoriaModel();
+        $categorias = $categoriaModel->findAll();
+        return view('pago/contraentrega', [
+            'categorias' => $categorias
+        ]);
+    }
+
+    public function tarjeta()
+    {
+        $categoriaModel = new CategoriaModel();
+        $categorias = $categoriaModel->findAll();
+        return view('pago/tarjeta', [
+            'categorias' => $categorias
+        ]);
+    }
+
 }
