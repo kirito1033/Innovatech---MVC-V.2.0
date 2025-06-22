@@ -35,6 +35,8 @@ $routes->group('estadousuario',['filter' => 'roleaccess'], function($routes){
     $routes->post("update", "EstadoUsuarioController::update");
 });
 
+$routes->post("register/add", "UsuarioController::create");
+
 $routes->group('usuario',['filter' => 'roleaccess'], function($routes){
     $routes->get("/", "UsuarioController::index");
     $routes->get("show", "UsuarioController::index");
@@ -383,5 +385,17 @@ $routes->get('pedido/factura/(:num)', 'PedidoProveedorController::generarFactura
 $routes->get('pedidoproveedor/enviarFacturaCorreo/(:num)', 'PedidoProveedorController::enviarFacturaCorreo/$1');
 
 $routes->get('facturas', 'Facturas::index');
-
+$routes->get('facturas/verQR/(:any)', 'Facturas::verQR/$1'); 
+$routes->get('facturas/pdf/(:segment)', 'Facturas::pdf/$1');
 $routes->post('facturas/registrar', 'Facturas::registrarFactura');
+$routes->get('facturas/pagar/(:segment)', 'Facturas::pagar/$1');
+$routes->get('facturas/respuesta', 'Facturas::respuesta');
+$routes->post('facturas/confirmacion', 'Facturas::confirmacion'); 
+<<<<<<< HEAD
+$routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
+=======
+$routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
+$routes->get('facturas/notas-credito', 'Facturas::notasCredito');
+$routes->post('notas-credito/registrar', 'Facturas::registrar');
+$routes->get('api/token', 'ApiController::token');
+>>>>>>> 8ee873d0f7f815b0256dcbbd11de0d55f7ee5022

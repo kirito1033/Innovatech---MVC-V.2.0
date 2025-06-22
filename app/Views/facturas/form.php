@@ -1,45 +1,43 @@
-<form action="<?= base_url('facturas/registrar') ?>" method="post" class="p-4 shadow rounded">
+<form id="formFactura" action="<?= base_url('facturas/registrar') ?>" method="post" class="p-4 shadow rounded">
 
       <!-- Datos ocultos -->
       <input type="hidden" name="numbering_range_id" value="8">
-      <input type="hidden" name="reference_code" value="I421">
-      <input type="hidden" name="observation" value="">
+      <input type="hidden" name="reference_code" id="reference_code">
+      <input type="hidden" name="observation" value="Pago realizado en la tienda de innovatech">
       <input type="hidden" name="payment_form" value="1">
       <input type="hidden" name="payment_due_date" value="2024-12-30">
-      <input type="hidden" name="payment_method_code" value="10">
+      <input type="hidden" name="payment_method_code" value="49">
       <input type="hidden" name="operation_type" value="10">
       <input type="hidden" name="order_reference[reference_code]" value="ref-001">
       <input type="hidden" name="order_reference[issue_date]" value="">
-      <input type="hidden" name="billing_period[start_date]" value="2024-01-10">
-      <input type="hidden" name="billing_period[start_time]" value="00:00:00">
-      <input type="hidden" name="billing_period[end_date]" value="2024-02-09">
-      <input type="hidden" name="billing_period[end_time]" value="23:59:59">
+
 
       <!-- Cliente -->
       <h5 class="mb-3">Datos del Cliente</h5>
       <div class="mb-2">
         <label for="identification">Identificación</label>
-        <input type="text" name="customer[identification]" id="identification" class="form-control" value="7788999456" required>
-      </div>
-      <div class="mb-2">
-        <label for="dv">Dígito de verificación</label>
-        <input type="text" name="customer[dv]" id="dv" class="form-control" value="3">
+      <input type="text" name="customer[identification]" id="identification" class="form-control"
+       value="<?= esc($usuario['documento']) ?>" required>
       </div>
       <div class="mb-2">
         <label for="names">Nombres</label>
-        <input type="text" name="customer[names]" id="names" class="form-control" value="Alan Turing" required>
+        <input type="text" name="customer[names]" id="names" class="form-control"
+       value="<?= esc($usuario['primer_nombre'] . ' ' . ($usuario['segundo_nombre'] ?? '') . ' ' . $usuario['primer_apellido'] . ' ' . ($usuario['segundo_apellido'] ?? '')) ?>" required>
       </div>
       <div class="mb-2">
         <label for="address">Dirección</label>
-        <input type="text" name="customer[address]" id="address" class="form-control" value="calle 1 # 2-68">
+        <input type="text" name="customer[address]" id="address" class="form-control"
+       value="<?= esc($usuario['direccion']) ?>">
       </div>
       <div class="mb-2">
         <label for="email">Correo</label>
-        <input type="email" name="customer[email]" id="email" class="form-control" value="alanturing@enigmasas.com">
+        <input type="email" name="customer[email]" id="email" class="form-control"
+       value="<?= esc($usuario['correo']) ?>">
       </div>
       <div class="mb-2">
         <label for="phone">Teléfono</label>
-        <input type="text" name="customer[phone]" id="phone" class="form-control" value="1234567890">
+        <input type="text" name="customer[phone]" id="phone" class="form-control"
+       value="<?= esc($usuario['telefono1']) ?>">
       </div>
 
       <!-- Ocultos cliente -->
@@ -51,76 +49,155 @@
       <input type="hidden" name="customer[municipality_id]" value="980">
 
       <!-- Ítems -->
-      <h5 class="mt-4 mb-3">Productos</h5>
-
-      <!-- Producto 1 -->
-      <div class="border rounded p-3 mb-3">
-        <div class="mb-2">
-          <label>Nombre</label>
-          <input type="text" name="items[0][name]" class="form-control" value="producto de prueba">
+      <div class="mb-3 d-flex align-items-end gap-2">
+        <div class="flex-grow-1">
+            <label for="select-producto">Seleccionar producto</label>
+            <select id="select-producto" class="form-select">
+            <option value="">-- Selecciona un producto --</option>
+            <?php foreach ($productos as $producto): ?>
+                <option value="<?= esc(json_encode($producto)) ?>">
+                <?= esc($producto['nom']) ?> - $<?= esc($producto['precio']) ?>
+                </option>
+            <?php endforeach; ?>
+            </select>
         </div>
-        <div class="mb-2">
-          <label>Código</label>
-          <input type="text" name="items[0][code_reference]" class="form-control" value="12345">
-        </div>
-        <div class="mb-2">
-          <label>Cantidad</label>
-          <input type="number" name="items[0][quantity]" class="form-control" value="1" min="1">
-        </div>
-        <div class="mb-2">
-          <label>Precio</label>
-          <input type="number" name="items[0][price]" class="form-control" value="50000">
+        <button type="button" class="btn btn-success" onclick="agregarProducto()">Agregar</button>
         </div>
 
-        <!-- Ocultos producto 1 -->
-        <input type="hidden" name="items[0][scheme_id]" value="1">
-        <input type="hidden" name="items[0][note]" value="">
-        <input type="hidden" name="items[0][discount_rate]" value="20">
-        <input type="hidden" name="items[0][tax_rate]" value="19.00">
-        <input type="hidden" name="items[0][unit_measure_id]" value="70">
-        <input type="hidden" name="items[0][standard_code_id]" value="1">
-        <input type="hidden" name="items[0][is_excluded]" value="0">
-        <input type="hidden" name="items[0][tribute_id]" value="1">
-        <input type="hidden" name="items[0][withholding_taxes][0][code]" value="06">
-        <input type="hidden" name="items[0][withholding_taxes][0][withholding_tax_rate]" value="7.00">
-        <input type="hidden" name="items[0][withholding_taxes][1][code]" value="05">
-        <input type="hidden" name="items[0][withholding_taxes][1][withholding_tax_rate]" value="15.00">
-        <input type="hidden" name="items[0][mandate][identification_document_id]" value="6">
-        <input type="hidden" name="items[0][mandate][identification]" value="123456789">
-      </div>
+        <div id="productos-container"></div>
 
-      <!-- Producto 2 -->
-      <div class="border rounded p-3 mb-3">
-        <div class="mb-2">
-          <label>Nombre</label>
-          <input type="text" name="items[1][name]" class="form-control" value="producto de prueba 2">
-        </div>
-        <div class="mb-2">
-          <label>Código</label>
-          <input type="text" name="items[1][code_reference]" class="form-control" value="54321">
-        </div>
-        <div class="mb-2">
-          <label>Cantidad</label>
-          <input type="number" name="items[1][quantity]" class="form-control" value="1" min="1">
-        </div>
-        <div class="mb-2">
-          <label>Precio</label>
-          <input type="number" name="items[1][price]" class="form-control" value="50000">
-        </div>
-
-        <!-- Ocultos producto 2 -->
-        <input type="hidden" name="items[1][scheme_id]" value="0">
-        <input type="hidden" name="items[1][note]" value="">
-        <input type="hidden" name="items[1][discount_rate]" value="0">
-        <input type="hidden" name="items[1][tax_rate]" value="5.00">
-        <input type="hidden" name="items[1][unit_measure_id]" value="70">
-        <input type="hidden" name="items[1][standard_code_id]" value="1">
-        <input type="hidden" name="items[1][is_excluded]" value="0">
-        <input type="hidden" name="items[1][tribute_id]" value="1">
-      </div>
 
       <!-- Botón -->
       <button type="submit" class="btn btn-success">Enviar factura</button>
-    </form>
+      <button type="button" class="btn btn-outline-primary " onclick="prepararPago()"><i class="bi bi-credit-card"></i> Pagar
+</button>
+
+</form>
+<form id="formPayU" method="post" action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/">
+  <input name="merchantId"    type="hidden" value="508029">
+  <input name="accountId"     type="hidden" value="512321">
+  <input name="description"   type="hidden" value="Factura electrónica">
+  <input name="referenceCode" type="hidden" id="payu_refcode">
+  <input name="amount"        type="hidden" id="payu_amount">
+  <input name="tax"           type="hidden" value="0">
+  <input name="taxReturnBase" type="hidden" value="0">
+  <input name="currency"      type="hidden" value="COP">
+  <input name="signature"     type="hidden" id="payu_signature">
+  <input name="test"          type="hidden" value="1">
+  <input name="buyerEmail"    type="hidden" id="payu_email">
+
+  <!-- Rutas a crear -->
+<<<<<<< HEAD
+  <input name="responseUrl"   type="hidden" value="https://5b57-179-51-111-178.ngrok-free.app/facturas/respuesta">
+  <input name="confirmationUrl" type="hidden" value="https://5b57-179-51-111-178.ngrok-free.app/facturas/confirmacion">
+=======
+  <input name="responseUrl"   type="hidden" value="https://de7c-179-51-111-178.ngrok-free.app/facturas/respuesta">
+  <input name="confirmationUrl" type="hidden" value="https://de7c-179-51-111-178.ngrok-free.app/facturas/confirmacion">
+>>>>>>> 8ee873d0f7f815b0256dcbbd11de0d55f7ee5022
+</form>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
+<script>
+function calcularTotalFactura() {
+  const precios = document.querySelectorAll('input[name^="items"][name$="[price]"]');
+  const cantidades = document.querySelectorAll('input[name^="items"][name$="[quantity]"]');
+
+  let total = 0;
+  for (let i = 0; i < precios.length; i++) {
+    const precio = parseFloat(precios[i].value) || 0;
+    const cantidad = parseInt(cantidades[i].value) || 0;
+    total += precio * cantidad;
+  }
+
+  return total.toFixed(2);
+}
+
+function prepararPago() {
+  const reference = 'ref_' + Date.now();
+  const email = document.getElementById("email").value;
+  const amount = calcularTotalFactura();
+  const apiKey = "4Vj8eK4rloUd272L48hsrarnUA";
+  const merchantId = "508029";
+  const currency = "COP";
+
+  const signatureRaw = `${apiKey}~${merchantId}~${reference}~${amount}~${currency}`;
+  const signature = md5(signatureRaw);
+
+  document.getElementById("payu_refcode").value = reference;
+  document.getElementById("payu_amount").value = amount;
+  document.getElementById("payu_signature").value = signature;
+  document.getElementById("payu_email").value = email;
+
+  // 🔁 Guarda la factura en la DB
+  const form = document.getElementById("formFactura");
+  const formData = new FormData(form);
+  formData.append('reference_code', reference);
+
+  fetch("<?= base_url('facturas/guardar-temporal') ?>", {
+    method: "POST",
+    body: formData,
+  }).then(() => {
+    document.getElementById("formPayU").submit();
+  });
+}
+
+
+</script>
+
+
+<script>
+  let itemIndex = 0;
+
+  function agregarProducto() {
+    const select = document.getElementById("select-producto");
+    const container = document.getElementById("productos-container");
+
+    if (!select.value) return alert("Selecciona un producto");
+
+    const producto = JSON.parse(select.value);
+
+    const html = `
+      <div class="border rounded p-3 mb-3">
+        <h6>Producto: ${producto.nom}</h6>
+        <div class="mb-2">
+          <label>Nombre</label>
+          <input type="text" name="items[${itemIndex}][name]" class="form-control" value="${producto.nom}">
+        </div>
+        <div class="mb-2">
+          <label>Código</label>
+          <input type="text" name="items[${itemIndex}][code_reference]" class="form-control" value="${producto.id}">
+        </div>
+        <div class="mb-2">
+          <label>Cantidad</label>
+          <input type="number" step="any" name="items[${itemIndex}][quantity]" class="form-control" value="1" min="1">
+        </div>
+        <div class="mb-2">
+          <label>Precio</label>
+          <input type="number" step="any" name="items[${itemIndex}][price]" class="form-control" value="${producto.precio}">
+        </div>
+
+        <!-- Ocultos -->
+        <input type="hidden" name="items[${itemIndex}][scheme_id]" value="0">
+        <input type="hidden" name="items[${itemIndex}][note]" value="">
+        <input type="hidden" name="items[${itemIndex}][discount_rate]" value="0">
+        <input type="hidden" name="items[${itemIndex}][tax_rate]" value="19.00">
+        <input type="hidden" name="items[${itemIndex}][unit_measure_id]" value="70">
+        <input type="hidden" name="items[${itemIndex}][standard_code_id]" value="1">
+        <input type="hidden" name="items[${itemIndex}][is_excluded]" value="0">
+        <input type="hidden" name="items[${itemIndex}][tribute_id]" value="1">
+        <input type="hidden" name="items[${itemIndex}][withholding_taxes][0][code]" value="06">
+        <input type="hidden" name="items[${itemIndex}][withholding_taxes][0][withholding_tax_rate]" value="7.00">
+        <input type="hidden" name="items[${itemIndex}][withholding_taxes][1][code]" value="05">
+        <input type="hidden" name="items[${itemIndex}][withholding_taxes][1][withholding_tax_rate]" value="15.00">
+        <input type="hidden" name="items[${itemIndex}][mandate][identification_document_id]" value="6">
+        <input type="hidden" name="items[${itemIndex}][mandate][identification]" value="123456789">
+      </div>
+    `;
+
+    container.insertAdjacentHTML("beforeend", html);
+    itemIndex++;
+  }
+   // Función para obtener el siguiente código en formato I###
+  
+</script>
 
   </div>

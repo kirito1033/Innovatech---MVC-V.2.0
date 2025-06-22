@@ -158,7 +158,7 @@
             <img src ="../assets/img/logo.png" style="color: white" >
     </div>
     <h2 class="titulo">Registro de Usuario</h2>
-    <form id="my-form" method="post" action="<?= base_url('usuario/add') ?>">
+    <form id="my-form" method="post" action="<?= base_url('register/add') ?>">
         <?= csrf_field() ?>
        
         <input type="hidden" id="id_usuario" name="id_usuario" value="">

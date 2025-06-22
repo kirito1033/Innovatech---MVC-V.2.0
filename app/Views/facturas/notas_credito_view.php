@@ -18,7 +18,7 @@
   <link href="../assets/css/style.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 
-  <title><?= $title ?></title>
+  <title>Notas credito</title>
 </head>
 
 <body>
@@ -29,15 +29,11 @@
 
   <!-- Container -->
   <div class="container">
-    <h3><?= $title ?></h3>
+    <title>Notas credito</title>
     <button type="button" class="btn btn-primary" onclick="add()" style="font-size: 0.5em;"><img src ="../assets/img/icons/person-add.svg" style="color: white" ></button>
     <!-- Table -->
-    <?php require_once("../app/Views/facturas/table.php") ?>
-      <?php if (session()->getFlashdata('success')): ?>
-    <div class="alert alert-success">
-      <?= session()->getFlashdata('success') ?>
-    </div>
-  <?php endif; ?>
+    <?php require_once("../app/Views/facturas/tableNotas.php") ?>
+     
 
 
   <!-- Modal -->
@@ -45,11 +41,11 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="my-modalLabel"><?= $title ?></h5>
+          <h5 class="modal-title" id="my-modalLabel">Notas credito</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <?php require_once("../app/Views/facturas/form.php") ?>
+          <?php require_once("../app/Views/facturas/formNotas.php") ?>
         </div>
       </div>
     </div>
@@ -69,46 +65,24 @@
 
 
   <script>
-    $(document).ready(function () {
-      $('#table-index').DataTable({
-        responsive: true,
-        language: {
-          url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
-        }
-      });
-    });
-      function add() {
-      var modal = new bootstrap.Modal(document.getElementById('my-modal'));
-      modal.show();
-      // Este ejemplo asume que tienes un input con ID reference_code
-      const refInput = document.getElementById('reference_code');
-      if (refInput) {
-        refInput.value = getNextReferenceCode();
+  $(document).ready(function () {
+    // Inicializar DataTables con español
+    $('#table-index').DataTable({
+      responsive: true,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
       }
+    });
+  });
 
-      // Aquí puedes agregar más lógica que ejecutas al hacer clic en el botón "Add"
-      console.log('Código generado:', refInput.value);
-    }
+  // Función para abrir el modal y asignar un nuevo código
+  function add() {
+    var modal = new bootstrap.Modal(document.getElementById('my-modal'));
+    modal.show();
 
-  if (!localStorage.getItem('last_reference_code')) {
-    localStorage.setItem('last_reference_code', 'I900');
   }
+</script>
 
-  function getNextReferenceCode() {
-    let lastCode = localStorage.getItem('last_reference_code');
-
-    // Obtener número actual y sumarle 1
-    const currentNumber = parseInt(lastCode.substring(1)) + 1;
-    const nextCode = 'I' + String(currentNumber).padStart(3, '0');
-
-    // Guardar el nuevo código
-    localStorage.setItem('last_reference_code', nextCode);
-    return nextCode;
-  }
-
-
-  
-  </script>
 
 </body>
 

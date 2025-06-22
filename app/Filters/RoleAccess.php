@@ -14,7 +14,7 @@ class RoleAccess implements FilterInterface
 
         // Si no está logueado
         if (!$session->get('isLoggedIn')) {
-            return redirect()->to('/login')->with('error', 'Debes iniciar sesión para acceder');
+            return redirect()->to('/usuario/login')->with('error', 'Debes iniciar sesión para acceder');
         }
 
         // Verifica si su estado cambió a inactivo

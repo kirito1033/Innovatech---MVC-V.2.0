@@ -184,7 +184,7 @@ ul{
         border: none;
         border-radius: 50px;
         background-color: var(--encabezados-piedepagina);
-        color: var(--Color--texto);
+        color: var(--gossamer);
         font-size: 1.3rem;
     }
     .boton-buscar{
@@ -204,6 +204,7 @@ ul{
         display: flex;
         width: 15%;
         justify-content: center;
+    
     }
     .header-pc{
         display: flex;

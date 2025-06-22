@@ -26,6 +26,27 @@ class CarritoController extends Controller
     {
         $session = session();
         $usuario_id = $session->get('id_usuario');
+        $usuarioModel = new \App\Models\UsuarioModel();
+        $idUsuario = session()->get('id_usuario');
+        $usuario = $usuarioModel->find($idUsuario);
+
+        $productosModel = new \App\Models\ProductosModel();
+        $productos = $productosModel->findAll();
+
+        $modelosModel = new \App\Models\ModelosModel();
+        $rolId = session()->get('rol_id');
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        $model = new \App\Models\FacturaModel();
+        $facturas = $model->getFacturas();
+
+        $detalleFactura = [];
+
+        // ✅ Accede correctamente a la primera factura
+        if (!empty($facturas['data']['data'])) {
+            $numeroFactura = $facturas['data']['data'][0]['number'];
+            $detalleFactura = $model->getFacturaCompleta($numeroFactura);
+        }
 
         // Validación de sesión si deseas forzar login
         if (!$usuario_id) {
@@ -45,8 +66,14 @@ class CarritoController extends Controller
         $categorias = $categoriaModel->findAll();
 
         return view('producto/carrito', [
-            'productos' => $carrito,
-            'categorias' => $categorias
+            'productoscarrito' => $carrito,
+            'categorias' => $categorias,
+            'facturas'        => $facturas,
+            'detalleFactura'  => $detalleFactura,
+            'modulos'         => $modulosPermitidos,
+            'title'           => 'Listado de Facturas',
+            'usuario'         => $usuario,
+            'productos'       => $productos
         ]);
     }
 
@@ -131,6 +158,15 @@ class CarritoController extends Controller
         $categoriaModel = new CategoriaModel();
         $categorias = $categoriaModel->findAll();
         return view('pago/tarjeta', [
+            'categorias' => $categorias
+        ]);
+    }
+
+    public function entrega()
+    {
+        $categoriaModel = new CategoriaModel();
+        $categorias = $categoriaModel->findAll();
+        return view('pago/entrega', [
             'categorias' => $categorias
         ]);
     }
