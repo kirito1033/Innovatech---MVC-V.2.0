@@ -7,6 +7,7 @@ use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\ModelosModel;
 
+// Controlador para la gestión de departamentos.
 class DepartamentoController extends Controller
 {
     private $primaryKey;
@@ -14,7 +15,7 @@ class DepartamentoController extends Controller
     private $data;
     private $model;
 
-    //Metodo constructor
+    //Constructor
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -23,7 +24,7 @@ class DepartamentoController extends Controller
         $this->model = "DepartamentoModel";
     }
 
-    //Metodo index
+    //Muestra la vista principal con la lista de departamentos.
     public function index()
     {
         $this->data["title"] = "DEPARTAMENTO";
@@ -39,7 +40,7 @@ class DepartamentoController extends Controller
         return view("departamento/departamento_view", $this->data);
     }
 
-    //Metodo create
+    //Crea un nuevo departamento (vía AJAX).
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -62,6 +63,7 @@ class DepartamentoController extends Controller
         echo json_encode($data);
     }
 
+    //Obtiene un único departamento por ID (vía AJAX).
     public function singleDepartamento($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -82,6 +84,7 @@ class DepartamentoController extends Controller
         echo json_encode($data);
     }
 
+    //Actualiza un departamento existente (vía AJAX).
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -109,6 +112,7 @@ class DepartamentoController extends Controller
         echo json_encode($dataModel);
     }
 
+    // Elimina un departamento por ID.
     public function delete($id = null)
     {
         try {
@@ -130,6 +134,7 @@ class DepartamentoController extends Controller
         echo json_encode($data);
     }
 
+    // Obtiene los datos del formulario para insertar/actualizar.
     public function getDataModel()
     {
         $data = [

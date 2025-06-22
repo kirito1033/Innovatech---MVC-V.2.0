@@ -1,5 +1,8 @@
 <?php
 
+//Controlador para gestionar el almacenamiento aleatorio.
+//  Proporciona funcionalidades CRUD utilizando AJAX.
+
 namespace App\Controllers;
 
 use App\Models\AlmacenamientoAleatorioModel;
@@ -8,14 +11,20 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class AlmacenamientoAleatorioController extends Controller
 {
+
+    //Llave primaria del modelo.
     private $primaryKey;
+    //Instancia del modelo de almacenamiento aleatorio.
     private $AlmacenamientoAleatorioModel;
+    //Datos compartidos con las vistas.
     private $data;
+    //Nombre del modelo usado.
     private $model;
 
     
 
-    // Constructor
+    // Constructor del controlador.
+    //Inicializa la clave primaria, el modelo y el arreglo de datos.
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -24,7 +33,8 @@ class AlmacenamientoAleatorioController extends Controller
         $this->model = "AlmacenamientoAleatorioModel";
     }
 
-    // Método index
+    //Muestra la vista principal de almacenamiento aleatorio.
+    //Carga los módulos permitidos según el rol de usuario.
     public function index()
     {
         $this->data["title"] = "ALMACENAMIENTO";
@@ -40,7 +50,7 @@ class AlmacenamientoAleatorioController extends Controller
         return view("almacenamientoaleatorio/almacenamientoaleatorio_view", $this->data);
     }
 
-    // Método create
+    // Crea un nuevo registro de almacenamiento aleatorio vía AJAX.
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -69,6 +79,7 @@ class AlmacenamientoAleatorioController extends Controller
         echo json_encode($data);
     }
 
+        //Obtiene un solo registro de almacenamiento por ID vía AJAX.
     public function singleAlmacenamiento($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -88,6 +99,8 @@ class AlmacenamientoAleatorioController extends Controller
         }
         echo json_encode($data);
     }
+
+    //Actualiza un registro existente de almacenamiento aleatorio vía AJAX.
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -122,6 +135,7 @@ class AlmacenamientoAleatorioController extends Controller
         echo json_encode($data);
     }
 
+    //Elimina un registro de almacenamiento aleatorio por ID.
     public function delete($id = null)
     {
         try {
@@ -148,6 +162,8 @@ class AlmacenamientoAleatorioController extends Controller
         }
         echo json_encode($data);
     }
+
+    //Extrae y devuelve los datos del formulario para el modelo.
 
     private function getDataModel()
     {

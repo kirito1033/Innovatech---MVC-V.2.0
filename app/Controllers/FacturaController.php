@@ -23,6 +23,7 @@ class FacturaController extends Controller
         $this->model = "FacturaModel";
     }
 
+    //Vista principal de facturas
     public function index()
     {
         $this->data['title'] = "Facturas";
@@ -45,6 +46,7 @@ class FacturaController extends Controller
         return view('factura/factura_view', $this->data);
     }
 
+    //Crear factura (AJAX)
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -67,6 +69,7 @@ class FacturaController extends Controller
         echo json_encode($data);
     }
 
+    //Obtener una factura específica por ID (AJAX)
     public function singleFactura($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -87,6 +90,7 @@ class FacturaController extends Controller
         echo json_encode($data);
     }
 
+    //Actualizar una factura (AJAX)
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -110,6 +114,7 @@ class FacturaController extends Controller
         echo json_encode($data);
     }
 
+    // Eliminar una factura (AJAX)
     public function delete($id = null)
     {
         try {
@@ -131,6 +136,7 @@ class FacturaController extends Controller
         echo json_encode($data);
     }
 
+    //Obtener datos del formulario para insertar/actualizar
     public function getDataModel()
     {
         return [

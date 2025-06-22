@@ -15,6 +15,7 @@ class EnvioController extends Controller
     private $data;
     private $model;
 
+    //Constructor
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -22,6 +23,8 @@ class EnvioController extends Controller
         $this->data = [];
         $this->model = "EnvioModel";
     }
+
+    //Muestra la vista principal con todos los envíos y datos relacionados.
 
     public function index()
     {
@@ -45,6 +48,8 @@ class EnvioController extends Controller
         return view('envio/envio_view', $this->data);
     }
 
+    //Inserta un nuevo envío (petición AJAX).
+
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -67,6 +72,8 @@ class EnvioController extends Controller
         echo json_encode($data);
     }
 
+    //Consulta un envío individual por ID (AJAX).
+
     public function singleEnvio($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -87,6 +94,7 @@ class EnvioController extends Controller
         echo json_encode($data);
     }
 
+    //Actualiza un envío (AJAX).
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -122,6 +130,7 @@ class EnvioController extends Controller
         echo json_encode($data);
     }
 
+    //Elimina un envío por ID.
 
     public function delete($id = null)
     {
@@ -143,6 +152,8 @@ class EnvioController extends Controller
         }
         echo json_encode($data);
     }
+
+    //Recoge datos desde el formulario de creación/actualización.
 
     public function getDataModel()
     {

@@ -6,7 +6,8 @@ use App\Models\FacturaModel;
 
 class Facturas extends BaseController
 {
-    
+ 
+    //Muestra listado de facturas
     public function index()
     {
         $modelosModel = new \App\Models\ModelosModel();
@@ -25,7 +26,7 @@ class Facturas extends BaseController
             'title'    => 'Listado de Facturas'
         ]);
     }
-    // En tu controlador FacturaController
+    // Registra una nueva factura desde formulario (POST)
     public function registrarFactura()
 {
     helper(['form', 'url']);
@@ -36,12 +37,13 @@ class Facturas extends BaseController
     $usuario = [ /* datos del cliente */ ];
     $productos = [ /* tus productos como antes */ ];
 
+    //Recoger datos del formulario
     $data = $this->request->getPost(); 
 
     $model = new \App\Models\FacturaModel();
     $resultado = $model->registrarFactura($data);
 
-    // Redireccionar con mensaje
+    // Validación opcional
     if (isset($resultado['error'])) {
         return redirect()->back()->with('error', $resultado['error']);
     }

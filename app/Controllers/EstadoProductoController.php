@@ -13,7 +13,7 @@ class EstadoProductoController extends Controller
     private $data;
     private $model;
 
-    // Método constructor
+    // Constructor
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -22,7 +22,7 @@ class EstadoProductoController extends Controller
         $this->model = "EstadoProductoModel";
     }
 
-    // Método index
+    //  Vista principal del módulo de estado de productos.
     public function index()
     {
         $this->data["title"] = "ESTADO PRODUCTO";
@@ -38,7 +38,7 @@ class EstadoProductoController extends Controller
         return view("estadoproducto/estadoproducto_view", $this->data);
     }
 
-    // Método create
+    //Crea un nuevo estado de producto (AJAX).
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -61,7 +61,7 @@ class EstadoProductoController extends Controller
         echo json_encode($data);
     }
 
-    // Método para obtener un solo estado producto
+    // Obtiene un estado de producto por su ID (AJAX).
     public function singleEstadoProducto($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -82,7 +82,7 @@ class EstadoProductoController extends Controller
         echo json_encode($data);
     }
 
-    // Método update
+    //Actualiza un estado de producto (AJAX).
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -110,7 +110,7 @@ class EstadoProductoController extends Controller
         echo json_encode($data);
     }
 
-    // Método delete
+    //Elimina un estado de producto (AJAX).
     public function delete($id = null)
     {
         try {
@@ -132,7 +132,7 @@ class EstadoProductoController extends Controller
         echo json_encode($data);
     }
 
-    // Método para obtener los datos enviados en el formulario
+    // Extrae los datos del request para usarlos en operaciones de inserción/actualización.
     public function getDataModel()
     {
         $data = [

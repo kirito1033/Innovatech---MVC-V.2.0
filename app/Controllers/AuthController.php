@@ -1,5 +1,7 @@
 <?php
 
+// Controlador responsable de la recuperación y restablecimiento de contraseñas.
+//Permite enviar enlaces de recuperación y actualizar la contraseña mediante un token.
 namespace App\Controllers;
 
 use App\Models\UsuarioModel;
@@ -7,10 +9,14 @@ use CodeIgniter\I18n\Time;
 
 class AuthController extends BaseController
 {
+    //Muestra el formulario para solicitar la recuperación de contraseña.
     public function showForgotForm()
     {
         return view('auth/forgot_password');
     }
+
+    //Procesa la solicitud de recuperación de contraseña.
+    //Genera un token, lo guarda en la base de datos y envía un correo con el enlace de restablecimiento.
 
   public function sendResetLink()
 {
@@ -74,7 +80,7 @@ class AuthController extends BaseController
         return redirect()->back()->with('error', 'Error al enviar el correo:<br><pre>' . esc($debug) . '</pre>');
     }
 }
-
+    //Muestra el formulario para restablecer la contraseña si el token es válido.
     public function showResetForm($token)
     {
         $usuarioModel = new UsuarioModel();
@@ -88,7 +94,8 @@ class AuthController extends BaseController
 
         return view('auth/reset_password', ['token' => $token]);
     }
-
+    //Actualiza la contraseña del usuario si el token es válido y no ha expirado.
+    //Limpia el token una vez que se ha usado.
     public function updatePassword()
     {
         $token = $this->request->getPost('token');

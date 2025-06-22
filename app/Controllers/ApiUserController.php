@@ -1,5 +1,7 @@
 <?php
 
+//Controlador encargado de la gestión de usuarios de la API.
+//Permite crear usuarios y verificar credenciales mediante AJAX.
 namespace App\Controllers;
 
 use App\Models\ApiUserModel;
@@ -8,16 +10,25 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class ApiUserController extends Controller
 {
+    //Clave primaria utilizada en el modelo.
     private $primaryKey = "id";
+    //Instancia del modelo de usuarios de la API.
     private $ApiUserModel;
+    //Datos a enviar a la vista.
     private $data = [];
+    //Nombre del modelo usado como clave para el array de datos.
     private $model = "ApiUserModel";
+
+    //Constructor del controlador.
+    //Inicializa el modelo ApiUserModel.
 
     public function __construct()
     {
         $this->ApiUserModel = new \App\Models\ApiUserModel();
     }
 
+    //Muestra la vista principal con los usuarios de la API.
+    //Filtra los módulos visibles de acuerdo al rol del usuario en sesión.
       public function index()
     {
         $this->data["title"] = "API USERS";
@@ -33,7 +44,8 @@ class ApiUserController extends Controller
         return view("apiuser/apiuser_view", $this->data);
     }
 
-    // Crear usuario con password hasheado (bcrypt)
+    //Crea un nuevo usuario de API con contraseña hasheada. (bcrypt)
+    //Solo acepta solicitudes AJAX.
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -65,7 +77,8 @@ class ApiUserController extends Controller
         echo json_encode($data);
     }
 
-    // Login: verificar contraseña
+    // Verifica las credenciales de acceso del usuario de la API.
+    //La contraseña es validada con password_verify().
     public function login()
     {
         if ($this->request->isAJAX()) {

@@ -14,6 +14,7 @@ class IngresoProductoController extends Controller
     private $data;
     private $model;
 
+    //Constructor del controlador
     public function __construct() 
     { 
         $this->primaryKey = "id"; 
@@ -22,11 +23,15 @@ class IngresoProductoController extends Controller
         $this->model = "IngresoProductoModel"; 
     }
 
+    //Método principal: carga la vista con los datos necesarios
     public function index() 
     { 
+        //Cargar todos los usuarios para mostrarlos en la vista
         $Usuario = new UsuarioModel();
         $this->data['usuario'] = $Usuario->findAll();
+        //Título de la página
         $this->data['title'] = "Ingreso de Producto"; 
+        //Obtener los módulos permitidos para el rol actual
          $rolId = session()->get('rol_id');
         $modelosModel = new \App\Models\ModelosModel();
 
@@ -35,11 +40,14 @@ class IngresoProductoController extends Controller
 
         // Agregar los módulos a los datos enviados a la vista
         $this->data['modulos'] = $modulosPermitidos;
+        //Obtener todos los ingresos de productos
         $this->data[$this->model] = $this->IngresoProductoModel->orderBy($this->primaryKey, 'ASC')->findAll();
 
+        //Cargar la vista con los datos
         return view('ingresoproducto/ingresoproducto_view', $this->data); 
     }
 
+    //Crear un nuevo ingreso de producto (vía AJAX)
     public function create() 
     { 
         if ($this->request->isAJAX()) { 
@@ -63,6 +71,7 @@ class IngresoProductoController extends Controller
         echo json_encode($data); 
     }
 
+    //Obtener un ingreso de producto por su ID (vía AJAX)
     public function singleIngresoProducto($id = null) 
     { 
         if ($this->request->isAJAX()) { 
@@ -83,12 +92,14 @@ class IngresoProductoController extends Controller
         echo json_encode($data);  
     }
 
+    //Actualizar un ingreso de producto (vía AJAX)
     public function update() 
     { 
         if ($this->request->isAJAX()) { 
             $today = date("Y-m-d H:i:s"); 
             $id = $this->request->getVar($this->primaryKey); 
             
+            //Construir arreglo con los nuevos datos
             $dataModel = [
                 'id' => $this->request->getVar('id'), 
                 'factura' => $this->request->getVar('factura'), 
@@ -115,6 +126,7 @@ class IngresoProductoController extends Controller
         echo json_encode($data); 
     }
 
+    //Eliminar un ingreso de producto por su ID
     public function delete($id = null) 
     { 
         try { 
@@ -136,6 +148,7 @@ class IngresoProductoController extends Controller
         echo json_encode($data);  
     }
 
+    //Extraer los datos del formulario (usado en create y update)
     public function getDataModel() 
     { 
         $data = [ 
@@ -146,18 +159,22 @@ class IngresoProductoController extends Controller
         ]; 
         return $data; 
     }
+
+    // Subir archivo PDF (factura) y guardar registro en la BD
     public function subirFactura()
     {
         helper(['form', 'url']);
 
+        //Obtener el archivo y campos del formulario
         $file = $this->request->getFile('factura_file');
         $usuario_id = $this->request->getPost('usuario_id');
         $nombreFactura  = $this->request->getPost('nombre_factura');
 
+        //Validar archivo
         if ($file && $file->isValid() && !$file->hasMoved()) {
-            $newName = $file->getRandomName();
+            $newName = $file->getRandomName(); //Generar nombre único
             $ruta = 'uploads/facturas/';
-            $file->move($ruta, $newName);
+            $file->move($ruta, $newName); // Mover archivo a la carpeta
 
             // Guardar en la base de datos
             $this->IngresoProductoModel->insert([
@@ -170,6 +187,7 @@ class IngresoProductoController extends Controller
             return redirect()->back()->with('success', 'Factura subida correctamente.');
         }
 
+        //Si falla la carga
         return redirect()->back()->with('error', 'Error al subir la factura.');
     }
 
