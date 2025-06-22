@@ -9,7 +9,7 @@
   <div class="text-center p-5 bg-white rounded shadow">
     <h2 class="text-success mb-4">¡Gracias por tu compra!</h2>
     <p class="mb-3">Tu pago fue procesado exitosamente.</p>
-    <a href="<?= base_url('/') ?>" class="btn btn-primary">Volver al inicio</a>
+    <a href="<?= base_url('/facturas') ?>" class="btn btn-primary">Volver a Facturas</a>
   </div>
 </body>
 </html>

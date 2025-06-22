@@ -139,5 +139,60 @@ class FacturaModel
             return ['error' => 'Error al obtener el PDF: ' . $e->getMessage()];
         }
     }
+    public function getNotasCredito()
+    {
+        $token = $this->getToken();
+        if (!$token) {
+            return ['error' => 'Token no disponible'];
+        }
+
+        $client = \Config\Services::curlrequest();
+
+        try {
+            $response = $client->get('https://api-sandbox.factus.com.co/v1/credit-notes', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Accept'        => 'application/json',
+                ],
+            ]);
+
+            return json_decode($response->getBody(), true);
+        } catch (\Exception $e) {
+            log_message('error', 'Error al consultar notas crédito: ' . $e->getMessage());
+            return ['error' => 'Error al consultar las notas crédito: ' . $e->getMessage()];
+        }
+    }
+
+     public function registrarNotaCredito($dataNota)
+    {
+        // Obtener token
+        $token = $this->getToken();
+
+        if (!$token) {
+            return ['error' => 'Token no disponible'];
+        }
+
+        // Cliente HTTP
+        $client = \Config\Services::curlrequest();
+
+        try {
+            // Enviar la nota crédito para validación
+            $response = $client->post('https://api-sandbox.factus.com.co/v1/credit-notes/validate', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Accept'        => 'application/json',
+                    'Content-Type'  => 'application/json',
+                ],
+                'body' => json_encode($dataNota),
+            ]);
+
+            // Retornar la respuesta como arreglo
+            return json_decode($response->getBody(), true);
+        } catch (\Exception $e) {
+            return ['error' => 'Error al registrar la nota crédito: ' . $e->getMessage()];
+        }
+    }
+
+
 
 }

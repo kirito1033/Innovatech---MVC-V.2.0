@@ -3,17 +3,14 @@
       <!-- Datos ocultos -->
       <input type="hidden" name="numbering_range_id" value="8">
       <input type="hidden" name="reference_code" id="reference_code">
-      <input type="hidden" name="observation" value="">
+      <input type="hidden" name="observation" value="Pago realizado en la tienda de innovatech">
       <input type="hidden" name="payment_form" value="1">
       <input type="hidden" name="payment_due_date" value="2024-12-30">
-      <input type="hidden" name="payment_method_code" value="10">
+      <input type="hidden" name="payment_method_code" value="49">
       <input type="hidden" name="operation_type" value="10">
       <input type="hidden" name="order_reference[reference_code]" value="ref-001">
       <input type="hidden" name="order_reference[issue_date]" value="">
-      <input type="hidden" name="billing_period[start_date]" value="2024-01-10">
-      <input type="hidden" name="billing_period[start_time]" value="00:00:00">
-      <input type="hidden" name="billing_period[end_date]" value="2024-02-09">
-      <input type="hidden" name="billing_period[end_time]" value="23:59:59">
+
 
       <!-- Cliente -->
       <h5 class="mb-3">Datos del Cliente</h5>
@@ -21,10 +18,6 @@
         <label for="identification">Identificación</label>
       <input type="text" name="customer[identification]" id="identification" class="form-control"
        value="<?= esc($usuario['documento']) ?>" required>
-      </div>
-      <div class="mb-2">
-        <label for="dv">Dígito de verificación</label>
-        <input type="text" name="customer[dv]" id="dv" class="form-control" value="3">
       </div>
       <div class="mb-2">
         <label for="names">Nombres</label>
@@ -75,7 +68,7 @@
 
 
       <!-- Botón -->
-      <button type="submit" class="btn btn-success d-none">Enviar factura</button>
+      <button type="submit" class="btn btn-success">Enviar factura</button>
       <button type="button" class="btn btn-outline-primary " onclick="prepararPago()"><i class="bi bi-credit-card"></i> Pagar
 </button>
 
@@ -94,8 +87,13 @@
   <input name="buyerEmail"    type="hidden" id="payu_email">
 
   <!-- Rutas a crear -->
+<<<<<<< HEAD
   <input name="responseUrl"   type="hidden" value="https://5b57-179-51-111-178.ngrok-free.app/facturas/respuesta">
   <input name="confirmationUrl" type="hidden" value="https://5b57-179-51-111-178.ngrok-free.app/facturas/confirmacion">
+=======
+  <input name="responseUrl"   type="hidden" value="https://de7c-179-51-111-178.ngrok-free.app/facturas/respuesta">
+  <input name="confirmationUrl" type="hidden" value="https://de7c-179-51-111-178.ngrok-free.app/facturas/confirmacion">
+>>>>>>> 8ee873d0f7f815b0256dcbbd11de0d55f7ee5022
 </form>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 <script>

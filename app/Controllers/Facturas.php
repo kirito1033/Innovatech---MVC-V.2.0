@@ -9,38 +9,38 @@ class Facturas extends BaseController
 {
     
    public function index()
-{
-    $usuarioModel = new \App\Models\UsuarioModel();
-    $idUsuario = session()->get('id_usuario');
-    $usuario = $usuarioModel->find($idUsuario);
+    {
+        $usuarioModel = new \App\Models\UsuarioModel();
+        $idUsuario = session()->get('id_usuario');
+        $usuario = $usuarioModel->find($idUsuario);
 
-    $productosModel = new \App\Models\ProductosModel();
-    $productos = $productosModel->findAll();
+        $productosModel = new \App\Models\ProductosModel();
+        $productos = $productosModel->findAll();
 
-    $modelosModel = new \App\Models\ModelosModel();
-    $rolId = session()->get('rol_id');
-    $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+        $modelosModel = new \App\Models\ModelosModel();
+        $rolId = session()->get('rol_id');
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
 
-    $model = new \App\Models\FacturaModel();
-    $facturas = $model->getFacturas();
+        $model = new \App\Models\FacturaModel();
+        $facturas = $model->getFacturas();
 
-    $detalleFactura = [];
+        $detalleFactura = [];
 
-    // ✅ Accede correctamente a la primera factura
-    if (!empty($facturas['data']['data'])) {
-        $numeroFactura = $facturas['data']['data'][0]['number'];
-        $detalleFactura = $model->getFacturaCompleta($numeroFactura);
+        // ✅ Accede correctamente a la primera factura
+        if (!empty($facturas['data']['data'])) {
+            $numeroFactura = $facturas['data']['data'][0]['number'];
+            $detalleFactura = $model->getFacturaCompleta($numeroFactura);
+        }
+
+        return view('facturas/index', [
+            'facturas'        => $facturas,
+            'detalleFactura'  => $detalleFactura,
+            'modulos'         => $modulosPermitidos,
+            'title'           => 'Listado de Facturas',
+            'usuario'         => $usuario,
+            'productos'       => $productos
+        ]);
     }
-
-    return view('facturas/index', [
-        'facturas'        => $facturas,
-        'detalleFactura'  => $detalleFactura,
-        'modulos'         => $modulosPermitidos,
-        'title'           => 'Listado de Facturas',
-        'usuario'         => $usuario,
-        'productos'       => $productos
-    ]);
-}
 
 
     // En tu controlador FacturaController
@@ -195,6 +195,89 @@ class Facturas extends BaseController
 
         return $this->response->setJSON(['status' => 'ok']);
     }
+
+    public function notasCredito()
+    {
+        $usuarioModel = new \App\Models\UsuarioModel();
+        $idUsuario = session()->get('id_usuario');
+        $usuario = $usuarioModel->find($idUsuario);
+        $productosModel = new \App\Models\ProductosModel();
+        $productos = $productosModel->findAll();
+
+        $modelosModel = new \App\Models\ModelosModel();
+        $rolId = session()->get('rol_id');
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        $model = new \App\Models\FacturaModel();
+        $token = $model->getToken();
+
+        $notasCredito = [];
+        $detalleFactura = [];
+
+        if ($token) {
+            try {
+                $client = \Config\Services::curlrequest();
+                $response = $client->get('https://api-sandbox.factus.com.co/v1/credit-notes', [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $token,
+                        'Accept' => 'application/json',
+                    ]
+                ]);
+                $notasCredito = json_decode($response->getBody(), true);
+
+                // Puedes obtener detalle de la primera nota si es necesario
+                if (!empty($notasCredito['data']['data'])) {
+                    $numero = $notasCredito['data']['data'][0]['number'];
+                    $detalleFactura = $model->getFacturaCompleta($numero); // si aplica
+                }
+
+            } catch (\Exception $e) {
+                log_message('error', 'Error al obtener notas crédito: ' . $e->getMessage());
+            }
+        }
+
+        return view('facturas/notas_credito_view', [
+            'notas'           => $notasCredito,
+            'detalleFactura'  => $detalleFactura,
+            'modulos'         => $modulosPermitidos,
+            'title'           => 'Notas Crédito',
+            'usuario'         => $usuario,
+            'productos'       => $productos,
+        ]);
+    }
+
+    public function registrar()
+    {
+        helper(['form']);
+        $request = \Config\Services::request();
+        $post = $request->getPost();
+        $notaCreditoModel = new \App\Models\FacturaModel();
+
+        // Formar el arreglo final con estructuras anidadas correctamente
+        $dataNota = [
+            'numbering_range_id'        => $post['numbering_range_id'] ?? null,
+            'correction_concept_code'   => $post['correction_concept_code'] ?? null,
+            'customization_id'          => $post['customization_id'] ?? null,
+            'bill_id'                   => $post['bill_id'] ?? null,
+            'reference_code'            => $post['reference_code'] ?? null,
+            'observation'               => $post['observation'] ?? null,
+            'payment_method_code'       => $post['payment_method_code'] ?? null,
+            'billing_period'            => $post['billing_period'] ?? [],
+            'customer'                  => $post['customer'] ?? [],
+            'items'                     => $post['items'] ?? []    // ya es array de arrays
+        ];
+        
+        $resultado = $notaCreditoModel->registrarNotaCredito($dataNota);
+
+        if (isset($resultado['data'])) {
+            return redirect()->to(base_url('facturas/notas-credito'))->with('success', 'Nota crédito registrada correctamente');
+        } else {
+            return redirect()->back()->with('error', $resultado['error'] ?? 'Error desconocido al registrar la nota crédito');
+        }
+    }
+
+
+    
 
 
 }
