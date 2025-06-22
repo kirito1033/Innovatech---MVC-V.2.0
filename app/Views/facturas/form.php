@@ -94,8 +94,8 @@
   <input name="buyerEmail"    type="hidden" id="payu_email">
 
   <!-- Rutas a crear -->
-  <input name="responseUrl"   type="hidden" value="https://8093-179-51-111-180.ngrok-free.app/facturas/respuesta">
-  <input name="confirmationUrl" type="hidden" value="https://8093-179-51-111-180.ngrok-free.app/facturas/confirmacion">
+  <input name="responseUrl"   type="hidden" value="https://5b57-179-51-111-178.ngrok-free.app/facturas/respuesta">
+  <input name="confirmationUrl" type="hidden" value="https://5b57-179-51-111-178.ngrok-free.app/facturas/confirmacion">
 </form>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 <script>
