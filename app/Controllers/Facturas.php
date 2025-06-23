@@ -7,14 +7,8 @@ use CodeIgniter\HTTP\CURLRequest;
 
 class Facturas extends BaseController
 {
-<<<<<<< HEAD
- 
-    //Muestra listado de facturas
-    public function index()
-=======
     
    public function index()
->>>>>>> 57a2c6db9f7e49dcdd03fad5322d9406cb2ef0a4
     {
         $usuarioModel = new \App\Models\UsuarioModel();
         $idUsuario = session()->get('id_usuario');
@@ -47,13 +41,9 @@ class Facturas extends BaseController
             'productos'       => $productos
         ]);
     }
-<<<<<<< HEAD
-    // Registra una nueva factura desde formulario (POST)
-=======
 
 
     // En tu controlador FacturaController
->>>>>>> 57a2c6db9f7e49dcdd03fad5322d9406cb2ef0a4
     public function registrarFactura()
     {
         helper(['form', 'url']);
@@ -64,28 +54,17 @@ class Facturas extends BaseController
         $usuario = [ /* datos del cliente */ ];
         $productos = [ /* tus productos como antes */ ];
 
-<<<<<<< HEAD
-    //Recoger datos del formulario
-    $data = $this->request->getPost(); 
-=======
         $data = $this->request->getPost(); 
->>>>>>> 57a2c6db9f7e49dcdd03fad5322d9406cb2ef0a4
 
         $model = new \App\Models\FacturaModel();
         $resultado = $model->registrarFactura($data);
 
-<<<<<<< HEAD
-    // Validación opcional
-    if (isset($resultado['error'])) {
-        return redirect()->back()->with('error', $resultado['error']);
-=======
         // Redireccionar con mensaje
         if (isset($resultado['error'])) {
             return redirect()->back()->with('error', $resultado['error']);
         }
 
         return redirect()->back()->with('success', 'Factura registrada correctamente.');
->>>>>>> 57a2c6db9f7e49dcdd03fad5322d9406cb2ef0a4
     }
 
        public function verQR($numero)
@@ -197,7 +176,11 @@ class Facturas extends BaseController
     {
         return view('facturas/pago_exitoso'); 
     }
- 
+  public function pagar($monto = 0)
+    {
+        $monto = floatval($monto); 
+        return view('facturas/formulario_pago', ['monto' => $monto]);
+    }
 
    public function guardarFacturaTemporal()
     {
