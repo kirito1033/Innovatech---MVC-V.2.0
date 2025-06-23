@@ -374,8 +374,8 @@
                 <input name="signature"     type="hidden" id="payu_signature">
                 <input name="test"          type="hidden" value="1">
                 <input name="buyerEmail"    type="hidden" id="payu_email">
-                <input name="responseUrl"   type="hidden" value="https://8093-179-51-111-180.ngrok-free.app/facturas/respuesta">
-                <input name="confirmationUrl" type="hidden" value="https://8093-179-51-111-180.ngrok-free.app/facturas/confirmacion">
+                <input name="responseUrl"   type="hidden" value="<?= base_url('facturas/respuesta') ?>">
+               <input name="confirmationUrl" type="hidden" value="https://01f7-179-51-111-179.ngrok-free.app/facturas/confirmacion">
             </form>
         </div>
     </div>
@@ -570,10 +570,11 @@
         const form = document.getElementById("formFactura");
         const formData = new FormData(form);
         formData.append('reference_code', reference);
-
+         console.log("formData")
         fetch("<?= base_url('facturas/guardar-temporal') ?>", {
             method: "POST",
             body: formData,
+           
         }).then(() => {
             document.getElementById("formPayU").submit();
         });

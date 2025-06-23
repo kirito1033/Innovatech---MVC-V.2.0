@@ -391,11 +391,7 @@ $routes->post('facturas/registrar', 'Facturas::registrarFactura');
 $routes->get('facturas/pagar/(:segment)', 'Facturas::pagar/$1');
 $routes->get('facturas/respuesta', 'Facturas::respuesta');
 $routes->post('facturas/confirmacion', 'Facturas::confirmacion'); 
-<<<<<<< HEAD
-$routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
-=======
 $routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
 $routes->get('facturas/notas-credito', 'Facturas::notasCredito');
 $routes->post('notas-credito/registrar', 'Facturas::registrar');
 $routes->get('api/token', 'ApiController::token');
->>>>>>> 8ee873d0f7f815b0256dcbbd11de0d55f7ee5022

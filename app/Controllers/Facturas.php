@@ -176,11 +176,7 @@ class Facturas extends BaseController
     {
         return view('facturas/pago_exitoso'); 
     }
-  public function pagar($monto = 0)
-    {
-        $monto = floatval($monto); 
-        return view('facturas/formulario_pago', ['monto' => $monto]);
-    }
+ 
 
    public function guardarFacturaTemporal()
     {

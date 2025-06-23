@@ -16,6 +16,7 @@ class App extends BaseConfig
      *
      * E.g., http://example.com/
      */
+    //public string $baseURL = 'https://rosybrown-ape-589569.hostingersite.com/';
     public string $baseURL = 'http://localhost:8080/';
 
     /**
