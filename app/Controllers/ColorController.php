@@ -6,14 +6,20 @@ use App\Models\ColorModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+// Controlador para la gestión de colores.
+
 class ColorController extends Controller
 {
+    //Clave primaria de la tabla.
     private $primaryKey;
+    //Instancia del modelo Color.
     private $ColorModel;
+    // Datos para las vistas.
     private $data;
+    //Nombre lógico del modelo.
     private $model;
 
-    // Método constructor
+    // Constructor: inicializa modelo y propiedades.
     public function __construct()
     {
         $this->primaryKey = "id_color";
@@ -22,7 +28,7 @@ class ColorController extends Controller
         $this->model = "ColorModel";
     }
 
-    // Método index
+    // Vista principal de gestión de colores.
     public function index()
     {
         $this->data["title"] = "COLOR";
@@ -38,7 +44,7 @@ class ColorController extends Controller
         return view("color/color_view", $this->data);
     }
 
-    // Método create
+    // Crea un nuevo color (vía AJAX).
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -61,7 +67,7 @@ class ColorController extends Controller
         echo json_encode($data);
     }
 
-    // Método para obtener un solo color
+    // Retorna un color por su ID.
     public function singleColor($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -82,7 +88,7 @@ class ColorController extends Controller
         echo json_encode($data);
     }
 
-    // Método update
+    // Actualiza un color existente (vía AJAX).
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -110,7 +116,7 @@ class ColorController extends Controller
         echo json_encode($data);
     }
 
-    // Método delete
+    // Elimina un color por su ID.
     public function delete($id = null)
     {
         try {
@@ -132,7 +138,7 @@ class ColorController extends Controller
         echo json_encode($data);
     }
 
-    // Método para obtener los datos enviados en el formulario
+    // Obtiene los datos del formulario (POST).
     public function getDataModel()
     {
         $data = [

@@ -2,33 +2,31 @@
 
 namespace App\Controllers;
 
-use App\Models\EnvioModel;
-use App\Models\EstadoEnvioModel;
-use App\Models\UsuarioModel;
+use App\Models\FacturaModel;
+use App\Models\EstadoFacturaModel;
+use App\Models\PedidoModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
-class EnvioController extends Controller
+class FacturaController extends Controller
 {
     private $primaryKey;
-    private $EnvioModel;
+    private $facturaModel;
     private $data;
     private $model;
 
-    //Constructor
     public function __construct()
     {
         $this->primaryKey = "id";
-        $this->EnvioModel = new EnvioModel();
+        $this->facturaModel = new FacturaModel();
         $this->data = [];
-        $this->model = "EnvioModel";
+        $this->model = "FacturaModel";
     }
 
-    //Muestra la vista principal con todos los envíos y datos relacionados.
-
+    //Vista principal de facturas
     public function index()
     {
-        $this->data['title'] = "Envíos";
+        $this->data['title'] = "Facturas";
          $rolId = session()->get('rol_id');
         $modelosModel = new \App\Models\ModelosModel();
 
@@ -37,30 +35,29 @@ class EnvioController extends Controller
 
         // Agregar los módulos a los datos enviados a la vista
         $this->data['modulos'] = $modulosPermitidos;
-        $this->data[$this->model] = $this->EnvioModel->orderBy($this->primaryKey, 'ASC')->findAll();
+        $this->data[$this->model] = $this->facturaModel->orderBy($this->primaryKey, 'ASC')->findAll();
 
-        $EstadoEnvio = new EstadoEnvioModel();
-        $Usuario = new UsuarioModel();
+        $estadoFactura = new EstadoFacturaModel();
+        $pedido = new PedidoModel();
         
-        $this->data['EstadoEnvio'] = $EstadoEnvio->findAll();
-       $this->data['Usuario'] = $Usuario->where('rol_id', 5)->findAll();
+        $this->data['EstadoFactura'] = $estadoFactura->findAll();
+        $this->data['Pedido'] = $pedido->findAll();
         
-        return view('envio/envio_view', $this->data);
+        return view('factura/factura_view', $this->data);
     }
 
-    //Inserta un nuevo envío (petición AJAX).
-
+    //Crear factura (AJAX)
     public function create()
     {
         if ($this->request->isAJAX()) {
             $dataModel = $this->getDataModel();
-            if ($this->EnvioModel->insert($dataModel)) {
+            if ($this->facturaModel->insert($dataModel)) {
                 $data['message'] = 'success';
                 $data['response'] = ResponseInterface::HTTP_OK;
                 $data['data'] = $dataModel;
                 $data['csrf'] = csrf_hash();
             } else {
-                $data['message'] = 'Error al crear el envío';
+                $data['message'] = 'Error al crear la factura';
                 $data['response'] = ResponseInterface::HTTP_NO_CONTENT;
                 $data['data'] = '';
             }
@@ -72,17 +69,16 @@ class EnvioController extends Controller
         echo json_encode($data);
     }
 
-    //Consulta un envío individual por ID (AJAX).
-
-    public function singleEnvio($id = null)
+    //Obtener una factura específica por ID (AJAX)
+    public function singleFactura($id = null)
     {
         if ($this->request->isAJAX()) {
-            if ($data[$this->model] = $this->EnvioModel->where($this->primaryKey, $id)->first()) {
+            if ($data[$this->model] = $this->facturaModel->where($this->primaryKey, $id)->first()) {
                 $data['message'] = 'success';
                 $data['response'] = ResponseInterface::HTTP_OK;
                 $data['csrf'] = csrf_hash();
             } else {
-                $data['message'] = 'Error al obtener el envío';
+                $data['message'] = 'Error al obtener la factura';
                 $data['response'] = ResponseInterface::HTTP_NO_CONTENT;
                 $data['data'] = '';
             }
@@ -94,54 +90,41 @@ class EnvioController extends Controller
         echo json_encode($data);
     }
 
-    //Actualiza un envío (AJAX).
+    //Actualizar una factura (AJAX)
     public function update()
     {
         if ($this->request->isAJAX()) {
             $id = $this->request->getVar($this->primaryKey);
-            $dataModel = [
-                 'direccion' => $this->request->getVar('direccion'),
-                'fecha' => $this->request->getVar('fecha'),
-                'estado_envio_id' => $this->request->getVar('estado_envio_id'),
-                'usuario_id' => $this->request->getVar('usuario_id'),
-                "updated_at" => date("Y-m-d H:i:s")
-            ];
-            if ($this->EstadoEnvioModel->update($id, $dataModel)) {
-                $data = [
-                    "message" => "success",
-                    "response" => ResponseInterface::HTTP_OK,
-                    "data" => $dataModel,
-                    "csrf" => csrf_hash()
-                ];
+            $dataModel = $this->getDataModel();
+            if ($this->facturaModel->update($id, $dataModel)) {
+                $data['message'] = 'success';
+                $data['response'] = ResponseInterface::HTTP_OK;
+                $data['data'] = $dataModel;
+                $data['csrf'] = csrf_hash();
             } else {
-                $data = [
-                    "message" => "Error al actualizar estado de envío",
-                    "response" => ResponseInterface::HTTP_NO_CONTENT,
-                    "data" => ""
-                ];
+                $data['message'] = 'Error al actualizar la factura';
+                $data['response'] = ResponseInterface::HTTP_NO_CONTENT;
+                $data['data'] = '';
             }
         } else {
-            $data = [
-                "message" => "Error Ajax",
-                "response" => ResponseInterface::HTTP_CONFLICT,
-                "data" => ""
-            ];
+            $data['message'] = 'Error Ajax';
+            $data['response'] = ResponseInterface::HTTP_CONFLICT;
+            $data['data'] = '';
         }
         echo json_encode($data);
     }
 
-    //Elimina un envío por ID.
-
+    // Eliminar una factura (AJAX)
     public function delete($id = null)
     {
         try {
-            if ($this->EnvioModel->where($this->primaryKey, $id)->delete($id)) {
+            if ($this->facturaModel->where($this->primaryKey, $id)->delete($id)) {
                 $data['message'] = 'success';
                 $data['response'] = ResponseInterface::HTTP_OK;
                 $data['data'] = 'OK';
                 $data['csrf'] = csrf_hash();
             } else {
-                $data['message'] = 'Error al eliminar el envío';
+                $data['message'] = 'Error al eliminar la factura';
                 $data['response'] = ResponseInterface::HTTP_CONFLICT;
                 $data['data'] = 'error';
             }
@@ -153,15 +136,15 @@ class EnvioController extends Controller
         echo json_encode($data);
     }
 
-    //Recoge datos desde el formulario de creación/actualización.
-
+    //Obtener datos del formulario para insertar/actualizar
     public function getDataModel()
     {
         return [
-            'direccion' => $this->request->getVar('direccion'),
             'fecha' => $this->request->getVar('fecha'),
-            'estado_envio_id' => $this->request->getVar('estado_envio_id'),
-            'usuario_id' => $this->request->getVar('usuario_id'),
+            'valortl' => $this->request->getVar('valortl'),
+            'metodopago' => $this->request->getVar('metodopago'),
+            'Estado_facturaId_Estado_factura' => $this->request->getVar('Estado_facturaId_Estado_factura'),
+            'Pedidoid' => $this->request->getVar('Pedidoid'),
             'updated_at' => date("Y-m-d H:i:s")
         ];
     }

@@ -1,5 +1,7 @@
 <?php
 
+//Controlador para gestionar el carrito de compras.
+//Permite agregar, eliminar productos y redirigir a métodos de pago.
 namespace App\Controllers;
 
 use App\Models\CarritoModel;
@@ -18,7 +20,8 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class CarritoController extends Controller
 {
-    // Mostrar vista del carrito
+    // Muestra la vista del carrito del usuario actual.
+    //Verifica la sesión del usuario y carga los productos agregados al carrito.
     public function carrito()
     {
         $session = session();
@@ -74,7 +77,8 @@ class CarritoController extends Controller
         ]);
     }
 
-    // Agregar producto al carrito
+    // Agrega un producto al carrito del usuario actual.
+    //Si el producto ya existe en el carrito, incrementa la cantidad.
     public function agregarAlCarrito()
     {
         $session = session();
@@ -113,7 +117,8 @@ class CarritoController extends Controller
         return redirect()->to('/carrito');
     }
 
-    // Eliminar producto del carrito
+    // Elimina un producto del carrito por su ID.
+    //Soporta tanto peticiones AJAX como normales.
     public function eliminarDelCarrito($carrito_id)
     {
         $carritoModel = new CarritoModel();
@@ -135,7 +140,8 @@ class CarritoController extends Controller
         }
     }
 
-    // Métodos de redirección de pago
+    // Muestra la vista del método de pago contraentrega.
+    //Carga las categorías para el menú o barra lateral.
     public function contraentrega()
     {
         $categoriaModel = new CategoriaModel();
@@ -145,6 +151,8 @@ class CarritoController extends Controller
         ]);
     }
 
+    //Muestra la vista del método de pago con tarjeta.
+    //Carga las categorías para mantener coherencia visual.
     public function tarjeta()
     {
         $categoriaModel = new CategoriaModel();

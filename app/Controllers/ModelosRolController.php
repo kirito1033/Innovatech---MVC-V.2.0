@@ -8,6 +8,8 @@ use App\Models\RolModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+//Controlador para gestionar las relaciones entre modelos y roles.
+//Permite operaciones CRUD utilizando peticiones AJAX.
 class ModelosRolController extends Controller
 {
     private $primaryKey;
@@ -15,6 +17,7 @@ class ModelosRolController extends Controller
     private $data;
     private $model;
 
+    // Constructor: inicializa propiedades principales.
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -23,10 +26,12 @@ class ModelosRolController extends Controller
         $this->model = "ModelosRolModel";
     }
 
+    //Carga la vista principal con todos los modelos-rol registrados.
     public function index()
     {
         $this->data['title'] = "MODELOS ROL";
         
+        // Obtener el rol actual de sesión
         $rolId = session()->get('rol_id');
         $modelosModel = new ModelosModel();
 
@@ -35,17 +40,21 @@ class ModelosRolController extends Controller
 
         // Agregar los módulos a los datos enviados a la vista
         $this->data['modulos'] = $modulosPermitidos;
+        // Obtener todos los modelos
         $modelos = new ModelosModel();
         $this->data['modelos'] = $modelos->findAll();
 
+        // Obtener todos los roles
         $rol = new RolModel();
         $this->data['roles'] = $rol->findAll();
 
+        // Obtener todas las relaciones modelo-rol
         $this->data[$this->model] = $this->ModelosRolModel->orderBy($this->primaryKey, 'ASC')->findAll();
 
         return view('modelosrol/modelosrol_view', $this->data);
     }
 
+    //Crea un nuevo registro de relación entre modelo y rol vía AJAX.
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -69,6 +78,7 @@ class ModelosRolController extends Controller
         echo json_encode($data);
     }
 
+    //Retorna un solo registro de modelo-rol por su ID.
     public function singleModelosRol($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -93,6 +103,7 @@ class ModelosRolController extends Controller
         echo json_encode($data);
     }
 
+    //Actualiza un registro existente de modelo-rol.
     public function update()
 {
     
@@ -100,6 +111,7 @@ class ModelosRolController extends Controller
         $today = date("Y-m-d H:i:s");
         $id = $this->request->getVar($this->primaryKey);
 
+        // Validar si los datos vienen como arrays
         $modelosid = $this->request->getVar('Modelosid');
         $rolid = $this->request->getVar('Rolid');
 
@@ -135,6 +147,8 @@ class ModelosRolController extends Controller
 
     echo json_encode($data);
 }
+
+//Elimina un registro modelo-rol por ID.
 public function delete($id = null)
 {
     if ($this->request->isAJAX()) {
@@ -153,6 +167,7 @@ public function delete($id = null)
     echo json_encode($data);
 }
 
+//Obtiene los datos del formulario para crear o actualizar registros.
     private function getDataModel()
     {
         return [

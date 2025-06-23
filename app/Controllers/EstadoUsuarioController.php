@@ -22,7 +22,7 @@ class EstadoUsuarioController extends Controller
         $this->model = "EstadoUsuarioModel";
     }
 
-    // Método index
+    // Vista principal del módulo de estado usuario.
     public function index()
     {
         $this->data["title"] = "ESTADO USUARIO";
@@ -38,7 +38,7 @@ class EstadoUsuarioController extends Controller
         return view("estadousuario/estadousuario_view", $this->data);
     }
 
-    // Método create
+    //Crea un nuevo estado de usuario (AJAX).
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -61,6 +61,7 @@ class EstadoUsuarioController extends Controller
         echo json_encode($data);
     }
 
+    //Obtiene un estado de usuario por ID (AJAX).
     public function singleEstadoUsuario($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -81,6 +82,7 @@ class EstadoUsuarioController extends Controller
         echo json_encode($data);
     }
 
+    //Actualiza un estado de usuario (AJAX).
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -109,6 +111,7 @@ class EstadoUsuarioController extends Controller
         echo json_encode($dataModel);
     }
 
+    //Elimina un estado de usuario (AJAX).
     public function delete($id = null)
     {
         try {
@@ -130,6 +133,7 @@ class EstadoUsuarioController extends Controller
         echo json_encode($data);
     }
 
+    //Extrae datos del formulario para inserción/actualización.
     public function getDataModel()
     {
         return [
