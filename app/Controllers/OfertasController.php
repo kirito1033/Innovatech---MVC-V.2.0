@@ -15,6 +15,7 @@ class OfertasController extends Controller
     private $data;
     private $model;
     
+    // Constructor: inicializa propiedades
     public function __construct() 
     { 
         $this->primaryKey = "id"; 
@@ -23,12 +24,14 @@ class OfertasController extends Controller
         $this->model = "OfertaModel"; 
     } 
 
-  
+  // Vista principal de ofertas
     public function index() 
     { 
-        $this->actualizarEstadosOfertas();
+        $this->actualizarEstadosOfertas(); // Verifica y actualiza el estado de las ofertas activas
 
         $this->data['title'] = "OFERTA"; 
+
+        // Obtener módulos por rol
          $rolId = session()->get('rol_id');
         $modelosModel = new \App\Models\ModelosModel();
 
@@ -37,15 +40,16 @@ class OfertasController extends Controller
 
         // Agregar los módulos a los datos enviados a la vista
         $this->data['modulos'] = $modulosPermitidos;
-        $this->data[$this->model] = $this->OfertaModel->orderBy($this->primaryKey, 'ASC')->findAll(); 
 
+        // Obtener todas las ofertas y productos
+        $this->data[$this->model] = $this->OfertaModel->orderBy($this->primaryKey, 'ASC')->findAll(); 
         $productos = new \App\Models\ProductosModel();
         $this->data['productos'] = $productos->findAll();
 
         return view('oferta/oferta_view', $this->data); 
     }
         
-    
+    // Crear nueva oferta
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -59,7 +63,7 @@ class OfertasController extends Controller
                 $dataModel["imagen"] = $newName;
             }
 
-            // Intentar insertar la oferta
+            // Insertar oferta y actualizar producto relacionado
             if ($this->OfertaModel->insert($dataModel)) {
                 // Obtener el ID del producto afectado
                 $productoID = $dataModel['productos_id'];
@@ -71,21 +75,21 @@ class OfertasController extends Controller
 
                         
             if ($producto) {
-                // Guardar categoría original si aún no ha sido guardada
+                // Guardar valores originales si no existen
                 if (empty($producto['categoria_original'])) {
                     $productosModel->update($productoID, [
                         'categoria_original' => $producto['id_categoria'], // suponiendo que 'categoria' es el campo actual
                     ]);
                 }
 
-                // Calcular el nuevo precio
+                // Aplicar descuento
                 $precioOriginal = $producto['precio'];
                 $precioConDescuento = $precioOriginal - ($precioOriginal * ($descuento / 100));
                 if ($precioConDescuento < 0) {
                     $precioConDescuento = 0; // Evitar precios negativos
                 }
 
-                // Actualizar el precio y categoría del producto
+                // Actualizar producto
                 $productosModel->update($productoID, [
                     'precio' => $precioConDescuento,
                     'id_categoria' => 6 // o el ID si usas ID de categoría
@@ -110,7 +114,7 @@ class OfertasController extends Controller
         echo json_encode($data);
     }
 
-    
+    // Obtener una oferta específica
     public function singleOferta($id = null) 
     { 
         if ($this->request->isAJAX()) { 
@@ -134,7 +138,7 @@ class OfertasController extends Controller
     }
 
 
-    
+    // Actualizar oferta y aplicar cambios al producto
     public function update() 
 { 
     if ($this->request->isAJAX()) { 
@@ -213,7 +217,7 @@ class OfertasController extends Controller
 }
 
 
-       
+    // Eliminar oferta y restaurar estado del producto   
     public function delete($id = null) 
     { 
         try { 
@@ -262,6 +266,8 @@ class OfertasController extends Controller
 
         echo json_encode($data);  
     }
+
+    // Obtener datos de la oferta desde la solicitud
     public function getDataModel() 
     { 
         $data = [ 
@@ -276,6 +282,7 @@ class OfertasController extends Controller
         return $data; 
     }
 
+    // Actualizar imagen de una oferta
 public function updateImage()
 {
     if ($this->request->isAJAX()) {
@@ -336,11 +343,11 @@ public function updateImage()
     ]);
 }
 
-
+    // Verifica y actualiza automáticamente los estados de las ofertas según la fecha actual
 
  private function actualizarEstadosOfertas() {
     $now = time();
-    $now -= 5 * 60 * 60; // sumar 4 horas para ajustarse al servidor
+    $now -= 5 * 60 * 60; // Ajuste de zona horaria
 
     $productosModel = new ProductosModel();
     $ofertas = $this->OfertaModel->findAll();
@@ -398,7 +405,6 @@ public function updateImage()
         }
     }
 }
-
 
 
 }

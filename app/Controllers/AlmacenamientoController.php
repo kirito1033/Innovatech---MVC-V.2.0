@@ -1,5 +1,7 @@
 <?php
 
+//Controlador para la gestión del almacenamiento tradicional.
+//Ofrece funcionalidades CRUD con soporte para peticiones AJAX.
 namespace App\Controllers;
 
 use App\Models\AlmacenamientoModel;
@@ -8,12 +10,16 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class AlmacenamientoController extends Controller
 {
+    //Clave primaria usada en las operaciones del modelo.
     private $primaryKey;
+    //Instancia del modelo de almacenamiento.
     private $AlmacenamientoModel;
+    // Datos que serán enviados a las vistas.
     private $data;
+    //Nombre del modelo actual usado como índice de datos.
     private $model;
 
-    // Constructor
+    // Inicializa propiedades y la instancia del modelo.
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -22,7 +28,8 @@ class AlmacenamientoController extends Controller
         $this->model = "AlmacenamientoModel";
     }
 
-    // Método index
+    // Muestra la vista principal con la lista de elementos de almacenamiento.
+    //También carga los módulos permitidos según el rol del usuario.
     public function index()
     {
         $this->data["title"] = "ALMACENAMIENTO";
@@ -38,7 +45,7 @@ class AlmacenamientoController extends Controller
         return view("almacenamiento/almacenamiento_view", $this->data);
     }
 
-    // Método create
+    // Crea un nuevo registro de almacenamiento desde una petición AJAX.
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -67,6 +74,7 @@ class AlmacenamientoController extends Controller
         echo json_encode($data);
     }
 
+    //Obtiene un único registro de almacenamiento por su ID mediante AJAX.
     public function singleAlmacenamiento($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -86,6 +94,8 @@ class AlmacenamientoController extends Controller
         }
         echo json_encode($data);
     }
+
+    //Actualiza un registro existente de almacenamiento a partir de datos enviados vía AJAX.
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -120,6 +130,8 @@ class AlmacenamientoController extends Controller
         echo json_encode($data);
     }
 
+    //Elimina un registro de almacenamiento por su ID.
+
     public function delete($id = null)
     {
         try {
@@ -146,6 +158,8 @@ class AlmacenamientoController extends Controller
         }
         echo json_encode($data);
     }
+
+    //Extrae los datos enviados en la petición para formar el arreglo que será insertado o actualizado.
 
     private function getDataModel()
     {

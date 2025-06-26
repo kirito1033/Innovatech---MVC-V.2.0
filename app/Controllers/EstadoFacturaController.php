@@ -13,7 +13,7 @@ class EstadoFacturaController extends Controller
     private $data;
     private $model;
 
-    // Método constructor
+    // Constructor
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -22,7 +22,7 @@ class EstadoFacturaController extends Controller
         $this->model = "EstadoFacturaModel";
     }
 
-    // Método index
+    // Carga la vista principal con la lista de estados de factura.
     public function index()
     {
         $this->data["title"] = "ESTADO FACTURA";
@@ -38,7 +38,7 @@ class EstadoFacturaController extends Controller
         return view("estadofactura/estadofactura_view", $this->data);
     }
 
-    // Método create
+    // Crea un nuevo registro de estado de factura (vía AJAX).
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -61,6 +61,7 @@ class EstadoFacturaController extends Controller
         echo json_encode($data);
     }
 
+    //Devuelve un único estado de factura por ID (vía AJAX).
     public function singleEstadoFactura($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -80,6 +81,8 @@ class EstadoFacturaController extends Controller
         }
         echo json_encode($data);
     }
+
+    //Actualiza un estado de factura (vía AJAX).
 
     public function update()
     {
@@ -108,6 +111,7 @@ class EstadoFacturaController extends Controller
         echo json_encode($data);
     }
 
+    //Elimina un estado de factura por ID (vía AJAX).
     public function delete($id = null)
     {
         try {
@@ -129,6 +133,7 @@ class EstadoFacturaController extends Controller
         echo json_encode($data);
     }
 
+    //Extrae los datos del formulario.
     public function getDataModel()
     {
         $data = [

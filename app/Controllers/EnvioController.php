@@ -15,6 +15,7 @@ class EnvioController extends Controller
     private $data;
     private $model;
 
+    //Constructor
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -22,6 +23,8 @@ class EnvioController extends Controller
         $this->data = [];
         $this->model = "EnvioModel";
     }
+
+    //Muestra la vista principal con todos los envíos y datos relacionados.
 
     public function index()
     {
@@ -40,10 +43,12 @@ class EnvioController extends Controller
         $Usuario = new UsuarioModel();
         
         $this->data['EstadoEnvio'] = $EstadoEnvio->findAll();
-       $this->data['Usuario'] = $Usuario->where('rol_id', 5)->findAll();
+        $this->data['Usuario'] = $Usuario->where('rol_id', 5)->findAll();
         
         return view('envio/envio_view', $this->data);
     }
+
+    //Inserta un nuevo envío (petición AJAX).
 
     public function create()
     {
@@ -67,6 +72,8 @@ class EnvioController extends Controller
         echo json_encode($data);
     }
 
+    //Consulta un envío individual por ID (AJAX).
+
     public function singleEnvio($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -87,41 +94,62 @@ class EnvioController extends Controller
         echo json_encode($data);
     }
 
-    public function update()
+   public function update()
     {
         if ($this->request->isAJAX()) {
+            $envioModel = new \App\Models\EnvioModel();
             $id = $this->request->getVar($this->primaryKey);
+
+            $envioActual = $envioModel->find($id);
+            $nuevoEstado = $this->request->getVar('estado_envio_id');
+
+            $cambioEstado = ($envioActual && $envioActual['estado_envio_id'] != $nuevoEstado);
+
             $dataModel = [
-                 'direccion' => $this->request->getVar('direccion'),
-                'fecha' => $this->request->getVar('fecha'),
-                'estado_envio_id' => $this->request->getVar('estado_envio_id'),
-                'usuario_id' => $this->request->getVar('usuario_id'),
-                "updated_at" => date("Y-m-d H:i:s")
+                'numero'           => $this->request->getVar('numero'),
+                'direccion'        => $this->request->getVar('direccion'),
+                'fecha'            => $this->request->getVar('fecha'),
+                'estado_envio_id'  => $nuevoEstado,
+                'usuario_id'       => $this->request->getVar('usuario_id'),
+                'correo'           => $this->request->getVar('correo'),
+                'updated_at'       => date('Y-m-d H:i:s'),
             ];
-            if ($this->EstadoEnvioModel->update($id, $dataModel)) {
+
+            if ($cambioEstado) {
+                $dataModel['correo_estado_enviado'] = 0;
+            }
+
+            if ($envioModel->update($id, $dataModel)) {
+                // ✅ Llamar al método del modelo
+                $envioModel->verificarEstados();
+
                 $data = [
-                    "message" => "success",
-                    "response" => ResponseInterface::HTTP_OK,
-                    "data" => $dataModel,
-                    "csrf" => csrf_hash()
+                    'message'  => 'success',
+                    'response' => ResponseInterface::HTTP_OK,
+                    'data'     => $dataModel,
+                    'csrf'     => csrf_hash()
                 ];
             } else {
                 $data = [
-                    "message" => "Error al actualizar estado de envío",
-                    "response" => ResponseInterface::HTTP_NO_CONTENT,
-                    "data" => ""
+                    'message'  => 'Error al actualizar estado de envío',
+                    'response' => ResponseInterface::HTTP_NO_CONTENT,
+                    'data'     => ''
                 ];
             }
         } else {
             $data = [
-                "message" => "Error Ajax",
-                "response" => ResponseInterface::HTTP_CONFLICT,
-                "data" => ""
+                'message'  => 'Error Ajax',
+                'response' => ResponseInterface::HTTP_CONFLICT,
+                'data'     => ''
             ];
         }
+
         echo json_encode($data);
     }
 
+
+
+    //Elimina un envío por ID.
 
     public function delete($id = null)
     {
@@ -144,14 +172,20 @@ class EnvioController extends Controller
         echo json_encode($data);
     }
 
+    //Recoge datos desde el formulario de creación/actualización.
+
     public function getDataModel()
     {
         return [
+            'numero' => $this->request->getVar('numero'),
             'direccion' => $this->request->getVar('direccion'),
             'fecha' => $this->request->getVar('fecha'),
             'estado_envio_id' => $this->request->getVar('estado_envio_id'),
             'usuario_id' => $this->request->getVar('usuario_id'),
+            'correo'       => $this->request->getVar('correo'),
             'updated_at' => date("Y-m-d H:i:s")
         ];
     }
+    
+
 }

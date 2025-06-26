@@ -153,6 +153,6 @@ mainApp.getForm().addEventListener('submit', async function (event) {
 function reloadPage() {
   setTimeout(function() {
     mainApp.hiddenPreload();
-    location.reload();
+    //location.reload();
   }, 500)
 }

@@ -309,7 +309,7 @@ $routes->post('/perfil/verificar-password', 'PerfilController::verificarPassword
 $routes->group('userapi', ['filter' => 'roleaccess'],function($routes) {
     $routes->get("/", "ApiUserController::index");
     $routes->get("show", "ApiUserController::index");
-    $routes->get("edit/(:num)", "ApiUserController::singleUser/$1");
+    $routes->get("edit/(:num)", "ApiUserController::singleUserApi/$1");
     $routes->get("delete/(:num)", "ApiUserController::delete/$1");
     $routes->post("add", "ApiUserController::create");
     $routes->post("update", "ApiUserController::update");
@@ -396,9 +396,17 @@ $routes->post('facturas/registrar', 'Facturas::registrarFactura');
 $routes->get('facturas/pagar/(:segment)', 'Facturas::pagar/$1');
 $routes->get('facturas/respuesta', 'Facturas::respuesta');
 $routes->post('facturas/confirmacion', 'Facturas::confirmacion'); 
+
 $routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
 
 $routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
 $routes->get('facturas/notas-credito', 'Facturas::notasCredito');
 $routes->post('notas-credito/registrar', 'Facturas::registrar');
 $routes->get('api/token', 'ApiController::token');
+
+$routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
+$routes->get('facturas/notas-credito', 'Facturas::notasCredito');
+$routes->post('notas-credito/registrar', 'Facturas::registrar');
+$routes->get('api/token', 'ApiController::token');
+$routes->post('facturas/ajaxData', 'Facturas::ajaxData');
+$routes->get('envios/verificar-estados', 'EnvioController::verificarEstados');

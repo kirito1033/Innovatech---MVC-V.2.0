@@ -1,5 +1,8 @@
 <?php
 
+//Controlador base del que deben extender todos los demás controladores.
+//Proporciona un punto común para inicializar servicios, helpers y configuraciones compartidas.
+
 namespace App\Controllers;
 
 use CodeIgniter\Controller;
@@ -10,40 +13,39 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Class BaseController
- *
- * BaseController provides a convenient place for loading components
- * and performing functions that are needed by all your controllers.
- * Extend this class in any new controllers:
- *     class Home extends BaseController
- *
- * For security be sure to declare any new methods as protected or private.
- */
+* Clase BaseController
+*
+* BaseController proporciona un lugar práctico para cargar componentes
+* realizar funciones necesarias para todos sus controladores.
+* Extienda esta clase en cualquier controlador nuevo:
+* class Home extends BaseController
+*
+* Por seguridad, asegúrese de declarar cualquier método nuevo como protegido o privado.
+*/
 abstract class BaseController extends Controller
 {
     /**
-     * Instance of the main Request object.
+     * Instancia principal del objeto Request.
      *
      * @var CLIRequest|IncomingRequest
      */
     protected $request;
 
     /**
-     * An array of helpers to be loaded automatically upon
-     * class instantiation. These helpers will be available
-     * to all other controllers that extend BaseController.
+     * Lista de helpers que se cargarán automáticamente al instanciar el controlador.
+     *Estos estarán disponibles para todos los controladores que extiendan BaseController.
      *
      * @var list<string>
      */
     protected $helpers = [];
 
-    /**
-     * Be sure to declare properties for any property fetch you initialized.
-     * The creation of dynamic property is deprecated in PHP 8.2.
-     */
-    // protected $session;
+    //Inicializa el controlador base y los servicios esenciales del framework.
+   //Este método es llamado automáticamente por CodeIgniter antes de ejecutar cualquier acción del controlador.
 
     /**
+     * @param RequestInterface  $request   Objeto de solicitud (HTTP o CLI).
+    * @param ResponseInterface $response  Objeto de respuesta HTTP.
+    * @param LoggerInterface   $logger    Servicio de registro de logs.
      * @return void
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)

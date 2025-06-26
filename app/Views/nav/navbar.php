@@ -232,51 +232,140 @@ function getIcon($ruta) {
     list-style: none;
     padding-left: 0; /* Opcional: elimina el sangrado izquierdo */
     }
+  
+    .login__logo img {
+      width: 200px;
+    }
+    .grupo {
+  margin-bottom: 10px;
+}
 
+  .grupo-toggle {
+    width: 100%;
+    background-color: transparent;
+    color: var(--Color--texto);
+    border: none;
+    font-size: 1.3rem;
+    font-weight: 500;
+    text-align: left;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .grupo-toggle i {
+    transition: transform 0.3s ease;
+  }
+
+  .grupo-toggle.active i {
+    transform: rotate(180deg);
+  }
+
+  .grupo-list {
+    list-style: none;
+    padding-left: 15px;
+    margin: 0;
+    display: none;
+    font-size: 1.1  rem;
+  }
+
+  .grupo-list.show {
+    display: block;
+  }
   </style>
   
 </head>
 <body>
   <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
 
+  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
+    <div class="login__logo text-center mb-4">
+      <img src="../assets/img/logo.png" alt="Logo Innovatech">
+    </div>
 
     <?php
-    // Agrupar módulos por grupo
-   $grupos = [];
+    $grupos = [];
+
+    // Agrupar módulos
     foreach ($modulos as $modulo) {
-        $grupo = $modulo['grupo'] ?? 'Sin grupo';
-        $grupos[$grupo][] = $modulo;
+      $grupo = $modulo['grupo'] ?? 'Sin grupo';
+      $grupos[$grupo][] = $modulo;
     }
+
+    // Ordenar grupos alfabéticamente
+    ksort($grupos);
+
+    // Ordenar módulos dentro de cada grupo alfabéticamente por nombre
+    foreach ($grupos as &$modulosGrupo) {
+      usort($modulosGrupo, function ($a, $b) {
+        $nombreA = ucfirst(trim(basename($a['Ruta']), '/'));
+        $nombreB = ucfirst(trim(basename($b['Ruta']), '/'));
+        return strcasecmp($nombreA, $nombreB);
+      });
+    }
+    unset($modulosGrupo);
     ?>
 
     <?php foreach ($grupos as $grupo => $modulosGrupo): ?>
-        <h2 class="text-center mt-3"><?= htmlspecialchars($grupo) ?></h2>
-        <ul>
+      <div class="grupo">
+        <button class="grupo-toggle">
+          <?= htmlspecialchars($grupo) ?>
+          <i class="bi bi-chevron-down"></i>
+        </button>
+        <ul class="grupo-list">
           <?php foreach ($modulosGrupo as $modulo): ?>
-              <li>
-                <a href="<?= base_url($modulo['Ruta']) ?>">
-                    <i class="bi <?= getIcon($modulo['Ruta']) ?>"></i>
-                    <?= ucfirst(trim(basename($modulo['Ruta']), '/')) ?: 'Home' ?>
-                </a>
-              </li>
+            <li>
+              <a href="<?= base_url($modulo['Ruta']) ?>" style="text-align: left;">
+                <i class="bi <?= getIcon($modulo['Ruta']) ?>"></i>
+                <?= ucfirst(trim(basename($modulo['Ruta']), '/')) ?: 'Home' ?>
+              </a>
+            </li>
           <?php endforeach; ?>
         </ul>
+      </div>
     <?php endforeach; ?>
+
+    <hr style="border-color: var(--gris-); margin: 15px 0;">
+
+    <!-- PERFIL Y CERRAR SESIÓN -->
+    <ul style="list-style: none; padding-left: 15px;">
+      <li>
+        <a href="<?= base_url('/perfil') ?>" style="text-align: left;">
+          <i class="bi bi-person-circle"></i> Perfil
+        </a>
+      </li>
+      <li>
+        <a href="<?= base_url('/logout') ?>" style="text-align: left;">
+          <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+        </a>
+      </li>
+    </ul>
   </div>
 
+  <!-- CONTENIDO PRINCIPAL -->
   <div class="main-content">
     <!-- Aquí va el contenido principal -->
   </div>
 
+  <!-- SCRIPT TOGGLE -->
   <script>
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       sidebar.classList.toggle('active');
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggles = document.querySelectorAll('.grupo-toggle');
+      toggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          toggle.classList.toggle('active');
+          const list = toggle.nextElementSibling;
+          list.classList.toggle('show');
+        });
+      });
+    });
   </script>
-
-  
 </body>
-
-</html>

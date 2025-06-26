@@ -6,16 +6,23 @@ use App\Models\CiudadModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
-
+//Controlador para la gestión de ciudades.
+//Incluye funciones para CRUD vía AJAX.
 
 class CiudadController extends Controller
 {
 
+    //Clave primaria del modelo.
     private $primarykey;
+    //Instancia del modelo Ciudad.
     private $CiudadModel;
+    //Datos pasados a las vistas.
     private $data;
+    //Nombre del modelo como clave.
     private $model;
     
+
+    //Constructor: inicializa modelo y variables.
     public function __construct() 
     { 
         $this->primaryKey = "id"; 
@@ -24,7 +31,7 @@ class CiudadController extends Controller
         $this->model = "CiudadModel"; 
     } 
 
-  
+    //Muestra la vista principal con listado de ciudades.
     public function index() 
     { 
     $this->data['title'] = "CIUDAD"; 
@@ -44,7 +51,7 @@ class CiudadController extends Controller
     
     
 
-        
+        // Crea una nueva ciudad vía AJAX.
     public function create() 
     { 
         if ($this->request->isAJAX()) { 
@@ -70,7 +77,7 @@ class CiudadController extends Controller
         echo json_encode($dataModel); 
     }
 
-    
+    //Obtiene una ciudad por ID.
      public function singleCiudad($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -92,7 +99,7 @@ class CiudadController extends Controller
     }
 
 
-    
+    //Actualiza una ciudad existente.
     public function update() 
     { 
         
@@ -127,7 +134,7 @@ class CiudadController extends Controller
         echo json_encode($dataModel); 
     }
 
-       
+       //Elimina una ciudad por ID.
     public function delete($id = null) 
     { 
         try { 
@@ -151,6 +158,7 @@ class CiudadController extends Controller
         echo json_encode($data);  
     }
 
+    //Obtiene los datos del formulario para insertar o actualizar.
     public function getDataModel() 
     { 
         $data = [ 

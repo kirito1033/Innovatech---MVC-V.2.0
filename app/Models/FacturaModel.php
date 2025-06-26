@@ -193,6 +193,46 @@ class FacturaModel
         }
     }
 
+    public function getFacturasPaginadas($perPage = 10, $page = 1, $search = '')
+    {
+        $token = $this->getToken();
+        if (!$token) return ['error' => 'Token no disponible'];
+
+        $client = \Config\Services::curlrequest();
+
+        $url = "https://api-sandbox.factus.com.co/v1/bills?per_page={$perPage}&page={$page}";
+
+        if (!empty($search)) {
+            // Detecta si es solo números → identificación
+            if (is_numeric($search)) {
+                $url .= '&filter[identification]=' . urlencode($search);
+            }
+            // Detecta si empieza con letras como SETP, FACT → number
+            elseif (preg_match('/^[A-Z]{2,}/', $search)) {
+                $url .= '&filter[number]=' . urlencode($search);
+            }
+            // Si es texto genérico → nombres
+            else {
+                $url .= '&filter[names]=' . urlencode($search);
+            }
+        }
+
+        try {
+            $response = $client->get($url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Accept'        => 'application/json',
+                ],
+            ]);
+
+            return json_decode($response->getBody(), true);
+        } catch (\Exception $e) {
+            log_message('error', 'Error al consumir el API de facturas: ' . $e->getMessage());
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+
 
 
 }
