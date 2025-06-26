@@ -66,6 +66,28 @@ class Database extends Config
         'numberNative' => false,
     ];
 
+    // public array $default = [
+    //     'DSN'          => '',
+    //     'hostname'     => 'localhost',
+    //     'username'     => 'u847177988_novatech',
+    //     'password'     => 'Dj=9xgRe]',
+    //     'database'     => 'u847177988_novatech',
+    //     'DBDriver'     => 'MySQLi',
+    //     'DBPrefix'     => '',
+    //     'pConnect'     => false,
+    //     'DBDebug'      => true,
+    //     'charset'      => 'utf8mb4',
+    //     'DBCollat'     => 'utf8mb4_general_ci',
+    //     'swapPre'      => '',
+    //     'encrypt'      => false,
+    //     'compress'     => false,
+    //     'strictOn'     => false,
+    //     'failover'     => [],
+    //     'port'         => 3306,
+    //     'numberNative' => false,
+    // ];
+
+
     //    /**
     //     * Sample database connection for SQLite3.
     //     *
