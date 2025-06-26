@@ -9,6 +9,10 @@ use App\Models\CategoriaModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Clase CategoriaController
+ * Controlador que maneja operaciones CRUD para las categorías a través de AJAX.
+ */
 class CategoriaController extends Controller
 {
     //Nombre de la clave primaria de la tabla.

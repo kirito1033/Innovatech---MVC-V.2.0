@@ -8,9 +8,18 @@ use App\Models\EstadoEnvioModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador que gestiona la visualización, registro y consumo de servicios
+ * relacionados con facturación electrónica, notas crédito y pagos en línea.
+ */
 class Facturas extends BaseController
 {
     
+     /**
+     * Vista principal de facturas del sistema.
+     * Carga facturas disponibles desde la API, el detalle de la primera factura,
+     * usuario autenticado, módulos disponibles y productos registrados.
+     */
    public function index()
     {
         $usuarioModel = new \App\Models\UsuarioModel();
@@ -29,7 +38,7 @@ class Facturas extends BaseController
 
         $detalleFactura = [];
 
-        // ✅ Accede correctamente a la primera factura
+        // Obtener detalle solo si hay al menos una factura
         if (!empty($facturas['data']['data'])) {
             $numeroFactura = $facturas['data']['data'][0]['number'];
             $detalleFactura = $model->getFacturaCompleta($numeroFactura);
@@ -70,6 +79,9 @@ class Facturas extends BaseController
         return redirect()->back()->with('success', 'Factura registrada correctamente.');
     }
 
+    /**
+     * Redirige al enlace del QR público de la DIAN para la factura indicada.
+     */
        public function verQR($numero)
         {
             $numero = trim($numero);
@@ -83,6 +95,9 @@ class Facturas extends BaseController
             }
         }
 
+        /**
+     * Descarga el PDF de una factura desde la API de Factus.
+     */
        public function pdf($numero)
         {
             $model = new \App\Models\FacturaModel();
@@ -121,7 +136,10 @@ class Facturas extends BaseController
             }
         }
 
-    
+   
+    /**
+     * Procesa la confirmación de PayU y registra el envío en la base de datos si la factura fue aprobada.
+     */ 
         public function confirmacion()
         {
             $estado = $this->request->getPost('state_pol');
@@ -232,23 +250,24 @@ class Facturas extends BaseController
             return $this->response->setStatusCode(200)->setBody('OK');
         }
 
-
-
-
-
-
-
-
+/**
+     * Muestra la vista de confirmación de pago.
+     */
     public function respuesta()
     {
         return view('facturas/pago_exitoso'); 
     }
+     /**
+     * Muestra el formulario de pago con el monto enviado.
+     */
   public function pagar($monto = 0)
     {
         $monto = floatval($monto); 
         return view('facturas/formulario_pago', ['monto' => $monto]);
     }
-
+/**
+     * Guarda temporalmente la factura con una referencia única.
+     */
    public function guardarFacturaTemporal()
     {
         $data = $this->request->getPost();
@@ -263,6 +282,9 @@ class Facturas extends BaseController
         return $this->response->setJSON(['status' => 'ok']);
     }
 
+    /**
+     * Muestra las notas crédito disponibles a través de la API de Factus.
+     */
     public function notasCredito()
     {
         $usuarioModel = new \App\Models\UsuarioModel();
@@ -313,6 +335,9 @@ class Facturas extends BaseController
         ]);
     }
 
+    /**
+     * Registra una nueva nota crédito a través de la API Factus.
+     */
     public function registrar()
     {
         helper(['form']);
@@ -343,7 +368,9 @@ class Facturas extends BaseController
         }
     }
 
-
+/**
+     * Proporciona datos paginados de facturas para DataTables.
+     */
     public function ajaxData()
     {
         $start = $this->request->getPost('start');

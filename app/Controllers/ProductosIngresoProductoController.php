@@ -8,8 +8,9 @@ use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\ProductosModel;
 use App\Models\IngresoProductoModel;
 
-
-
+/**
+ * Controlador para gestionar el ingreso del producto.
+ */
 class ProductosIngresoProductoController extends Controller
 {
 
@@ -18,6 +19,9 @@ class ProductosIngresoProductoController extends Controller
     private $data;
     private $model;
     
+    /**
+     * Constructor: inicializa propiedades necesarias y carga el modelo.
+     */
     public function __construct() 
     { 
         $this->primaryKey = "id"; 
@@ -26,18 +30,22 @@ class ProductosIngresoProductoController extends Controller
         $this->model = "ProductosIngresoProducto"; 
     } 
 
-  
+  /**
+     * Muestra el listado de productos ingresados con sus relaciones.
+     */
    public function index() 
     { 
         $this->data['title'] = "Productos Ingreso Producto"; 
+       // Cargar módulos permitidos según el rol del usuario
         $rolId = session()->get('rol_id');
         $modelosModel = new \App\Models\ModelosModel();
         $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
         $this->data['modulos'] = $modulosPermitidos;
 
-        // Datos principales
+        // Obtener todos los registros de ingresos de productos
         $this->data['productosIngresoProducto'] = $this->ProductosIngresoProducto->orderBy($this->primaryKey, 'ASC')->findAll();
-
+       
+        // Obtener lista de productos y facturas
         $producto = new ProductosModel();
         $this->data['producto'] = $producto->findAll();
 
@@ -47,16 +55,17 @@ class ProductosIngresoProductoController extends Controller
         return view('ProductosIngresoProducto/ProductosIngresoProducto_view', $this->data); 
     }
 
-    
-
-        
+   /**
+     * Crea un nuevo registro de producto ingresado.
+     * También actualiza el stock del producto.
+     */     
    public function create() 
 { 
     if ($this->request->isAJAX()) { 
         $dataModel = $this->getDataModel(); 
 
         if ($this->ProductosIngresoProducto->insert($dataModel)) { 
-            // Actualizar stock
+            // Actualizar existencias del producto
             $productoModel = new ProductosModel();
             $producto = $productoModel->find($dataModel['producto_id']);
 
@@ -81,9 +90,7 @@ class ProductosIngresoProductoController extends Controller
     } 
     echo json_encode($data); 
 }
-
-
-    
+    //Devuelve los datos de un solo registro de ingreso de producto.
      public function singleProductosIngresoProducto($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -104,14 +111,17 @@ class ProductosIngresoProductoController extends Controller
         echo json_encode($data);
     }
 
-
-    
+    /**
+     * Actualiza un registro de ingreso de producto.
+     * Ajusta el stock del producto según la nueva cantidad.
+     */
     public function update() 
     { 
         if ($this->request->isAJAX()) { 
             $today = date("Y-m-d H:i:s"); 
             $id = $this->request->getVar($this->primaryKey); 
             
+            // Obtener la cantidad anterior para ajustar el stock correctamente
             $productoIngresoAnterior = $this->ProductosIngresoProducto->find($id);
             $cantidadAnterior = $productoIngresoAnterior['cantidad'] ?? 0;
 
@@ -124,7 +134,7 @@ class ProductosIngresoProductoController extends Controller
             ]; 
 
             if ($this->ProductosIngresoProducto->update($id, $dataModel)) { 
-                // Ajustar stock del producto
+                // Recalcular stock del producto
                 $productoModel = new ProductosModel();
                 $producto = $productoModel->find($dataModel['producto_id']);
 
@@ -152,13 +162,17 @@ class ProductosIngresoProductoController extends Controller
         echo json_encode($data); 
     }
 
-       
+    /**
+     * Elimina un registro de ingreso de producto.
+     * Resta la cantidad al stock del producto correspondiente.
+     */  
    public function delete($id = null) 
     { 
         if ($this->request->isAJAX()) { 
             $registro = $this->ProductosIngresoProducto->find($id); 
 
             if ($registro) { 
+                // Ajustar stock del producto
                 $productoModel = new ProductosModel(); 
                 $producto = $productoModel->find($registro['producto_id']); 
 
@@ -192,7 +206,7 @@ class ProductosIngresoProductoController extends Controller
         echo json_encode($data); 
     }
 
-
+    // Recoge los datos enviados por formulario o AJAX y los estructura para su uso.
     public function getDataModel() 
     { 
         $data = [ 

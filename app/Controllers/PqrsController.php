@@ -8,6 +8,9 @@ use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\CategoriaModel;
 
+/**
+ * Controlador para gestionar el módulo de PQRS (Peticiones, Quejas, Reclamos y Sugerencias).
+ */
 class PqrsController extends Controller
 {
     private $primaryKey;
@@ -15,7 +18,9 @@ class PqrsController extends Controller
     private $data;
     private $model;
 
-    // Método constructor
+    /**
+     * Constructor que inicializa propiedades y el modelo principal.
+     */
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -24,17 +29,22 @@ class PqrsController extends Controller
         $this->model = "PqrsModel";
     }
 
-    // Método index
+    /**
+     * Vista principal de administración de PQRS.
+     * Carga todos los registros de PQRS y datos relacionados para la vista de administración.
+     */
     public function index()
     {
         $EstadoPqrs = new EstadoPqrsModel();
         $TipoPqrs  = new TipoPqrsModel();
         $Usuario = new UsuarioModel();
         
+        // Datos de apoyo
         $this->data['EstadoPqrs'] = $EstadoPqrs->findAll();
         $this->data['TipoPqrs'] = $TipoPqrs->findAll();
         $this->data['Usuario'] = $Usuario->findAll();
 
+        // Título y módulos según el rol
         $this->data["title"] = "PQRS";
          $rolId = session()->get('rol_id');
         $modelosModel = new \App\Models\ModelosModel();
@@ -44,17 +54,18 @@ class PqrsController extends Controller
 
         // Agregar los módulos a los datos enviados a la vista
         $this->data['modulos'] = $modulosPermitidos;
+        // Listado completo de PQRS
         $this->data[$this->model] = $this->PqrsModel->orderBy($this->primaryKey, "ASC")->findAll();
         return view("pqrs/pqrs_view", $this->data);
     }
 
-    // Método create
+    // Crea un nuevo registro de PQRS (solo por AJAX).
     public function create()
     {
         if ($this->request->isAJAX()) {
             $dataModel = $this->getDataModel();
 
-            // Obtener el ID del usuario desde la sesión
+            // Obtener el ID del usuario logueado
             $session = session();
             $idUsuario = $session->get('id_usuario');
 
@@ -85,6 +96,7 @@ class PqrsController extends Controller
         echo json_encode($data);
     }
 
+    //Obtiene una PQRS por ID (solo por AJAX).
     public function singlePqrs($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -105,6 +117,7 @@ class PqrsController extends Controller
         echo json_encode($data);
     }
 
+    //Actualiza una PQRS existente por ID (solo por AJAX).
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -136,6 +149,7 @@ class PqrsController extends Controller
         echo json_encode($data);
     }
 
+    //Elimina un registro PQRS por ID.
     public function delete($id = null)
     {
         try {
@@ -157,6 +171,7 @@ class PqrsController extends Controller
         echo json_encode($data);
     }
 
+    //Recupera los datos del formulario o solicitud.
     public function getDataModel()
     {
         $data = [
@@ -170,6 +185,7 @@ class PqrsController extends Controller
         ];
         return $data;
     }
+    //Vista para que un cliente vea sus propias PQRS.
     public function PqrsCliente()
     {
     $session = session();

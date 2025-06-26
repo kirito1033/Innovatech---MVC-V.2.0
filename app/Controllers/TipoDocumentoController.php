@@ -6,6 +6,10 @@ use App\Models\TipoDocumentoModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador para la gestión de Tipos de Documento.
+ * Realiza operaciones CRUD sobre la entidad TipoDocumento.
+ */
 class TipoDocumentoController extends Controller
 {
     private $primaryKey;
@@ -13,7 +17,10 @@ class TipoDocumentoController extends Controller
     private $data;
     private $model;
 
-    //Metodo constructor
+    /**
+     * Constructor del controlador.
+     * Inicializa variables importantes y la instancia del modelo.
+     */
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -22,23 +29,31 @@ class TipoDocumentoController extends Controller
         $this->model = "TipoDocumentoModel";
     }
 
-    //Metodo index
+    /**
+     * Método principal que muestra la vista de tipo de documento.
+     * Carga los módulos permitidos y todos los tipos de documento disponibles.
+     */
     public function index()
     {
         $this->data["title"] = "TIPO DE DOCUMENTO";
          $rolId = session()->get('rol_id');
         $modelosModel = new \App\Models\ModelosModel();
 
-        // Obtener los módulos permitidos para el rol actual
+        // Cargar los módulos permitidos según el rol del usuario
         $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
 
         // Agregar los módulos a los datos enviados a la vista
         $this->data['modulos'] = $modulosPermitidos;
+        // Obtener todos los registros ordenados por ID
         $this->data[$this->model] = $this->TipoDocumentoModel->orderBy($this->primaryKey, "ASC")->findAll();
+       // Cargar la vista correspondiente
         return view("tipodocumento/tipodocumento_view", $this->data);
     }
 
-    //Metodo create
+    /**
+     * Crea un nuevo tipo de documento (vía AJAX).
+     * Devuelve la respuesta en formato JSON.
+     */
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -61,6 +76,7 @@ class TipoDocumentoController extends Controller
         echo json_encode($data);
     }
 
+    //Obtiene un tipo de documento específico por su ID (vía AJAX).
     public function singleTipoDocumento($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -81,6 +97,7 @@ class TipoDocumentoController extends Controller
         echo json_encode($data);
     }
 
+    //Actualiza un tipo de documento existente (vía AJAX).
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -108,6 +125,7 @@ class TipoDocumentoController extends Controller
         echo json_encode($data);
     }
 
+    //Elimina un tipo de documento por su ID.
     public function delete($id = null)
     {
         try {
@@ -129,6 +147,7 @@ class TipoDocumentoController extends Controller
         echo json_encode($data);
     }
 
+    //Método auxiliar para obtener los datos enviados por POST o AJAX.
     public function getDataModel()
     {
         $data = [

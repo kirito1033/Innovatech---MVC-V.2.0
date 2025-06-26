@@ -8,6 +8,10 @@ use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador para la gestión de envíos en el sistema.
+ * Permite operaciones CRUD y se comunica mediante peticiones AJAX para inserción, consulta y actualización.
+ */
 class EnvioController extends Controller
 {
     private $primaryKey;
@@ -16,6 +20,8 @@ class EnvioController extends Controller
     private $model;
 
     //Constructor
+    // Inicializa el modelo de envío, clave primaria y propiedades de contexto.
+
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -39,6 +45,7 @@ class EnvioController extends Controller
         $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->EnvioModel->orderBy($this->primaryKey, 'ASC')->findAll();
 
+        // Cargar relaciones
         $EstadoEnvio = new EstadoEnvioModel();
         $Usuario = new UsuarioModel();
         
@@ -94,12 +101,18 @@ class EnvioController extends Controller
         echo json_encode($data);
     }
 
+    /**
+     * Actualiza un envío existente.
+     * Detecta si hubo cambio de estado y reinicia el envío de correo si aplica.
+     * Llama al método `verificarEstados()` para gestionar lógicas adicionales.
+     */
    public function update()
     {
         if ($this->request->isAJAX()) {
             $envioModel = new \App\Models\EnvioModel();
             $id = $this->request->getVar($this->primaryKey);
 
+            // Detectar si hay cambio de estado
             $envioActual = $envioModel->find($id);
             $nuevoEstado = $this->request->getVar('estado_envio_id');
 
@@ -114,15 +127,16 @@ class EnvioController extends Controller
                 'correo'           => $this->request->getVar('correo'),
                 'updated_at'       => date('Y-m-d H:i:s'),
             ];
-
+           
+            // Reinicia el estado de envío de correo si cambió el estado
             if ($cambioEstado) {
                 $dataModel['correo_estado_enviado'] = 0;
             }
 
             if ($envioModel->update($id, $dataModel)) {
                 // ✅ Llamar al método del modelo
-                $envioModel->verificarEstados();
-
+                $envioModel->verificarEstados(); // Verificación lógica adicional del modelo
+ 
                 $data = [
                     'message'  => 'success',
                     'response' => ResponseInterface::HTTP_OK,

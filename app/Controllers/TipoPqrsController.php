@@ -6,6 +6,10 @@ use App\Models\TipoPqrsModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador encargado de gestionar los Tipos de PQRS.
+ * Permite realizar operaciones CRUD a través de peticiones AJAX.
+ */
 class TipoPqrsController extends Controller
 {
     private $primaryKey;
@@ -13,7 +17,10 @@ class TipoPqrsController extends Controller
     private $data;
     private $model;
 
-    //Metodo constructor
+    /**
+     * Constructor del controlador.
+     * Inicializa las propiedades del modelo, clave primaria y nombre lógico.
+     */
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -22,7 +29,10 @@ class TipoPqrsController extends Controller
         $this->model = "TipoPqrsModel";
     }
 
-    //Metodo index
+    /**
+     * Carga la vista principal con la lista de tipos de PQRS disponibles.
+     * También carga los módulos permitidos según el rol del usuario.
+     */
     public function index()
     {
         $this->data["title"] = "TIPO PQRS";
@@ -38,7 +48,10 @@ class TipoPqrsController extends Controller
         return view("tipopqrs/tipopqrs_view", $this->data);
     }
 
-    //Metodo create
+    /**
+     * Crea un nuevo registro de Tipo PQRS.
+     * Solo se permite mediante peticiones AJAX.
+     */
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -61,6 +74,10 @@ class TipoPqrsController extends Controller
         echo json_encode($data);
     }
 
+    /**
+     * Obtiene un Tipo PQRS específico por su ID.
+     * Solo responde a solicitudes AJAX.
+     */
     public function singleTipoPqrs($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -81,6 +98,10 @@ class TipoPqrsController extends Controller
         echo json_encode($data);
     }
 
+    /**
+     * Actualiza un Tipo PQRS existente.
+     * La solicitud debe ser AJAX.
+     */
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -109,6 +130,10 @@ class TipoPqrsController extends Controller
         echo json_encode($data);
     }
 
+    /**
+     * Elimina un registro de Tipo PQRS por ID.
+     * Maneja excepciones y responde en formato JSON.
+     */
     public function delete($id = null)
     {
         try {
@@ -130,6 +155,7 @@ class TipoPqrsController extends Controller
         echo json_encode($data);
     }
 
+    //Método auxiliar para extraer los datos del formulario o solicitud AJAX.
     public function getDataModel()
     {
         $data = [

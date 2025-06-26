@@ -24,12 +24,13 @@ class MarcaController extends Controller
     }
 
     // Método principal para cargar la vista de marcas.
-    // Obtiene los módulos permitidos para el usuario actual y las marcas registradas.
     public function index()
     {
         $this->data["title"] = "MARCA";
 
+        // Obtener ID de rol de la sesión
          $rolId = session()->get('rol_id'); // Obtener ID del rol del usuario actual
+         // Obtener módulos permitidos para el rol actual
         $modelosModel = new \App\Models\ModelosModel();
 
         // Consultar los módulos accesibles según el rol

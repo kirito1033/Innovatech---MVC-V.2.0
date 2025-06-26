@@ -162,6 +162,10 @@ class CarritoController extends Controller
         ]);
     }
 
+       /**
+     * Muestra la vista para la entrega de productos.
+     * Carga las categorías disponibles.
+     */
     public function entrega()
     {
         $categoriaModel = new CategoriaModel();
