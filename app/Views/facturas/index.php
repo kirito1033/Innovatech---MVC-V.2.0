@@ -69,14 +69,34 @@
 
 
   <script>
-    $(document).ready(function () {
-      $('#table-index').DataTable({
-        responsive: true,
-        language: {
-          url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Spanish.json"
-        }
-      });
-    });
+   $(document).ready(function() {
+  $('#table-index').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: {
+          url: "<?= base_url('facturas/ajaxData') ?>",
+          type: "POST"
+      },
+      columns: [
+          { data: "number" },
+          { data: "names" },
+          { data: "identification" },
+          { data: "total", render: function(data) {
+              return "$" + parseFloat(data).toFixed(2);
+          }},
+          { data: "status", render: function(data) {
+              return data == 1 ? "Válida" : "Pendiente";
+          }},
+          { data: "document_name" },
+          { data: "payment_form_name" },
+          { data: "acciones", orderable: false, searchable: false }
+      ],
+      language: {
+          url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+      }
+  });
+});
+
       function add() {
       var modal = new bootstrap.Modal(document.getElementById('my-modal'));
       modal.show();

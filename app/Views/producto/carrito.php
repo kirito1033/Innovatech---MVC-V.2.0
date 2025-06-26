@@ -375,7 +375,7 @@
                 <input name="test"          type="hidden" value="1">
                 <input name="buyerEmail"    type="hidden" id="payu_email">
                 <input name="responseUrl"   type="hidden" value="<?= base_url('facturas/respuesta') ?>">
-               <input name="confirmationUrl" type="hidden" value="https://01f7-179-51-111-179.ngrok-free.app/facturas/confirmacion">
+               <input name="confirmationUrl" type="hidden" value="https://e16e-179-51-111-179.ngrok-free.app/facturas/confirmacion">
             </form>
         </div>
     </div>

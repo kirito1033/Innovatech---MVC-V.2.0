@@ -34,7 +34,8 @@
         <option value="Roles">Roles</option>
         <option value="Filtros">Filtros</option>
         <option value="Facturas">Facturas</option>
-    
+        <option value="Dashboard">Dashboard</option>
+        <option value="Proveedor">Proveedor</option>
     </select>
     <label for="grupo">Grupo</label>
 </div>
