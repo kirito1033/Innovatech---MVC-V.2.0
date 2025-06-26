@@ -105,7 +105,7 @@
           <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">  <i class="bi bi-bag"></i>Mis compras</a>
           </li>
           <li class="nav-item header-pc__nav-ul-li">
-             <a href="<?= base_url('ofertas/6') ?>"><i class="bi bi-tags"></i>ofertas</a>
+            <a href="<?= base_url('ofertas/6') ?>"><i class="bi bi-tags"></i>Ofertas</a>
           </li>
           <li class="nav-item header-pc__nav-ul-li">
           <a href="<?= base_url('pqrs/Cpqrs') ?>"><i class="bi bi-info-circle icon"></i>Ayuda/PQR</a>
@@ -113,7 +113,7 @@
           <li class="nav-item  header-pc__nav-ul-li">
           <?php if (isset($_SESSION['usuario'])): ?>
           <li class="nav-item  header-pc__nav-ul-li">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">
+            <a href="<?= base_url("/perfil") ?>">
               <i class="bi bi-person-circle"></i> Mi perfil
             </a>
           </li>
