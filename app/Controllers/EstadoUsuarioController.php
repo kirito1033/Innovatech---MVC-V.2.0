@@ -6,6 +6,10 @@ use App\Models\EstadoUsuarioModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador para gestionar las operaciones CRUD sobre el estado de los usuarios.
+ * Incluye funcionalidad para mostrar, crear, actualizar y eliminar registros vía AJAX.
+ */
 class EstadoUsuarioController extends Controller
 {
     private $primaryKey;

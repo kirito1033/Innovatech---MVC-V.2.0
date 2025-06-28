@@ -6,6 +6,9 @@ use App\Models\EstadoPqrsModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador que gestiona las operaciones CRUD para los estados de PQRS.
+ */
 class EstadoPqrsController extends Controller
 {
     private $primaryKey;

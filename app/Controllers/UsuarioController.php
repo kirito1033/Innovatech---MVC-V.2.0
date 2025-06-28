@@ -12,6 +12,10 @@ use App\Models\CiudadModel;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
+/**
+ * Controlador encargado de gestionar los usuarios.
+ * Permite realizar operaciones CRUD a través de peticiones AJAX.
+ */
 class UsuarioController extends Controller
 {
     private $primaryKey;
@@ -19,7 +23,10 @@ class UsuarioController extends Controller
     private $data;
     private $model;
 
-    
+    /**
+     * Constructor de la clase
+     * Inicializa propiedades y modelo de usuario
+     */    
     public function __construct()
     {
         $this->primaryKey = "id_usuario";
@@ -28,10 +35,16 @@ class UsuarioController extends Controller
         $this->model = "UsuarioModel";
     }
 
+    /**
+     * Método principal para mostrar la lista de usuarios
+     * Además carga datos relacionados como roles, estados, tipos de documento y ciudades
+     */
     public function index()
     {
         $this->data['title'] = "Usuarios";
-         $rolId = session()->get('rol_id');
+        // Obtiene el rol del usuario de sesión 
+        $rolId = session()->get('rol_id');
+        // Instancia el modelo para obtener los módulos permitidos para el rol
         $modelosModel = new \App\Models\ModelosModel();
 
         // Obtener los módulos permitidos para el rol actual
@@ -41,6 +54,7 @@ class UsuarioController extends Controller
         $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->UsuarioModel->orderBy($this->primaryKey, 'ASC')->findAll();
         
+        // Carga datos auxiliares para los selects de la vista
         $TipoDocumento = new TipoDocumentoModel();
         $Ciudad  = new CiudadModel();
         $Rol = new RolModel();
@@ -51,9 +65,15 @@ class UsuarioController extends Controller
         $this->data['TipoDocumento'] = $TipoDocumento->orderBy('nom', 'ASC')->findAll();
         $this->data['Ciudad'] = $Ciudad->orderBy('name', 'ASC')->findAll();
         
+        // Retorna la vista con los datos
         return view('usuario/usuario_view', $this->data);
     }
 
+    /**
+     * Crea un nuevo usuario
+     * Si la petición es AJAX, devuelve respuesta JSON
+     * Si no, redirige según el rol creado
+     */
     public function create()
     {
         
@@ -69,7 +89,7 @@ class UsuarioController extends Controller
                     'csrf' => csrf_hash()
                 ]);
             } else {
-                // Redirigir según el rol_id
+                // Redirige según el rol asignado al usuario creado
                 $rolId = $dataModel['rol_id'];
     
                 if ($rolId == 3) {
@@ -93,6 +113,9 @@ class UsuarioController extends Controller
         }
     }
 
+    /**
+     * Obtiene un usuario específico por su ID mediante AJAX
+     */
     public function singleUsuario($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -113,6 +136,9 @@ class UsuarioController extends Controller
         echo json_encode($data);
     }
 
+    /**
+     * Actualiza un usuario existente vía AJAX
+     */
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -136,6 +162,10 @@ class UsuarioController extends Controller
         echo json_encode($data);
     }
 
+     /**
+     * Elimina un usuario por ID
+     * Maneja excepciones y responde con JSON
+     */
     public function delete($id = null)
     {
         try {
@@ -157,6 +187,10 @@ class UsuarioController extends Controller
         echo json_encode($data);
     }
 
+    /**
+     * Obtiene datos del formulario para crear o actualizar usuario
+     * Hashea la contraseña antes de devolver los datos
+     */
     public function getDataModel()
     {
         
@@ -179,11 +213,16 @@ class UsuarioController extends Controller
             'updated_at' => date("Y-m-d H:i:s")
         ];
     }
+    /**
+     * Función para autenticar usuario
+     * Valida usuario y contraseña, genera JWT y crea sesión
+     */
     public function login()
     {
         $usuario = $this->request->getVar('usuario');
         $password = $this->request->getVar('password');
 
+        // Busca usuario en base de datos
         $user = $this->UsuarioModel->where('usuario', $usuario)->first();
 
         // Verifica si el usuario existe y la contraseña es correcta
@@ -196,10 +235,12 @@ class UsuarioController extends Controller
             return $this->handleLoginError('Tu cuenta está inactiva o suspendida');
         }
 
+        // Clave secreta para JWT (puede venir de variables de entorno)
         $key = getenv('JWT_SECRET') ?? 'clave_secreta_demo';
         $issuedAt = time();
-        $expirationTime = $issuedAt + 3600;
+        $expirationTime = $issuedAt + 3600;// Expira en 1 hora
 
+        // Carga útil del token JWT
         $payload = [
             'iat' => $issuedAt,
             'exp' => $expirationTime,
@@ -208,8 +249,10 @@ class UsuarioController extends Controller
             'rol_id' => $user['rol_id']
         ];
 
+        // Genera token JWT
         $token = JWT::encode($payload, $key, 'HS256');
 
+        // Guarda información en sesión
         session()->set([
             'token' => $token,
             'usuario' => $user['usuario'],
@@ -219,6 +262,7 @@ class UsuarioController extends Controller
             'estado_usuario_id' => $user['estado_usuario_id'], // Opcional: guardar también el estado por si se quiere usar después
         ]);
 
+        // Responde según tipo de petición
         if ($this->request->isAJAX()) {
             return $this->response->setJSON([
                 'status' => 'success',
@@ -236,7 +280,9 @@ class UsuarioController extends Controller
         }
     }
 
-// Función auxiliar para manejar errores de login
+/**
+     * Maneja errores de login y responde según el tipo de petición
+     */
 private function handleLoginError($message)
 {
     if ($this->request->isAJAX()) {
@@ -249,6 +295,10 @@ private function handleLoginError($message)
     }
 }
 
+/**
+     * Cierra sesión del usuario actual
+     * Si es petición AJAX devuelve JSON, si no redirige a login
+     */
     public function logout()
     {
         // Destruye toda la sesión
@@ -266,6 +316,9 @@ private function handleLoginError($message)
         }
     }
 
+    /**
+     * Carga la vista para registro de usuario con datos necesarios para selects
+     */
     public function registerView()
     {
         $TipoDocumento = new TipoDocumentoModel();
@@ -280,6 +333,10 @@ private function handleLoginError($message)
 
          return view('usuario/register', $this->data);
     }
+    /**
+     * Actualiza la imagen de un usuario vía AJAX
+     * Verifica validez y mueve el archivo al directorio de uploads
+     */
     public function updateImage()
     {
         if ($this->request->isAJAX()) {
@@ -321,10 +378,13 @@ private function handleLoginError($message)
         ]);
     }   
   
+    /**
+     * Obtiene los datos del usuario actualmente logueado desde la sesión
+     */
     public function getUsuarioActual()
         {
             $usuarioModel = new \App\Models\UsuarioModel();
-            $idUsuario = session()->get('id_usuario'); // O usa el campo que manejes
+            $idUsuario = session()->get('id_usuario'); // ID del usuario en sesión
             $usuario = $usuarioModel->find($idUsuario);
 
             return $usuario;

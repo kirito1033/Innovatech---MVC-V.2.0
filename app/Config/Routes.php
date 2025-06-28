@@ -296,9 +296,14 @@ $routes->get('/logout', 'UsuarioController::logout');
 $routes->get('/carrito', 'CarritoController::carrito');
 $routes->post('/carrito/agregar', 'CarritoController::agregarAlCarrito');
 $routes->post('carrito/eliminarDelCarrito/(:num)', 'CarritoController::eliminarDelCarrito/$1');
-// Metodos de pago
-$routes->get('pago/contraentrega', 'CarritoController::contraentrega');
-$routes->get('pago/tarjeta', 'CarritoController::tarjeta');
+
+// Perfil
+$routes->get('/perfil', 'PerfilController::index');
+$routes->post('/perfil/actualizar', 'PerfilController::actualizar');
+$routes->get('perfil/datos', 'PerfilController::obtenerDatos');
+$routes->post('/perfil/actualizar-imagen', 'PerfilController::updateImage');
+$routes->post('/perfil/verificar-password', 'PerfilController::verificarPassword');
+
 
 
 $routes->group('userapi', ['filter' => 'roleaccess'],function($routes) {
@@ -391,6 +396,14 @@ $routes->post('facturas/registrar', 'Facturas::registrarFactura');
 $routes->get('facturas/pagar/(:segment)', 'Facturas::pagar/$1');
 $routes->get('facturas/respuesta', 'Facturas::respuesta');
 $routes->post('facturas/confirmacion', 'Facturas::confirmacion'); 
+
+$routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
+
+$routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
+$routes->get('facturas/notas-credito', 'Facturas::notasCredito');
+$routes->post('notas-credito/registrar', 'Facturas::registrar');
+$routes->get('api/token', 'ApiController::token');
+
 $routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
 $routes->get('facturas/notas-credito', 'Facturas::notasCredito');
 $routes->post('notas-credito/registrar', 'Facturas::registrar');

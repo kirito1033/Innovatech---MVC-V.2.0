@@ -16,6 +16,9 @@ use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\PedidoProveedorModel;
 
+/**
+ * Controlador para gestionar el módulo de producto.
+ */
 class ProductoController extends Controller
 {
     private $primaryKey;
@@ -49,7 +52,10 @@ class ProductoController extends Controller
         $this->model = "productos";
     }
 
-    // Método index
+   /**
+     * Método principal para listar productos.
+     * Actualiza estado y crea pedidos automáticos si es necesario.
+     */
    public function index()
 {
     $this->data["title"] = "PRODUCTOS";
@@ -99,7 +105,7 @@ class ProductoController extends Controller
         }
     }
 
-    // Resto igual
+    // Carga de datos para vista
     $this->data["productos"] = $productos;
     $this->data["almacenamiento_aleatorio"] = $this->almacenamientoAleatorioModel->findAll();
     $this->data["almacenamiento"] = $this->almacenamientoModel->findAll();
@@ -111,6 +117,7 @@ class ProductoController extends Controller
     $this->data["sistemas_operativos"] = $this->sistemaOperativoModel->findAll();
     $this->data["resoluciones"] = $this->resolucionModel->findAll();
 
+    // Obtiene módulos del usuario por rol
     $rolId = session()->get('rol_id');
     $modelosModel = new \App\Models\ModelosModel();
     $this->data['modulos'] = $modelosModel->getModelosByRol($rolId);
@@ -119,7 +126,10 @@ class ProductoController extends Controller
 }
 
 
-    // Método create
+    /**
+     * Crea un nuevo producto vía AJAX.
+     * También maneja subida y guardado de imagen.
+     */
     public function create()
     {
     if ($this->request->isAJAX()) {
@@ -174,7 +184,10 @@ class ProductoController extends Controller
         echo json_encode($data);
     }
 
-    // Método update
+     /**
+     * Actualiza un producto (AJAX).
+     * Recalcula estado y precio original si cambia.
+     */
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -202,12 +215,13 @@ class ProductoController extends Controller
             $existencias = intval($this->request->getVar("existencias"));
             $estadoActual = intval($this->request->getVar("id_estado"));
 
+            // Recalcula estado según existencias o mantiene reservado/devuelto
             if ($estadoActual === 4 || $estadoActual === 7) {
                 $idEstado = $estadoActual;
             } else {
                 $idEstado = ($existencias == 0) ? 2 : 1; // 2 = Agotado, 1 = En stock
             }
-            
+            // Construye los datos a guardar
         $dataModel = [
             "id" => $this->request->getVar("id"),
             "nom" => $this->request->getVar("nom"),
@@ -250,7 +264,7 @@ class ProductoController extends Controller
 
 
 
-    // Método delete
+    // Elimina un producto por ID.
     public function delete($id = null)
     {
 
@@ -274,8 +288,8 @@ class ProductoController extends Controller
         echo json_encode($data);
     }
 
-    // Método para obtener los datos enviados en el formulario
-    public function getDataModel()
+//Recoge datos del formulario para usar en create/update.
+public function getDataModel()
     {
         $data = [
             "id" => $this->request->getVar("id"),
@@ -301,6 +315,10 @@ class ProductoController extends Controller
         return $data;
     }
     
+    /**
+     * Actualiza la imagen de un producto.
+     * Elimina la anterior si existe y devuelve nueva ruta.
+     */
     public function updateImage()
     {
         if ($this->request->isAJAX()) {
@@ -359,7 +377,10 @@ class ProductoController extends Controller
         ]);
     }
 
-
+    /**
+     * Muestra la vista de un producto con relaciones.
+     * Lanza error 404 si no existe.
+     */
     public function ver($id = null)
     {
         $productoModel = new ProductosModel();
@@ -377,16 +398,20 @@ class ProductoController extends Controller
         return view('producto/ver', $data);
     }
 
-    // Mensaje
+    /**
+     * Simula el envío de una pregunta por un usuario.
+     * Rediseña a la vista del producto con mensaje.
+     */
     public function preguntar($id)
     {
         $pregunta = $this->request->getPost('pregunta');
         return redirect()->to("/producto/ver/$id")->with('message', 'Pregunta enviada');
     }
 
-    // ----------- Listar Productos ---------------- //
+    //Lista productos filtrables por múltiples criterios.
     public function listarProductos($id = null)
-{
+    {
+    // Instancias de modelos
     $productoModel = new ProductosModel();
     $categoriaModel = new CategoriaModel();
     $marcaModel = new MarcaModel();

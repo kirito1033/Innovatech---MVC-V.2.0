@@ -8,6 +8,11 @@ use App\Models\ApiUserModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+
+/**
+ * Controlador para gestionar los usuarios que consumen la API.
+ * Ofrece operaciones CRUD y autenticación básica mediante AJAX.
+ */
 class ApiUserController extends Controller
 {
     //Clave primaria utilizada en el modelo.
@@ -156,6 +161,8 @@ class ApiUserController extends Controller
         }
         echo json_encode($data);
     }
+
+    //Elimina un usuario API por ID.
      public function delete($id = null)
     {
         try {

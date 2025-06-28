@@ -7,6 +7,9 @@ use App\Models\UsuarioModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador para gestionar el ingreso de productos mediante facturas.
+ */
 class IngresoProductoController extends Controller
 {
     private $primaryKey;
