@@ -386,6 +386,60 @@ class Facturas extends BaseController
         ]);
     }
 
+   public function todasExcel()
+{
+    $tokenModel = new \App\Models\TokenModel();
+    $token = $tokenModel->getToken();
+
+    if (!$token) {
+        return $this->response->setJSON(['error' => 'Token no disponible']);
+    }
+
+    $client = \Config\Services::curlrequest();
+
+    $perPage = 100; // Puedes ajustar este valor si el API lo permite
+    $page = 1;
+    $todas = [];
+    $totalPages = null;
+
+    try {
+        do {
+            $url = "https://api-sandbox.factus.com.co/v1/bills?per_page={$perPage}&page={$page}";
+
+            $response = $client->get($url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Accept'        => 'application/json',
+                ],
+            ]);
+
+            $result = json_decode($response->getBody(), true);
+
+            // Si no hay datos, salimos del bucle
+            if (!isset($result['data']['data']) || empty($result['data']['data'])) {
+                break;
+            }
+
+            // Agregamos las facturas de esta página
+            $todas = array_merge($todas, $result['data']['data']);
+
+            // Obtenemos total de páginas (solo una vez)
+            if ($totalPages === null) {
+                $totalPages = $result['data']['pagination']['total_pages'] ?? 1;
+            }
+
+            $page++; // Pasamos a la siguiente página
+
+        } while ($page <= $totalPages);
+
+        return $this->response->setJSON($todas);
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error en todasExcel(): ' . $e->getMessage());
+        return $this->response->setJSON(['error' => $e->getMessage()]);
+    }
+}
+
 
 
 }

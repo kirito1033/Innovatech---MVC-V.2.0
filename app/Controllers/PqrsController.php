@@ -195,4 +195,7 @@ class PqrsController extends Controller
     return view("pqrs/pqrs_form_view", $this->data);
     }
 
+   
+
+
 }
