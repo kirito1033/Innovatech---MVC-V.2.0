@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\FacturaModel;
+use App\Models\CarritoModel;
 use CodeIgniter\HTTP\CURLRequest;
 
 class Facturas extends BaseController
@@ -118,8 +119,10 @@ class Facturas extends BaseController
             }
         }
 
+    // Confirmación de transacción
     public function confirmacion()
     {
+        log_message('debug', '🚀 Se ejecutó confirmacion() con estado: ' . $this->request->getPost('state_pol'));
         $estado = $this->request->getPost('state_pol');
         $referencia = $this->request->getPost('reference_sale');
 
@@ -137,7 +140,6 @@ class Facturas extends BaseController
             $factura = json_decode($row['factura_json'], true);
             $factura['reference_code'] = $referencia;
 
-            // ✅ Obtener el token desde el modelo
             $facturaModel = new \App\Models\FacturaModel();
             $token = $facturaModel->getToken();
 
@@ -146,9 +148,8 @@ class Facturas extends BaseController
                 return $this->response->setStatusCode(500)->setBody('Token no obtenido');
             }
 
-            // ✅ Enviar a la API con el token
-            $client = \Config\Services::curlrequest();
             try {
+                $client = \Config\Services::curlrequest();
                 $response = $client->post('https://api-sandbox.factus.com.co/v1/bills/validate', [
                     'headers' => [
                         'Content-Type' => 'application/json',
@@ -162,39 +163,61 @@ class Facturas extends BaseController
             } catch (\Exception $e) {
                 log_message('error', '❌ Error al enviar a API Factus: ' . $e->getMessage());
             }
-        }
 
+            // ✅ Vaciar carrito con el usuario_id obtenido desde la factura temporal
+            $usuarioId = $row['usuario_id']; // <--- CAMBIO CLAVE
+            if ($usuarioId) {
+                log_message('debug', '🛒 Iniciando intento de vaciar carrito para usuario ID (desde DB): ' . $usuarioId);
+                $carritoModel = new \App\Models\CarritoModel();
+                $carritoModel->where('usuario_id', $usuarioId)->delete();
+                log_message('info', '🧹 Carrito eliminado para usuario ID: ' . $usuarioId);
+            } else {
+                log_message('warning', '⚠️ No se encontró usuario_id en la factura temporal.');
+            }
+        }
 
         return $this->response->setStatusCode(200)->setBody('OK');
     }
 
 
-
-
-
+    // Redirección dependiendo el rol
     public function respuesta()
     {
-        return view('facturas/pago_exitoso'); 
+        log_message('debug', '✅ Se ejecutó el método respuesta() de Facturas');
+        $rol = session('rol');
+
+        $compra_exitosa = true;
+
+        return view('facturas/pago_exitoso', [
+            'rol' => $rol,
+            'compra_exitosa' => $compra_exitosa
+        ]);
     }
+
+
   public function pagar($monto = 0)
     {
         $monto = floatval($monto); 
         return view('facturas/formulario_pago', ['monto' => $monto]);
     }
 
-   public function guardarFacturaTemporal()
+    public function guardarFacturaTemporal()
     {
-        $data = $this->request->getPost();
-        $ref = $data['reference_code'];
+        $data       = $this->request->getPost();
+        $ref        = $data['reference_code'];
+        $usuarioId  = session('id_usuario'); // ✅ Recuperamos el usuario de la sesión
 
         $model = new \App\Models\FacturaTemporalModel();
+
         $model->insert([
             'reference_code' => $ref,
-            'factura_json' => json_encode($data),
+            'factura_json'   => json_encode($data),
+            'usuario_id'     => $usuarioId // ✅ Guardamos el ID del usuario para referencia futura
         ]);
 
         return $this->response->setJSON(['status' => 'ok']);
     }
+
 
     public function notasCredito()
     {

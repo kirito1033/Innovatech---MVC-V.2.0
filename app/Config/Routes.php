@@ -295,6 +295,7 @@ $routes->get('/logout', 'UsuarioController::logout');
 // Carrito
 $routes->get('/carrito', 'CarritoController::carrito');
 $routes->post('/carrito/agregar', 'CarritoController::agregarAlCarrito');
+$routes->post('/carrito/vaciar', 'CarritoController::vaciar');
 $routes->post('carrito/eliminarDelCarrito/(:num)', 'CarritoController::eliminarDelCarrito/$1');
 
 // Perfil

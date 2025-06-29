@@ -135,32 +135,26 @@ class CarritoController extends Controller
         }
     }
 
-    // Métodos de redirección de pago
-    public function contraentrega()
+    // Vaciar carrito de compras
+    public function vaciar()
     {
-        $categoriaModel = new CategoriaModel();
-        $categorias = $categoriaModel->findAll();
-        return view('pago/contraentrega', [
-            'categorias' => $categorias
-        ]);
+        $usuarioId = session('id_usuario');
+
+        if (!$usuarioId) {
+            return $this->response->setJSON(['error' => 'Usuario no autenticado'])->setStatusCode(401);
+        }
+
+        $carritoModel = new \App\Models\CarritoModel();
+
+        try {
+            $carritoModel->where('usuario_id', $usuarioId)->delete();
+            log_message('info', '✅ Carrito vaciado desde CarritoController para usuario ID: ' . $usuarioId);
+            return $this->response->setJSON(['success' => true]);
+        } catch (\Exception $e) {
+            log_message('error', '❌ Error al vaciar carrito: ' . $e->getMessage());
+            return $this->response->setJSON(['error' => 'Error al vaciar carrito'])->setStatusCode(500);
+        }
     }
 
-    public function tarjeta()
-    {
-        $categoriaModel = new CategoriaModel();
-        $categorias = $categoriaModel->findAll();
-        return view('pago/tarjeta', [
-            'categorias' => $categorias
-        ]);
-    }
-
-    public function entrega()
-    {
-        $categoriaModel = new CategoriaModel();
-        $categorias = $categoriaModel->findAll();
-        return view('pago/entrega', [
-            'categorias' => $categorias
-        ]);
-    }
 
 }
