@@ -6,15 +6,16 @@ use App\Models\ModelosModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
-
+//Controlador para gestionar los módulos del sistema.
+//Permite operaciones CRUD vía AJAX sobre los registros de la tabla `modelos`.
 class ModelosController extends Controller
 {
-    private $primaryKey;
-    private $ModelosModel;
-    private $data;
-    private $model;
+    private $primaryKey; // Clave primaria de la tabla
+    private $ModelosModel; // Instancia del modelo ModelosModel
+    private $data; // Datos a enviar a la vista
+    private $model; // Nombre del modelo (como string)
 
-    // Método constructor
+     // Constructor: inicializa propiedades
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -23,18 +24,18 @@ class ModelosController extends Controller
         $this->model = "ModelosModel";
     }
 
-    // Método index
+    //Vista principal: carga los módulos disponibles y permitidos según el rol.
     public function index()
     {
         $this->data["title"] = "MODELOS";
 
-    $rolId = session()->get('rol_id');
+    $rolId = session()->get('rol_id'); // Obtener el rol del usuario actual
     $modelosModel = new ModelosModel();
 
-    // Obtener los módulos permitidos para el rol actual
+    // Obtener los módulos permitidos para el rol
     $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
 
-    // Agregar los módulos a los datos enviados a la vista
+    // Enviar módulos y todos los modelos a la vista
     $this->data['modulos'] = $modulosPermitidos;
 
     // Obtener todos los modelos
@@ -44,7 +45,7 @@ class ModelosController extends Controller
     return view("modelos/modelos_view", $this->data);
     }
 
-    // Método create
+    // Método para crear un nuevo modelo vía AJAX.
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -53,7 +54,7 @@ class ModelosController extends Controller
                 $data["message"] = "success";
                 $data["response"] = ResponseInterface::HTTP_OK;
                 $data["data"] = $dataModel;
-                $data["csrf"] = csrf_hash();
+                $data["csrf"] = csrf_hash(); // Seguridad CSRF
             } else {
                 $data["message"] = "Error creating model";
                 $data["response"] = ResponseInterface::HTTP_NO_CONTENT;
@@ -67,6 +68,7 @@ class ModelosController extends Controller
         echo json_encode($data);
     }
 
+    //Método para obtener un modelo específico (por ID).
     public function singleModelo($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -87,6 +89,7 @@ class ModelosController extends Controller
         echo json_encode($data);
     }
 
+    //Método para actualizar un modelo existente.
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -115,6 +118,7 @@ class ModelosController extends Controller
         echo json_encode($dataModel);
     }
 
+    //Método para eliminar un modelo por su ID.
     public function delete($id = null)
     {
         try {
@@ -136,6 +140,8 @@ class ModelosController extends Controller
         echo json_encode($data);
     }
 
+    //Método auxiliar para recoger los datos del formulario.
+    //Se utiliza tanto en creación como en actualización.
     public function getDataModel()
     {
         $data = [

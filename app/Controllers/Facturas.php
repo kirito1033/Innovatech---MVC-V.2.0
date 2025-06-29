@@ -5,6 +5,9 @@ namespace App\Controllers;
 use App\Models\FacturaModel;
 use App\Models\CarritoModel;
 use CodeIgniter\HTTP\CURLRequest;
+use App\Models\EstadoEnvioModel;
+use CodeIgniter\Controller;
+use CodeIgniter\HTTP\ResponseInterface;
 
 class Facturas extends BaseController
 {
@@ -119,7 +122,7 @@ class Facturas extends BaseController
             }
         }
 
-    // Confirmación de transacción
+// Confirmación de transacción
     public function confirmacion()
     {
         log_message('debug', '🚀 Se ejecutó confirmacion() con estado: ' . $this->request->getPost('state_pol'));
@@ -180,6 +183,7 @@ class Facturas extends BaseController
     }
 
 
+
     // Redirección dependiendo el rol
     public function respuesta()
     {
@@ -195,7 +199,7 @@ class Facturas extends BaseController
     }
 
 
-  public function pagar($monto = 0)
+    public function pagar($monto = 0)
     {
         $monto = floatval($monto); 
         return view('facturas/formulario_pago', ['monto' => $monto]);
@@ -300,7 +304,48 @@ class Facturas extends BaseController
     }
 
 
-    
+    public function ajaxData()
+    {
+        $start = $this->request->getPost('start');
+        $length = $this->request->getPost('length');
+        $draw = $this->request->getPost('draw');
+        $searchValue = $this->request->getPost('search')['value'] ?? '';
+        $page = ceil(($start + 1) / $length); // Calculamos la página actual
+
+        $model = new \App\Models\FacturaModel();
+        $response = $model->getFacturasPaginadas($length, $page, $searchValue);
+
+        if (isset($response['data']['data'])) {
+            $data = [];
+            foreach ($response['data']['data'] as $factura) {
+                $data[] = [
+                    'number' => esc($factura['number'] ?? 'N/D'),
+                    'names' => esc($factura['names'] ?? '---'),
+                    'identification' => esc($factura['identification'] ?? '---'),
+                    'total' => $factura['total'] ?? 0,
+                    'status' => $factura['status'] ?? '0',
+                    'document_name' => esc($factura['document']['name'] ?? '---'),
+                    'payment_form_name' => esc($factura['payment_form']['name'] ?? '---'),
+                    'acciones' => view('facturas/acciones', ['factura' => $factura]) // una vista parcial con los botones
+                ];
+            }
+
+            return $this->response->setJSON([
+                'draw' => intval($draw),
+                'recordsTotal' => $response['data']['pagination']['total'] ?? 0,
+                'recordsFiltered' => $response['data']['pagination']['total'] ?? 0,
+                'data' => $data,
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'draw' => intval($draw),
+            'recordsTotal' => 0,
+            'recordsFiltered' => 0,
+            'data' => [],
+        ]);
+    }
+
 
 
 }

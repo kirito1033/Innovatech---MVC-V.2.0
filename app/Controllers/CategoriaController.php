@@ -1,5 +1,8 @@
 <?php
 
+//Controlador encargado de gestionar las categorías del sistema.
+//Permite crear, consultar, actualizar y eliminar categorías a través de peticiones AJAX.
+
 namespace App\Controllers;
 
 use App\Models\CategoriaModel;
@@ -8,12 +11,16 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class CategoriaController extends Controller
 {
+    //Nombre de la clave primaria de la tabla.
     private $primaryKey;
+    //Instancia del modelo de categorías.
     private $CategoriaModel;
+    //Datos compartidos con la vista.
     private $data;
+    //Nombre del modelo como clave para los datos enviados a la vista.
     private $model;
 
-    // Método constructor
+    // Constructor del controlador. Inicializa propiedades y modelo de categoría.
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -22,7 +29,8 @@ class CategoriaController extends Controller
         $this->model = "CategoriaModel";
     }
 
-    // Método index
+    // Carga la vista principal con el listado de categorías.
+    //También incluye los módulos visibles según el rol del usuario en sesión.
     public function index()
     {
         $this->data["title"] = "CATEGORIA";
@@ -38,7 +46,7 @@ class CategoriaController extends Controller
         return view("categoria/categoria_view", $this->data);
     }
 
-    // Método create
+    // Crea una nueva categoría desde una petición AJAX.
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -61,7 +69,7 @@ class CategoriaController extends Controller
         echo json_encode($data);
     }
 
-    // Método para obtener una sola categoría
+    // Obtiene los datos de una sola categoría por ID, mediante AJAX.
     public function singleCategoria($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -82,7 +90,7 @@ class CategoriaController extends Controller
         echo json_encode($data);
     }
 
-    // Método update
+    //Actualiza una categoría existente con datos enviados mediante AJAX.
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -110,7 +118,8 @@ class CategoriaController extends Controller
         echo json_encode($data);
     }
 
-    // Método delete
+    // Elimina una categoría específica por su ID.
+    //Soporta manejo de excepciones y responde en formato JSON.
     public function delete($id = null)
     {
         try {
@@ -132,7 +141,7 @@ class CategoriaController extends Controller
         echo json_encode($data);
     }
 
-    // Método para obtener los datos enviados en el formulario
+    // Obtiene y estructura los datos del formulario para insertar o actualizar una categoría.
     public function getDataModel()
     {
         $data = [

@@ -22,7 +22,7 @@ class GarantiaController extends Controller
         $this->model = "GarantiaModel";
     }
 
-    // Método index
+    // Listado principal
     public function index()
     {
         $this->data["title"] = "GARANTÍA";
@@ -38,7 +38,7 @@ class GarantiaController extends Controller
         return view("garantia/garantia_view", $this->data);
     }
 
-    // Método create
+    // Crear registro
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -61,7 +61,7 @@ class GarantiaController extends Controller
         echo json_encode($data);
     }
 
-    // Método para obtener una sola garantía
+    // Obtener un solo registro
     public function singleGarantia($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -82,7 +82,7 @@ class GarantiaController extends Controller
         echo json_encode($data);
     }
 
-    // Método update
+    //  Actualizar
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -111,7 +111,7 @@ class GarantiaController extends Controller
         echo json_encode($data);
     }
 
-    // Método delete
+    // Eliminar
     public function delete($id = null)
     {
         try {
@@ -133,7 +133,7 @@ class GarantiaController extends Controller
         echo json_encode($data);
     }
 
-    // Método para obtener los datos enviados en el formulario
+    // Obtener los datos del formulario
     public function getDataModel()
     {
         $data = [

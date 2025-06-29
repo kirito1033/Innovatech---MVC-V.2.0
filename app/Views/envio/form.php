@@ -2,15 +2,26 @@
     <input type="hidden" class="form-control" id="id" name="id" value=null>
     <input type="hidden" class="form-control" id="updated_at" name="updated_at" value=null>
 
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="numero" name="numero" placeholder="Numero Factura" required>
+        <label for="Numero Factura">Dirección</label>
+    </div>
+
     <div class="form-floating mb-3">
         <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Dirección" required>
         <label for="direccion">Dirección</label>
     </div>
 
     <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo" required>
+        <label for="correo">Correo</label>
+    </div>
+
+    <div class="form-floating mb-3">
         <input type="date" class="form-control" id="fecha" name="fecha" required>
         <label for="fecha">Fecha de Envío</label>
     </div>
+
 
     <div class="form-floating mb-3">
         <select class="form-select" id="estado_envio_id" name="estado_envio_id" required>

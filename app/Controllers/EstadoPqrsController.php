@@ -13,7 +13,7 @@ class EstadoPqrsController extends Controller
     private $data;
     private $model;
 
-    //Metodo constructor
+    //Constructor
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -22,7 +22,7 @@ class EstadoPqrsController extends Controller
         $this->model = "EstadoPqrsModel";
     }
 
-    //Metodo index
+    //Carga la vista con el listado de estados PQRS.
     public function index()
     {
         $this->data["title"] = "ESTADO PQRS";
@@ -38,7 +38,7 @@ class EstadoPqrsController extends Controller
         return view("estadopqrs/estadopqrs_view", $this->data);
     }
 
-    //Metodo create
+    //Crea un nuevo registro.
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -61,6 +61,7 @@ class EstadoPqrsController extends Controller
         echo json_encode($data);
     }
 
+    //Retorna un solo estado por ID.
     public function singleEstadoPqrs($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -81,6 +82,7 @@ class EstadoPqrsController extends Controller
         echo json_encode($data);
     }
 
+    //Actualiza un estado PQRS.
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -108,6 +110,7 @@ class EstadoPqrsController extends Controller
         echo json_encode($data);
     }
 
+    //Elimina un estado PQRS.
     public function delete($id = null)
     {
         try {
@@ -129,6 +132,7 @@ class EstadoPqrsController extends Controller
         echo json_encode($data);
     }
 
+    //Extrae datos del request para el modelo.
     public function getDataModel()
     {
         $data = [

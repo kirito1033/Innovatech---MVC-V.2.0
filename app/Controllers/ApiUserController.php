@@ -1,5 +1,7 @@
 <?php
 
+//Controlador encargado de la gestión de usuarios de la API.
+//Permite crear usuarios y verificar credenciales mediante AJAX.
 namespace App\Controllers;
 
 use App\Models\ApiUserModel;
@@ -8,16 +10,25 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class ApiUserController extends Controller
 {
+    //Clave primaria utilizada en el modelo.
     private $primaryKey = "id";
+    //Instancia del modelo de usuarios de la API.
     private $ApiUserModel;
+    //Datos a enviar a la vista.
     private $data = [];
+    //Nombre del modelo usado como clave para el array de datos.
     private $model = "ApiUserModel";
+
+    //Constructor del controlador.
+    //Inicializa el modelo ApiUserModel.
 
     public function __construct()
     {
         $this->ApiUserModel = new \App\Models\ApiUserModel();
     }
 
+    //Muestra la vista principal con los usuarios de la API.
+    //Filtra los módulos visibles de acuerdo al rol del usuario en sesión.
       public function index()
     {
         $this->data["title"] = "API USERS";
@@ -33,7 +44,59 @@ class ApiUserController extends Controller
         return view("apiuser/apiuser_view", $this->data);
     }
 
-    // Crear usuario con password hasheado (bcrypt)
+     public function singleUserApi($id = null)
+    {
+        if ($this->request->isAJAX()) {
+            if ($data[$this->model] = $this->ApiUserModel->where($this->primaryKey, $id)->first()) {
+                $data["message"] = "success";
+                $data["response"] = ResponseInterface::HTTP_OK;
+                $data["csrf"] = csrf_hash();
+            } else {
+                $data["message"] = "Error al obtener categoría";
+                $data["response"] = ResponseInterface::HTTP_NO_CONTENT;
+                $data["data"] = "";
+            }
+        } else {
+            $data["message"] = "Error Ajax";
+            $data["response"] = ResponseInterface::HTTP_CONFLICT;
+            $data["data"] = "";
+        }
+        echo json_encode($data);
+    }
+
+    //Actualiza una categoría existente con datos enviados mediante AJAX.
+    public function update()
+    {
+        if ($this->request->isAJAX()) {
+            $today = date("Y-m-d H:i:s");
+            $id = $this->request->getVar($this->primaryKey);
+            $dataModel = [
+                 "api_user" => $this->request->getVar("api_user"),
+                "api_password" => $hashedPassword,
+                "api_role" => $this->request->getVar("api_role"),
+                "api_status" => $this->request->getVar("api_status"),
+                "updated_at" => $today
+            ];
+            if ($this->CategoriaModel->update($id, $dataModel)) {
+                $data["message"] = "success";
+                $data["response"] = ResponseInterface::HTTP_OK;
+                $data["data"] = $dataModel;
+                $data["csrf"] = csrf_hash();
+            } else {
+                $data["message"] = "Error al actualizar categoría";
+                $data["response"] = ResponseInterface::HTTP_NO_CONTENT;
+                $data["data"] = "";
+            }
+        } else {
+            $data["message"] = "Error Ajax";
+            $data["response"] = ResponseInterface::HTTP_CONFLICT;
+            $data["data"] = "";
+        }
+        echo json_encode($data);
+    }
+
+    //Crea un nuevo usuario de API con contraseña hasheada. (bcrypt)
+    //Solo acepta solicitudes AJAX.
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -65,7 +128,8 @@ class ApiUserController extends Controller
         echo json_encode($data);
     }
 
-    // Login: verificar contraseña
+    // Verifica las credenciales de acceso del usuario de la API.
+    //La contraseña es validada con password_verify().
     public function login()
     {
         if ($this->request->isAJAX()) {
@@ -89,6 +153,26 @@ class ApiUserController extends Controller
             $data["message"] = "Petición no válida";
             $data["response"] = ResponseInterface::HTTP_CONFLICT;
             $data["data"] = "";
+        }
+        echo json_encode($data);
+    }
+     public function delete($id = null)
+    {
+        try {
+            if ($this->CategoriaModel->where($this->primaryKey, $id)->delete($id)) {
+                $data["message"] = "success";
+                $data["response"] = ResponseInterface::HTTP_OK;
+                $data["data"] = "OK";
+                $data["csrf"] = csrf_hash();
+            } else {
+                $data["message"] = "Error al eliminar categoría";
+                $data["response"] = ResponseInterface::HTTP_NO_CONTENT;
+                $data["data"] = "error";
+            }
+        } catch (\Exception $e) {
+            $data["message"] = $e->getMessage();
+            $data["response"] = ResponseInterface::HTTP_CONFLICT;
+            $data["data"] = "Error";
         }
         echo json_encode($data);
     }

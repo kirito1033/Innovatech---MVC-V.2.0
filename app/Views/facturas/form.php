@@ -87,13 +87,8 @@
   <input name="buyerEmail"    type="hidden" id="payu_email">
 
   <!-- Rutas a crear -->
-<<<<<<< HEAD
-  <input name="responseUrl"   type="hidden" value="https://5b57-179-51-111-178.ngrok-free.app/facturas/respuesta">
-  <input name="confirmationUrl" type="hidden" value="https://5b57-179-51-111-178.ngrok-free.app/facturas/confirmacion">
-=======
-  <input name="responseUrl"   type="hidden" value="https://de7c-179-51-111-178.ngrok-free.app/facturas/respuesta">
-  <input name="confirmationUrl" type="hidden" value="https://de7c-179-51-111-178.ngrok-free.app/facturas/confirmacion">
->>>>>>> 8ee873d0f7f815b0256dcbbd11de0d55f7ee5022
+  <input name="responseUrl"   type="hidden" value="<?= base_url('facturas/respuesta') ?>">
+  <input name="confirmationUrl" type="hidden" value="https://e16e-179-51-111-179.ngrok-free.app/facturas/confirmacion">
 </form>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 <script>

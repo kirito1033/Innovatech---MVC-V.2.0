@@ -24,6 +24,27 @@ class Database extends Config
      *
      * @var array<string, mixed>
      */
+
+    // public array $default = [
+    //     'DSN'          => '',
+    //     'hostname'     => 'localhost',
+    //     'username'     => 'u847177988_novatech',
+    //     'password'     => 'Dj=9xgRe]',
+    //     'database'     => 'u847177988_novatech',
+    //     'DBDriver'     => 'MySQLi',
+    //     'DBPrefix'     => '',
+    //     'pConnect'     => false,
+    //     'DBDebug'      => true,
+    //     'charset'      => 'utf8mb4',
+    //     'DBCollat'     => 'utf8mb4_general_ci',
+    //     'swapPre'      => '',
+    //     'encrypt'      => false,
+    //     'compress'     => false,
+    //     'strictOn'     => false,
+    //     'failover'     => [],
+    //     'port'         => 3306,
+    //     'numberNative' => false,
+    // ];
     public array $default = [
         'DSN'          => '',
         'hostname'     => 'ba5y5n8oyxxeexbybziu-mysql.services.clever-cloud.com',

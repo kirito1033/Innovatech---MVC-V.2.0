@@ -22,7 +22,7 @@ class EstadoEnvioController extends Controller
         $this->model = "EstadoEnvioModel";
     }
 
-    // Método index
+    // Muestra la vista principal con los estados de envío.
     public function index()
     {
         $this->data["title"] = "ESTADO DE ENVÍO";
@@ -38,7 +38,7 @@ class EstadoEnvioController extends Controller
         return view("estadoenvio/estadoenvio_view", $this->data);
     }
 
-    // Método create
+    // Crea un nuevo estado de envío (solo vía AJAX).
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -67,7 +67,7 @@ class EstadoEnvioController extends Controller
         echo json_encode($data);
     }
 
-    // Obtener un solo estado de envío
+    // Obtiene un estado de envío por su ID (solo vía AJAX).
     public function singleEstadoEnvio($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -92,7 +92,7 @@ class EstadoEnvioController extends Controller
         echo json_encode($data);
     }
 
-    // Método update
+    //  Actualiza un estado de envío (solo vía AJAX).
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -125,7 +125,7 @@ class EstadoEnvioController extends Controller
         echo json_encode($data);
     }
 
-    // Método delete
+    // Elimina un estado de envío por su ID.
     public function delete($id = null)
     {
         try {
@@ -153,7 +153,7 @@ class EstadoEnvioController extends Controller
         echo json_encode($data);
     }
 
-    // Obtener datos del modelo
+    // Obtiene los datos del formulario.
     private function getDataModel()
     {
         return [
