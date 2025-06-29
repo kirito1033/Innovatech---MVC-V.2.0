@@ -17,6 +17,10 @@ class FacturaTemporalModel extends Model
     protected $table = 'facturas_temporales';
     //Clave primaria de la tabla.
     protected $primaryKey = 'id';
+
+    protected $allowedFields = ['reference_code', 'factura_json', 'usuario_id'];
+
+    protected $useTimestamps = true;
     //Campos permitidos para inserción y actualización.
     protected $allowedFields = ['reference_code', 'factura_json'];
     //Habilita la gestión automática de marcas de tiempo (created_at y updated_at).
@@ -37,5 +41,4 @@ class FacturaTemporalModel extends Model
         // Elimina todos los registros cuya fecha de creación sea anterior a la hora límite
         return $this->where('created_at <', $horaLimite)->delete();
     }
-
 }

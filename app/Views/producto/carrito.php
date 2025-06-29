@@ -42,6 +42,31 @@
             margin-bottom: 2rem;
         }
 
+        .mensaje-vacio {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            color: #00796b;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: auto;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #dce1e5;
+            max-width: 350px;
+            width: 100%;
+            min-height: 180px;
+            text-align: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .mensaje-vacio h4 {
+            font-size: 1.8rem;
+            margin: 0;
+            font-weight: 600;
+        }
+
+
         .productos-carrito {
             display: flex;
             flex-direction: column;
@@ -61,13 +86,11 @@
         }
 
         .producto-img {
-            width: 200px !important;
-            height: 200px !important;
-            max-width: 200px !important;
-            max-height: 200px !important;
+            width: 100% !important;
+            height: auto !important;
+            max-width: 250px !important;
             object-fit: contain !important;
             border-radius: 12px !important;
-            overflow: hidden !important;
             display: block;
             margin: auto;
         }
@@ -232,8 +255,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        
     </style>
 </head>
 <body>
@@ -246,7 +267,7 @@
     <h1 class="titulo-carrito mb-4">Carrito de Compras</h1>
     <div class="row">
         <!-- Columna izquierda: productos -->
-        <div class="col-md-8 productos-carrito">
+        <div id="productos-carrito" class="col-md-8 productos-carrito">
             <?php foreach ($productoscarrito as $producto): ?>
                 <div class="producto-card producto-carrito d-flex mb-3 p-3 border rounded shadow-sm align-items-center" 
                     id="producto-<?= $producto['carrito_id'] ?>"
@@ -256,9 +277,11 @@
                     data-cantidad="<?= $producto['cantidad'] ?>">
                     
                     <!-- Imagen del producto -->
+                    <div style="max-width: 250px; flex-shrink: 0;">
                     <img src="<?= base_url('Uploads/' . $producto['imagen']) ?>" 
                         alt="<?= esc($producto['nom']) ?>" 
                         class="producto-img me-3">
+                    </div>
 
                     <!-- Información del producto -->
                     <div class="producto-info flex-grow-1">
@@ -289,11 +312,16 @@
                     </div>
                 </div>
             <?php endforeach; ?>
+
+            <!-- Columna mensaje del carrito vacío -->
+            <div id="mensaje-vacio" class="col-md-8 mensaje-vacio" style="display: none;">
+                <h4>🛒 Aún no tienes productos en tu carrito</h4>
+            </div>
         </div>
 
         <!-- Columna derecha: resumen -->
-        <div class="col-md-4">
-            <form id="formFactura" action="<?= base_url('facturas/registrar') ?>" method="post" class="card card-resumen p-4 shadow rounded">
+        <div class="col-md-4 resumen-carrito">
+            <form id="formFactura" action="<?= base_url('facturas/registrar') ?>" method="post" class="card-resumen p-4 shadow rounded">
                 <!-- Título -->
                 <h5 class="mb-3">Resumen del Carrito</h5>
 
@@ -353,7 +381,7 @@
 
                 <div id="productos-container"></div>
                 <p class="mb-1">Subtotal: <strong id="subtotal">$0</strong></p>
-
+                <br>
                 <!-- Botones -->
                 <button type="submit" class="btn btn-success d-none">Enviar factura</button>
                 <button type="button" class="btn btn-outline-primary w-100" onclick="prepararPago()">
@@ -374,8 +402,8 @@
                 <input name="signature"     type="hidden" id="payu_signature">
                 <input name="test"          type="hidden" value="1">
                 <input name="buyerEmail"    type="hidden" id="payu_email">
-                <input name="responseUrl"   type="hidden" value="<?= base_url('facturas/respuesta') ?>">
-               <input name="confirmationUrl" type="hidden" value="https://2bd0-179-51-111-179.ngrok-free.app/facturas/confirmacion">
+                <input name="responseUrl"   type="hidden" value="https://9b90-181-59-3-98.ngrok-free.app/facturas/respuesta">
+                <input name="confirmationUrl" type="hidden" value="https://9b90-181-59-3-98.ngrok-free.app/facturas/confirmacion">
             </form>
         </div>
     </div>
@@ -386,6 +414,31 @@
     // ==========================
     // FUNCIONES UTILITARIAS
     // ==========================
+    function verificarCarritoVacio() {
+        const contenedor = document.getElementById("productos-carrito");
+        const mensaje = document.getElementById("mensaje-vacio");
+
+        if (!contenedor || !mensaje) return;
+
+        const productos = contenedor.querySelectorAll('.producto-carrito');
+        const tieneProductos = productos.length > 0;
+
+        mensaje.style.display = tieneProductos ? 'none' : 'block';
+    }
+
+    function eliminarProductoDelDOM(productoId) {
+        const producto = document.getElementById(`producto-${productoId}`);
+        if (producto) {
+            producto.remove();
+        }
+        verificarCarritoVacio();
+    }
+
+    function agregarProductoAlDOM(productoHTML) {
+        const contenedor = document.getElementById("productos-carrito");
+        contenedor.insertAdjacentHTML("beforeend", productoHTML);
+        verificarCarritoVacio();
+    }
 
     function calcularTotalFactura() {
         const precios = document.querySelectorAll('input[name^="items"][name$="[price]"]');
@@ -404,14 +457,12 @@
         cantidades[id] = cantidad;
         sessionStorage.setItem("cantidades", JSON.stringify(cantidades));
 
-        // 🔁 Mostrar preload y recargar
         const preload = document.getElementById("preload");
         if (preload) preload.style.display = "flex";
 
-        // Esperar unos ms antes de recargar (para que se vea la animación)
         setTimeout(() => {
             location.reload();
-        }, 700); // puedes ajustar el tiempo
+        }, 400);
     }
 
     function restaurarCantidadesDesdeStorage() {
@@ -458,7 +509,7 @@
     function eliminarProducto(id) {
         if (!confirm("¿Eliminar este producto del carrito?")) return;
 
-        // 1. Eliminar del DOM visual (carrito)
+        // 1. Eliminar del DOM
         const productoElemento = document.getElementById(`producto-${id}`);
         if (productoElemento) {
             productoElemento.remove();
@@ -469,10 +520,9 @@
         delete cantidades[id];
         sessionStorage.setItem("cantidades", JSON.stringify(cantidades));
 
-        // 3. Eliminar los inputs ocultos del formulario (formFactura)
+        // 3. Eliminar del formulario oculto
         const container = document.getElementById("productos-container");
         const bloques = container.querySelectorAll("div");
-
         bloques.forEach(bloque => {
             const inputRef = bloque.querySelector(`input[name$="[code_reference]"]`);
             if (inputRef && inputRef.value == id) {
@@ -494,6 +544,18 @@
                     throw new Error(err.error || 'Error desconocido');
                 });
             }
+
+            // 6. Verificar si ya no hay productos
+            const productosRestantes = document.querySelectorAll('.producto-carrito');
+            if (productosRestantes.length === 0) {
+                const preload = document.getElementById("preload");
+                if (preload) preload.style.display = "flex";
+                setTimeout(() => {
+                    location.reload();
+                }, 700);
+            } else {
+                verificarCarritoVacio();
+            }
         })
         .catch(error => {
             alert("Hubo un error al eliminar el producto: " + error.message);
@@ -501,11 +563,9 @@
         });
     }
 
-
     // ==========================
-    // CARGAR PRODUCTOS DEL CARRITO AL FORMULARIO
+    // CARGAR PRODUCTOS EN FORM
     // ==========================
-
     function cargarProductosEnFormulario() {
         const productos = document.querySelectorAll('.producto-carrito');
         const container = document.getElementById("productos-container");
@@ -525,7 +585,6 @@
                     <input type="hidden" name="items[${itemIndex}][code_reference]" value="${id}">
                     <input type="hidden" name="items[${itemIndex}][quantity]" value="${cantidad}">
                     <input type="hidden" name="items[${itemIndex}][price]" value="${precio}">
-                    <!-- Ocultos -->
                     <input type="hidden" name="items[${itemIndex}][scheme_id]" value="0">
                     <input type="hidden" name="items[${itemIndex}][note]" value="">
                     <input type="hidden" name="items[${itemIndex}][discount_rate]" value="0">
@@ -550,7 +609,6 @@
     // ==========================
     // PAGO CON PAYU
     // ==========================
-
     function prepararPago() {
         const reference = 'ref_' + Date.now();
         const email = document.getElementById("email").value;
@@ -570,21 +628,20 @@
         const form = document.getElementById("formFactura");
         const formData = new FormData(form);
         formData.append('reference_code', reference);
-         console.log("formData")
+
         fetch("<?= base_url('facturas/guardar-temporal') ?>", {
             method: "POST",
             body: formData,
-           
         }).then(() => {
             document.getElementById("formPayU").submit();
         });
     }
 
     // ==========================
-    // AL CARGAR LA PÁGINA
+    // INICIO
     // ==========================
-
     document.addEventListener("DOMContentLoaded", function () {
+        verificarCarritoVacio();
         restaurarCantidadesDesdeStorage();
         actualizarSubtotal();
         cargarProductosEnFormulario();
