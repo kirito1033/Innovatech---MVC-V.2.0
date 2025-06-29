@@ -154,7 +154,8 @@ class CarritoController extends Controller
             log_message('error', '❌ Error al vaciar carrito: ' . $e->getMessage());
             return $this->response->setJSON(['error' => 'Error al vaciar carrito'])->setStatusCode(500);
         }
-       /**
+    }
+    /**
      * Muestra la vista para la entrega de productos.
      * Carga las categorías disponibles.
      */
