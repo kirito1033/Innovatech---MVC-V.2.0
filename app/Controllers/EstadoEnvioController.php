@@ -6,6 +6,10 @@ use App\Models\EstadoEnvioModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador encargado de gestionar los estados de envío dentro del sistema.
+ * Permite operaciones CRUD mediante peticiones AJAX.
+ */
 class EstadoEnvioController extends Controller
 {
     private $primaryKey;
@@ -14,6 +18,8 @@ class EstadoEnvioController extends Controller
     private $model;
 
     // Constructor
+    //Inicializa propiedades clave y el modelo correspondiente.
+
     public function __construct()
     {
         $this->primaryKey = "id";

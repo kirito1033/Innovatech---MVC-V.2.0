@@ -22,19 +22,30 @@ use App\Models\PqrsModel;
 use App\Models\TipoPqrsModel;
 use App\Models\EstadoPqrsModel;
 use App\Models\OfertasModel;
-//Controlador del Dashboard principal del sistema.
 
+//Controlador del Dashboard principal del sistema.
+// Recolecta datos de usuarios, productos, ofertas, envíos, facturas y PQRS para generar gráficos y KPIs.
 class DashboardController extends BaseController
 {
-    //Carga el menú de navegación con los módulos disponibles según el rol.
-   // Asegúrate de importar el modelo si no lo has hecho
-
+    /**
+     * Muestra la vista principal del dashboard con estadísticas generales.
+     * Genera KPIs y gráficos para:
+     * - Usuarios (por rol, estado, API)
+     * - Productos (por categoría, marca, estado, SO, almacenamiento, color)
+     * - Ofertas (por estado, mes, rango de descuento)
+     * - PQRS (por tipo, estado, mes, usuario)
+     * - Facturas (por estado, tipo, forma de pago)
+     * - Envíos (por estado, mes, ciudad)
+     */
     public function index()
     {
+        // 1. Obtener los módulos permitidos según el rol del usuario actual
+
         $rolId = session()->get('rol_id');
         $modelosModel = new ModelosModel();
         $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
 
+         // 2. KPIs de usuarios por rol
         $usuarioModel = new UsuarioModel();
         $rolModel = new RolModel();
         $apiUserModel = new ApiUserModel();
@@ -66,15 +77,16 @@ class DashboardController extends BaseController
             }
         }
 
-        // === Usuarios Activos/Inactivos ===
+        // 3. Usuarios activos / inactivos
         $activos = $usuarioModel->where('estado_usuario_id', 1)->countAllResults();
         $inactivos = $usuarioModel->where('estado_usuario_id', 4)->countAllResults();
 
-        // === Usuarios API ===
+        // 4. Usuarios API activos / inactivos
         $apiActivos = $apiUserModel->where('api_status', "Active")->countAllResults();
         $apiInactivos = $apiUserModel->where('api_status', "Inactive")->countAllResults();
         $totalUsuariosApi = $apiUserModel->countAllResults();
 
+        // 5. Usuarios API por mes
         $apiPorMes = $apiUserModel
             ->select("DATE_FORMAT(created_at, '%Y-%m') as mes, COUNT(*) as total")
             ->groupBy("mes")
@@ -88,7 +100,7 @@ class DashboardController extends BaseController
             $datosMes[] = $row['total'];
         }
 
-        // === Productos por Categoría ===
+        // 6. Productos por categoría
         $productosCategoria = $productoModel
             ->select('id_categoria, COUNT(*) as total')
             ->groupBy('id_categoria')
@@ -106,7 +118,7 @@ class DashboardController extends BaseController
             }
         }
 
-        // === Productos por Marca ===
+        // 7. Productos por marca
         $productosMarca = $productoModel
             ->select('id_marca, COUNT(*) as total')
             ->groupBy('id_marca')
@@ -124,7 +136,7 @@ class DashboardController extends BaseController
             }
         }
 
-        // === Productos por Estado ===
+        // 8. Productos por estado
         $productosEstado = $productoModel
             ->select('id_estado, COUNT(*) as total')
             ->groupBy('id_estado')
@@ -142,7 +154,7 @@ class DashboardController extends BaseController
             }
         }
         
-        // === Productos por SO ===
+        // 9. Productos por sistema operativo
         $productosSO = $productoModel
             ->select('id_sistema_operativo, COUNT(*) as total')
             ->groupBy('id_sistema_operativo')
@@ -160,7 +172,7 @@ class DashboardController extends BaseController
             }
         }
 
-        // === Productos por Almacenamiento ===
+        // 10. Productos por almacenamiento
         $productosAlm = $productoModel
             ->select('id_almacenamiento, COUNT(*) as total')
             ->groupBy('id_almacenamiento')
@@ -178,7 +190,7 @@ class DashboardController extends BaseController
             }
         }
 
-        // === Productos por Color ===
+        // 11. Productos por color
         $productosColor = $productoModel
             ->select('id_color, COUNT(*) as total')
             ->groupBy('id_color')
@@ -196,17 +208,18 @@ class DashboardController extends BaseController
             }
         }
 
-        // === KPIs de Productos ===
+        // 12. KPIs de productos
         $totalProductos = $productoModel->countAllResults();
         $totalDisponibles = $productoModel->where('id_estado', 1)->countAllResults(); // Ajustar el ID si necesario
         $categoriasUnicas = count($categorias);
         $marcasUnicas = count($marcas);
 
-        // === Compilar datos para la vista ===
+        // 13. KPIs de facturas (incluyendo por estado, tipo y forma de pago)
       
        $facturaModel = new \App\Models\FacturaModel();
         $facturas = $facturaModel->getFacturas();
-
+        // Se calcula el total, y se agrupan por tipo, estado y forma de pago.
+        
         $totalFacturas = 0;
         $totalesPorEstado = [];
         $totalesPorTipo = [];
@@ -231,7 +244,7 @@ class DashboardController extends BaseController
             }
         }
 
-        // === PQRS: Estadísticas ===
+        // 14. KPIs y gráficas para PQRS (tipo, estado, mes, usuario)
         $pqrsModel = new PqrsModel();
         $tipoPqrsModel = new TipoPqrsModel();
         $estadoPqrsModel = new EstadoPqrsModel();
@@ -291,7 +304,7 @@ class DashboardController extends BaseController
             $labelsUsuarioPqrs[] = $usuario['primer_nombre'] ?? 'Desconocido';
             $datosUsuarioPqrs[] = $item['total'];
         }
-            // === Gráficas para Ofertas ===
+        // 15. Ofertas: KPIs y estadísticas por estado, mes y descuento
         $OfertaModel = new OfertasModel();
 
         // Total de ofertas
@@ -372,7 +385,7 @@ class DashboardController extends BaseController
         $ofertasActivas    = $OfertaModel->where('estado', 'Activa')->countAllResults();
         $ofertasInactivas  = $OfertaModel->where('estado', 'Inactiva')->countAllResults();
         $promedioDescuento = (float) ($OfertaModel->selectAvg('descuento')->first()['descuento'] ?? 0);
-        // === Envíos ===
+        // 16. Envíos: KPIs, estados, meses y ciudades
         $envioModel = new \App\Models\EnvioModel();
         $estadoEnvioModel = new \App\Models\EstadoEnvioModel();
         $usuarioModel = new \App\Models\UsuarioModel();

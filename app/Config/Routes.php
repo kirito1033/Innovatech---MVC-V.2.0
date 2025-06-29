@@ -411,3 +411,7 @@ $routes->post('notas-credito/registrar', 'Facturas::registrar');
 $routes->get('api/token', 'ApiController::token');
 $routes->post('facturas/ajaxData', 'Facturas::ajaxData');
 $routes->get('envios/verificar-estados', 'EnvioController::verificarEstados');
+
+$routes->get('webhook',  'Webhook::index');      // Verificación GET
+$routes->post('webhook', 'Webhook::indexPost');  // Mensajes entrantes POST
+$routes->get('facturas/todasExcel', 'Facturas::todasExcel');

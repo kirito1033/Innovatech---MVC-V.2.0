@@ -9,9 +9,18 @@ use App\Models\EstadoEnvioModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador que gestiona la visualización, registro y consumo de servicios
+ * relacionados con facturación electrónica, notas crédito y pagos en línea.
+ */
 class Facturas extends BaseController
 {
     
+     /**
+     * Vista principal de facturas del sistema.
+     * Carga facturas disponibles desde la API, el detalle de la primera factura,
+     * usuario autenticado, módulos disponibles y productos registrados.
+     */
    public function index()
     {
         $usuarioModel = new \App\Models\UsuarioModel();
@@ -30,7 +39,7 @@ class Facturas extends BaseController
 
         $detalleFactura = [];
 
-        // ✅ Accede correctamente a la primera factura
+        // Obtener detalle solo si hay al menos una factura
         if (!empty($facturas['data']['data'])) {
             $numeroFactura = $facturas['data']['data'][0]['number'];
             $detalleFactura = $model->getFacturaCompleta($numeroFactura);
@@ -71,6 +80,9 @@ class Facturas extends BaseController
         return redirect()->back()->with('success', 'Factura registrada correctamente.');
     }
 
+    /**
+     * Redirige al enlace del QR público de la DIAN para la factura indicada.
+     */
        public function verQR($numero)
         {
             $numero = trim($numero);
@@ -84,6 +96,9 @@ class Facturas extends BaseController
             }
         }
 
+        /**
+     * Descarga el PDF de una factura desde la API de Factus.
+     */
        public function pdf($numero)
         {
             $model = new \App\Models\FacturaModel();
@@ -221,8 +236,7 @@ class Facturas extends BaseController
 
         return $this->response->setJSON(['status' => 'ok']);
     }
-
-
+  
     public function notasCredito()
     {
         $usuarioModel = new \App\Models\UsuarioModel();
@@ -273,6 +287,9 @@ class Facturas extends BaseController
         ]);
     }
 
+    /**
+     * Registra una nueva nota crédito a través de la API Factus.
+     */
     public function registrar()
     {
         helper(['form']);
@@ -303,7 +320,9 @@ class Facturas extends BaseController
         }
     }
 
-
+/**
+     * Proporciona datos paginados de facturas para DataTables.
+     */
     public function ajaxData()
     {
         $start = $this->request->getPost('start');
@@ -345,6 +364,60 @@ class Facturas extends BaseController
             'data' => [],
         ]);
     }
+
+   public function todasExcel()
+{
+    $tokenModel = new \App\Models\TokenModel();
+    $token = $tokenModel->getToken();
+
+    if (!$token) {
+        return $this->response->setJSON(['error' => 'Token no disponible']);
+    }
+
+    $client = \Config\Services::curlrequest();
+
+    $perPage = 100; // Puedes ajustar este valor si el API lo permite
+    $page = 1;
+    $todas = [];
+    $totalPages = null;
+
+    try {
+        do {
+            $url = "https://api-sandbox.factus.com.co/v1/bills?per_page={$perPage}&page={$page}";
+
+            $response = $client->get($url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Accept'        => 'application/json',
+                ],
+            ]);
+
+            $result = json_decode($response->getBody(), true);
+
+            // Si no hay datos, salimos del bucle
+            if (!isset($result['data']['data']) || empty($result['data']['data'])) {
+                break;
+            }
+
+            // Agregamos las facturas de esta página
+            $todas = array_merge($todas, $result['data']['data']);
+
+            // Obtenemos total de páginas (solo una vez)
+            if ($totalPages === null) {
+                $totalPages = $result['data']['pagination']['total_pages'] ?? 1;
+            }
+
+            $page++; // Pasamos a la siguiente página
+
+        } while ($page <= $totalPages);
+
+        return $this->response->setJSON($todas);
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error en todasExcel(): ' . $e->getMessage());
+        return $this->response->setJSON(['error' => $e->getMessage()]);
+    }
+}
 
 
 

@@ -6,6 +6,10 @@ use App\Models\GarantiaModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador para la gestión del módulo de Garantías.
+ * Permite realizar operaciones CRUD y mostrar información en vistas.
+ */
 class GarantiaController extends Controller
 {
     private $primaryKey;
@@ -13,7 +17,10 @@ class GarantiaController extends Controller
     private $data;
     private $model;
 
-    // Método constructor
+/**
+     * Constructor del controlador.
+     * Inicializa propiedades clave y carga el modelo de Garantía.
+     */
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -22,7 +29,10 @@ class GarantiaController extends Controller
         $this->model = "GarantiaModel";
     }
 
-    // Listado principal
+    /**
+     * Muestra el listado principal de garantías.
+     * Incluye también los módulos permitidos según el rol del usuario.
+     */
     public function index()
     {
         $this->data["title"] = "GARANTÍA";
@@ -38,7 +48,7 @@ class GarantiaController extends Controller
         return view("garantia/garantia_view", $this->data);
     }
 
-    // Crear registro
+    // Crear registro de garantía
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -61,7 +71,7 @@ class GarantiaController extends Controller
         echo json_encode($data);
     }
 
-    // Obtener un solo registro
+    // Obtener un solo registro de garantía mediante su id
     public function singleGarantia($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -82,7 +92,7 @@ class GarantiaController extends Controller
         echo json_encode($data);
     }
 
-    //  Actualizar
+    //  Actualizar registro existente de garantía
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -111,7 +121,7 @@ class GarantiaController extends Controller
         echo json_encode($data);
     }
 
-    // Eliminar
+    // Eliminar registro de garantía por su id
     public function delete($id = null)
     {
         try {
@@ -133,7 +143,7 @@ class GarantiaController extends Controller
         echo json_encode($data);
     }
 
-    // Obtener los datos del formulario
+    // Obtener los datos del formulario para la creación o actualización de garantías.
     public function getDataModel()
     {
         $data = [

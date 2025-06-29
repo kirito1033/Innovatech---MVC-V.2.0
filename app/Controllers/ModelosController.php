@@ -6,8 +6,11 @@ use App\Models\ModelosModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
-//Controlador para gestionar los módulos del sistema.
-//Permite operaciones CRUD vía AJAX sobre los registros de la tabla `modelos`.
+/**
+ * Controlador para gestionar los módulos del sistema.
+ * Permite realizar operaciones CRUD (crear, leer, actualizar y eliminar)
+ * sobre los registros de la tabla `modelos`, mediante peticiones AJAX.
+ */
 class ModelosController extends Controller
 {
     private $primaryKey; // Clave primaria de la tabla
