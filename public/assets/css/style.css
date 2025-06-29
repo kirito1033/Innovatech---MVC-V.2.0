@@ -11,12 +11,15 @@
     --ebony-clay: #2c3443;
     --gris-:#5a626b;
 }
-
-
 .preload {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.6);
+  z-index: 9999;
+}
+.d-none {
   display: none;
 }
-
 
 .container {
   border-radius: 8px;

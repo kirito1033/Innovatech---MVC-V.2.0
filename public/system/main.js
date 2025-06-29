@@ -9,11 +9,11 @@ class Main {
 	}
 
 	showPreload() {
-		this.preload.style.display = "block";
+		 this.preload.classList.remove('d-none');
 	}
 
 	hiddenPreload() {
-		this.preload.style.display = "none";
+		this.preload.classList.add('d-none');
 	}
 
 	showModal() {
@@ -101,8 +101,8 @@ class Main {
 	}
 
 	getDataFormData() {
-		var elementsForm = this.objForm.querySelectorAll('input, select');
-		elementsForm.forEach(function (element) {
+		var elementsForm = this.myForm.querySelectorAll('input, select');
+		elementsForm.forEach((element) => {
 			if (element.id) {
 				if (element.tagName === 'INPUT') {
 					if (element.type === 'checkbox') {
