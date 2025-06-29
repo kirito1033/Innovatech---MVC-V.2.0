@@ -7,6 +7,9 @@ use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\ModelosModel;
 
+/**
+ * Controlador para gestionar los proveedores.
+ */
 class ProveedorController extends Controller
 {
     private $primaryKey;
@@ -14,7 +17,10 @@ class ProveedorController extends Controller
     private $data;
     private $model;
 
-    //Metodo constructor
+    /**
+     * Constructor del controlador.
+     * Inicializa el modelo de proveedor y propiedades básicas.
+     */
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -23,10 +29,14 @@ class ProveedorController extends Controller
         $this->model = "ProveedorModel";
     }
 
-    //Metodo index
+    /**
+     * Método principal que carga la vista de proveedores.
+     * También obtiene los módulos disponibles según el rol.
+     */
     public function index()
     {
         $this->data["title"] = "PROVEEDOR";
+        // Obtener el ID del rol actual desde la sesión
         $rolId = session()->get('rol_id');
         $modelosModel = new ModelosModel();
 
@@ -36,10 +46,13 @@ class ProveedorController extends Controller
         // Agregar los módulos a los datos enviados a la vista
         $this->data['modulos'] = $modulosPermitidos;
         $this->data[$this->model] = $this->ProveedorModel->orderBy($this->primaryKey, "ASC")->findAll();
+        // Cargar vista
         return view("proveedor/proveedor_view", $this->data);
     }
 
-    //Metodo create
+/**
+     * Crea un nuevo proveedor a partir de los datos recibidos por AJAX.
+     */
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -62,6 +75,7 @@ class ProveedorController extends Controller
         echo json_encode($data);
     }
 
+    //Retorna la información de un proveedor específico por ID (AJAX).
     public function singleProveedor($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -82,6 +96,9 @@ class ProveedorController extends Controller
         echo json_encode($data);
     }
 
+    /**
+     * Actualiza los datos de un proveedor existente.
+     */
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -113,6 +130,7 @@ class ProveedorController extends Controller
         echo json_encode($dataModel);
     }
 
+    //Elimina un proveedor por ID.
     public function delete($id = null)
     {
         try {
@@ -134,6 +152,7 @@ class ProveedorController extends Controller
         echo json_encode($data);
     }
 
+    //Extrae y estructura los datos del formulario o petición AJAX.
     public function getDataModel()
     {
         $data = [

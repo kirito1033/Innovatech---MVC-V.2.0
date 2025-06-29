@@ -295,6 +295,7 @@ $routes->get('/logout', 'UsuarioController::logout');
 // Carrito
 $routes->get('/carrito', 'CarritoController::carrito');
 $routes->post('/carrito/agregar', 'CarritoController::agregarAlCarrito');
+$routes->post('/carrito/vaciar', 'CarritoController::vaciar');
 $routes->post('carrito/eliminarDelCarrito/(:num)', 'CarritoController::eliminarDelCarrito/$1');
 
 // Perfil
@@ -398,8 +399,21 @@ $routes->get('facturas/respuesta', 'Facturas::respuesta');
 $routes->post('facturas/confirmacion', 'Facturas::confirmacion'); 
 
 $routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
+
+$routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
 $routes->get('facturas/notas-credito', 'Facturas::notasCredito');
 $routes->post('notas-credito/registrar', 'Facturas::registrar');
 $routes->get('api/token', 'ApiController::token');
 $routes->post('facturas/ajaxData', 'Facturas::ajaxData');
 $routes->get('envios/verificar-estados', 'EnvioController::verificarEstados');
+
+$routes->post('facturas/guardar-temporal', 'Facturas::guardarFacturaTemporal');
+$routes->get('facturas/notas-credito', 'Facturas::notasCredito');
+$routes->post('notas-credito/registrar', 'Facturas::registrar');
+$routes->get('api/token', 'ApiController::token');
+$routes->post('facturas/ajaxData', 'Facturas::ajaxData');
+$routes->get('envios/verificar-estados', 'EnvioController::verificarEstados');
+
+$routes->get('webhook',  'Webhook::index');      // Verificación GET
+$routes->post('webhook', 'Webhook::indexPost');  // Mensajes entrantes POST
+$routes->get('facturas/todasExcel', 'Facturas::todasExcel');

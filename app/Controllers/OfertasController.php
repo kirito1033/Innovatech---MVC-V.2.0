@@ -7,6 +7,10 @@ use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\ProductosModel;
 
+/**
+ * Controlador para gestionar ofertas comerciales.
+ * Permite operaciones CRUD y sincronización con productos.
+ */
 class OfertasController extends Controller
 {
 
@@ -24,7 +28,10 @@ class OfertasController extends Controller
         $this->model = "OfertaModel"; 
     } 
 
-  // Vista principal de ofertas
+  /**
+     * Vista principal de ofertas.
+     * Carga módulos permitidos por rol y todas las ofertas/productos.
+     */
     public function index() 
     { 
         $this->actualizarEstadosOfertas(); // Verifica y actualiza el estado de las ofertas activas

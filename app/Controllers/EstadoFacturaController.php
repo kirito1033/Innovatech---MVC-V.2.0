@@ -6,6 +6,10 @@ use App\Models\EstadoFacturaModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador encargado de manejar los estados de factura en el sistema.
+ * Permite crear, leer, actualizar y eliminar registros mediante peticiones AJAX.
+ */
 class EstadoFacturaController extends Controller
 {
     private $primaryKey;

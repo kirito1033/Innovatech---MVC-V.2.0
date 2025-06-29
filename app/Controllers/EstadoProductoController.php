@@ -6,6 +6,10 @@ use App\Models\EstadoProductoModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador que gestiona las operaciones CRUD para el estado de los productos.
+ * Permite crear, consultar, actualizar y eliminar estados de producto, principalmente vía AJAX.
+ */
 class EstadoProductoController extends Controller
 {
     private $primaryKey;

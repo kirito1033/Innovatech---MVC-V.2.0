@@ -2,6 +2,10 @@
 
 namespace App\Controllers;
 
+/**
+ * Controlador encargado de manejar errores personalizados dentro de la aplicación,
+ * como el acceso no autorizado.
+ */
 class ErrorController extends BaseController
 {
 

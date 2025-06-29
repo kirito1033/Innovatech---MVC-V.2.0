@@ -7,6 +7,10 @@ namespace App\Controllers;
 use App\Models\UsuarioModel;
 use CodeIgniter\I18n\Time;
 
+/**
+ * Controlador de autenticación para recuperación de contraseñas.
+ * Contiene funcionalidades para solicitar, enviar, mostrar formulario y actualizar contraseñas con token.
+ */
 class AuthController extends BaseController
 {
     //Muestra el formulario para solicitar la recuperación de contraseña.

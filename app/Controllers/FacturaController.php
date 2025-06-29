@@ -8,6 +8,10 @@ use App\Models\PedidoModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador para gestionar las operaciones CRUD relacionadas con facturas.
+ * Incluye creación, visualización, edición y eliminación, todas vía AJAX.
+ */
 class FacturaController extends Controller
 {
     private $primaryKey;
@@ -15,6 +19,10 @@ class FacturaController extends Controller
     private $data;
     private $model;
 
+    /**
+     * Constructor del controlador.
+     * Inicializa propiedades clave y el modelo principal de facturas.
+     */
     public function __construct()
     {
         $this->primaryKey = "id";

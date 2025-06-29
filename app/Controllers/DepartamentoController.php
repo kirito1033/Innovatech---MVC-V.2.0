@@ -8,6 +8,8 @@ use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\ModelosModel;
 
 // Controlador para la gestión de departamentos.
+// Incluye funcionalidades como mostrar, crear, editar, eliminar y consultar departamentos vía AJAX.
+
 class DepartamentoController extends Controller
 {
     private $primaryKey;
@@ -16,6 +18,7 @@ class DepartamentoController extends Controller
     private $model;
 
     //Constructor
+    // Inicializa el modelo principal, la clave primaria y otras propiedades compartidas.
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -28,6 +31,8 @@ class DepartamentoController extends Controller
     public function index()
     {
         $this->data["title"] = "DEPARTAMENTO";
+
+        // Obtener el rol del usuario actual
         $rolId = session()->get('rol_id');
         $modelosModel = new ModelosModel();
 

@@ -6,6 +6,9 @@ use App\Models\PermisosModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador para gestionar permisos del sistema.
+ */
 class PermisosController extends Controller
 {
     private $primaryKey;
@@ -13,7 +16,9 @@ class PermisosController extends Controller
     private $data;
     private $model;
 
-    // Método constructor
+    /**
+     * Constructor: Inicializa las propiedades del controlador.
+     */
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -22,10 +27,11 @@ class PermisosController extends Controller
         $this->model = "PermisosModel";
     }
 
-    // Método index
+    // Muestra la vista principal con todos los permisos.
     public function index()
     {
         $this->data["title"] = "PERMISOS";
+        // Obtener ID del rol desde sesión
          $rolId = session()->get('rol_id');
         $modelosModel = new \App\Models\ModelosModel();
 
@@ -38,7 +44,7 @@ class PermisosController extends Controller
         return view("permisos/permisos_view", $this->data);
     }
 
-    // Método create
+    // Crea un nuevo permiso vía AJAX.
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -61,6 +67,7 @@ class PermisosController extends Controller
         echo json_encode($data);
     }
 
+    //Devuelve un permiso específico por su ID.
     public function singlePermiso($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -81,6 +88,7 @@ class PermisosController extends Controller
         echo json_encode($data);
     }
 
+    // Actualiza un permiso existente vía AJAX.
     public function update()
     {
         if ($this->request->isAJAX()) {
@@ -109,6 +117,7 @@ class PermisosController extends Controller
         echo json_encode($data);
     }
 
+    //Elimina un permiso por su ID.
     public function delete($id = null)
     {
         try {
@@ -130,6 +139,7 @@ class PermisosController extends Controller
         echo json_encode($data);
     }
 
+    //Extrae los datos del formulario de permisos.
     public function getDataModel()
     {
         $data = [

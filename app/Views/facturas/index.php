@@ -17,6 +17,13 @@
   <!-- Tu CSS personalizado -->
   <link href="../assets/css/style.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
+  <!-- ZIP para Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <!-- PDFMake -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
 
   <title><?= $title ?></title>
 </head>
@@ -33,11 +40,14 @@
     <button type="button" class="btn btn-primary" onclick="add()" style="font-size: 0.5em;"><img src ="../assets/img/icons/person-add.svg" style="color: white" ></button>
     <!-- Table -->
     <?php require_once("../app/Views/facturas/table.php") ?>
-      <?php if (session()->getFlashdata('success')): ?>
-    <div class="alert alert-success">
-      <?= session()->getFlashdata('success') ?>
-    </div>
-  <?php endif; ?>
+    <div class="d-flex justify-content-center my-3 gap-2">
+    <button id="export-excel" class="btn btn-success">
+      <i class="bi bi-file-earmark-excel"></i> Exportar a Excel
+    </button>
+    <button id="export-pdf" class="btn btn-danger">
+      <i class="bi bi-file-earmark-pdf"></i> Exportar a PDF
+    </button>
+  </div>
 
 
   <!-- Modal -->
@@ -129,6 +139,58 @@
 
   
   </script>
+<script>
+document.getElementById('export-excel').addEventListener('click', function () {
+  fetch("<?= base_url('facturas/todasExcel') ?>")
+    .then(res => res.json())
+    .then(data => {
+      const zip = new JSZip();
+      let csv = 'Número,Cliente,Identificación,Total,Estado,Tipo,Forma de Pago\n';
+
+      data.forEach(f => {
+        const estado = f.status == 1 ? 'Válida' : 'Pendiente';
+        csv += `${f.number},${f.names},${f.identification},${f.total},${estado},${f.document.name},${f.payment_form.name}\n`;
+      });
+
+      zip.file("facturas.csv", csv);
+      zip.generateAsync({ type: "blob" }).then(content => {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(content);
+        a.download = "facturas.zip";
+        a.click();
+      });
+    });
+});
+
+document.getElementById('export-pdf').addEventListener('click', function () {
+  fetch("<?= base_url('facturas/todasExcel') ?>")
+    .then(res => res.json())
+    .then(data => {
+      const body = [
+        ['Número', 'Cliente', 'Identificación', 'Total', 'Estado', 'Tipo', 'Pago']
+      ];
+      data.forEach(f => {
+        const estado = f.status == 1 ? 'Válida' : 'Pendiente';
+        body.push([
+          f.number, f.names, f.identification,
+          "$" + Number(f.total).toLocaleString(),
+          estado, f.document.name, f.payment_form.name
+        ]);
+      });
+
+      pdfMake.createPdf({
+        content: [
+          { text: 'Listado de Facturas', style: 'header' },
+          { table: { headerRows: 1, body } }
+        ],
+        styles: {
+          header: { fontSize: 18, bold: true, margin: [0, 0, 0, 10] }
+        },
+        pageOrientation: 'landscape'
+      }).download("facturas.pdf");
+    });
+});
+</script>
 
 </body>
 

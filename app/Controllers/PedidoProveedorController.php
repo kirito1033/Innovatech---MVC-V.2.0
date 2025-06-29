@@ -10,6 +10,7 @@ use Dompdf\Options;
 use CodeIgniter\Email\Email;
 
 
+ //Controlador para gestionar pedidos respecto a proveedores.
 class PedidoProveedorController extends Controller
 {
     private $primarykey;
@@ -17,6 +18,9 @@ class PedidoProveedorController extends Controller
     private $data;
     private $model;
 
+    /**
+     * Constructor: inicializa propiedades del controlador.
+     */
     public function __construct() 
     { 
         $this->primaryKey = "id"; 
@@ -25,15 +29,21 @@ class PedidoProveedorController extends Controller
         $this->model = "PedidoProveedorModel"; 
     } 
 
+    /**
+     * Muestra la vista principal de pedidos a proveedores.
+     */
     public function index() 
     { 
         $this->data['title'] = "Pedido Proveedor"; 
+        // Obtener módulos disponibles para el rol actual
         $rolId = session()->get('rol_id');
         $modelosModel = new \App\Models\ModelosModel();
         $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
         $this->data['modulos'] = $modulosPermitidos;
+        // Obtener todos los pedidos
         $this->data[$this->model] = $this->PedidoProveedorModel->orderBy($this->primaryKey, 'ASC')->findAll(); 
 
+        // Obtener productos y proveedores
         $productos = new \App\Models\ProductosModel();
         $this->data['producto'] = $productos->findAll();
 
@@ -43,6 +53,9 @@ class PedidoProveedorController extends Controller
         return view('pedidoproveedor/pedidoproveedor_view', $this->data); 
     }
 
+    /**
+     * Crea un nuevo pedido a proveedor.
+     */
     public function create() 
     { 
         if ($this->request->isAJAX()) { 
@@ -65,6 +78,9 @@ class PedidoProveedorController extends Controller
         echo json_encode($dataModel); 
     }
 
+    /**
+     * Obtiene un pedido por ID vía AJAX.
+     */
     public function singlePedidoProveedor($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -85,6 +101,9 @@ class PedidoProveedorController extends Controller
         echo json_encode($data);
     }
 
+    /**
+     * Actualiza un pedido existente.
+     */
     public function update() 
     { 
         if ($this->request->isAJAX()) { 
@@ -116,6 +135,9 @@ class PedidoProveedorController extends Controller
         echo json_encode($dataModel); 
     }
 
+    /**
+     * Elimina un pedido por ID.
+     */
     public function delete($id = null) 
     { 
         try { 
@@ -137,6 +159,9 @@ class PedidoProveedorController extends Controller
         echo json_encode($data);  
     }
 
+    /**
+     * Recolecta datos del formulario.
+     */
     public function getDataModel() 
     { 
         $numero_factura = $this->request->getVar('numero_factura');
@@ -157,6 +182,9 @@ class PedidoProveedorController extends Controller
         return $data; 
     }
 
+    /**
+     * Lista todos los números de factura agrupados.
+     */
     public function listarFacturas()
     {
         if ($this->request->isAJAX()) {
@@ -169,6 +197,9 @@ class PedidoProveedorController extends Controller
         }
     }
 
+    /**
+     * Genera un PDF con la información de una factura.
+     */
    public function generarFacturaPDF($numero_factura)
 {
     $db = \Config\Database::connect();
@@ -219,6 +250,9 @@ class PedidoProveedorController extends Controller
     return;
 }
 
+/**
+     * Envía la factura por correo al proveedor correspondiente.
+     */
 public function enviarFacturaCorreo($numero_factura)
 {
     $db = \Config\Database::connect();

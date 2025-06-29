@@ -3,14 +3,24 @@
 namespace App\Controllers;
 
 use App\Models\FacturaModel;
+use App\Models\CarritoModel;
 use CodeIgniter\HTTP\CURLRequest;
 use App\Models\EstadoEnvioModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador que gestiona la visualización, registro y consumo de servicios
+ * relacionados con facturación electrónica, notas crédito y pagos en línea.
+ */
 class Facturas extends BaseController
 {
     
+     /**
+     * Vista principal de facturas del sistema.
+     * Carga facturas disponibles desde la API, el detalle de la primera factura,
+     * usuario autenticado, módulos disponibles y productos registrados.
+     */
    public function index()
     {
         $usuarioModel = new \App\Models\UsuarioModel();
@@ -29,7 +39,7 @@ class Facturas extends BaseController
 
         $detalleFactura = [];
 
-        // ✅ Accede correctamente a la primera factura
+        // Obtener detalle solo si hay al menos una factura
         if (!empty($facturas['data']['data'])) {
             $numeroFactura = $facturas['data']['data'][0]['number'];
             $detalleFactura = $model->getFacturaCompleta($numeroFactura);
@@ -70,6 +80,9 @@ class Facturas extends BaseController
         return redirect()->back()->with('success', 'Factura registrada correctamente.');
     }
 
+    /**
+     * Redirige al enlace del QR público de la DIAN para la factura indicada.
+     */
        public function verQR($numero)
         {
             $numero = trim($numero);
@@ -83,6 +96,9 @@ class Facturas extends BaseController
             }
         }
 
+        /**
+     * Descarga el PDF de una factura desde la API de Factus.
+     */
        public function pdf($numero)
         {
             $model = new \App\Models\FacturaModel();
@@ -121,148 +137,106 @@ class Facturas extends BaseController
             }
         }
 
-    
-        public function confirmacion()
-        {
-            $estado = $this->request->getPost('state_pol');
-            $referencia = $this->request->getPost('reference_sale');
+// Confirmación de transacción
+    public function confirmacion()
+    {
+        log_message('debug', '🚀 Se ejecutó confirmacion() con estado: ' . $this->request->getPost('state_pol'));
+        $estado = $this->request->getPost('state_pol');
+        $referencia = $this->request->getPost('reference_sale');
 
-            log_message('info', '📥 Confirmación de PayU recibida. Estado: ' . $estado . ', Ref: ' . $referencia);
+        log_message('info', '📥 Confirmación de PayU recibida. Estado: ' . $estado . ', Ref: ' . $referencia);
 
-            if ($estado == 4) {
-                $temporalModel = new \App\Models\FacturaTemporalModel();
-                $row = $temporalModel->where('reference_code', $referencia)->first();
+        if ($estado == 4) {
+            $temporalModel = new \App\Models\FacturaTemporalModel();
+            $row = $temporalModel->where('reference_code', $referencia)->first();
 
-                if (!$row) {
-                    log_message('error', '❌ No se encontró factura temporal con referencia: ' . $referencia);
-                    return $this->response->setStatusCode(200)->setBody('OK');
-                }
-
-                $factura = json_decode($row['factura_json'], true);
-                $factura['reference_code'] = $referencia;
-
-                // ✅ Obtener el token desde el modelo
-                $facturaModel = new \App\Models\FacturaModel();
-                $token = $facturaModel->getToken();
-
-                if (!$token) {
-                    log_message('error', '❌ Token no obtenido, no se puede enviar a la API');
-                    return $this->response->setStatusCode(500)->setBody('Token no obtenido');
-                }
-
-                // ✅ Enviar a la API con el token
-                $client = \Config\Services::curlrequest();
-                try {
-                    $response = $client->post('https://api-sandbox.factus.com.co/v1/bills/validate', [
-                        'headers' => [
-                            'Content-Type' => 'application/json',
-                            'Authorization' => 'Bearer ' . $token,
-                        ],
-                        'body' => json_encode($factura)
-                    ]);
-
-                    $responseBody = $response->getBody();
-                    log_message('info', '✅ Factura enviada a API. Respuesta: ' . $responseBody);
-
-                    $data = json_decode($responseBody, true);
-
-                    // ✅ Obtener dirección, correo y número de factura
-                    $direccion = $data['data']['customer']['address'] ?? 'Sin dirección';
-                    $ciudad = $data['data']['customer']['municipality']['name'] ?? '';
-                    $direccionCompleta = $direccion . ($ciudad ? ', ' . $ciudad : '');
-                    $correo = $data['data']['customer']['email'] ?? 'Sin correo';
-                    $numeroFactura = $data['data']['bill']['number'] ?? null;
-
-                    if (!$numeroFactura) {
-                        log_message('error', '❌ Número de factura no disponible en la respuesta.');
-                        return $this->response->setStatusCode(500)->setBody('Número de factura no disponible');
-                    }
-
-                    $envioModel = new \App\Models\EnvioModel();
-                    $usuarioModel = new \App\Models\UsuarioModel();
-
-                    // ❌ Prevenir duplicado por número
-                    $envioExistente = $envioModel->where('numero', $numeroFactura)->first();
-                    if ($envioExistente) {
-                        log_message('info', '⚠️ Envío ya existe para número: ' . $numeroFactura);
-                        return $this->response->setStatusCode(200)->setBody('OK');
-                    }
-
-                    $estadoEnvioId = 1; // Estado "pendiente"
-                    $rolTransporteId = 5;
-                    $usuarioTransporte = $usuarioModel->where('rol_id', $rolTransporteId)->first();
-
-                    if ($usuarioTransporte) {
-                        // Calcular fecha estimada de entrega (2 días hábiles, sin domingos)
-                        $fechaEntrega = new \DateTime();
-                        $diasAgregados = 0;
-                        while ($diasAgregados < 2) {
-                            $fechaEntrega->modify('+1 day');
-                            if ($fechaEntrega->format('w') != 0) { // 0 = domingo
-                                $diasAgregados++;
-                            }
-                        }
-
-                        // ✅ Insertar envío con correo_estado_enviado en 0
-                        $envioModel->insert([
-                            'numero'                => $numeroFactura,
-                             'direccion'             => $direccionCompleta,
-                            'correo'                => $correo,
-                            'fecha'                 => $fechaEntrega->format('Y-m-d'),
-                            'estado_envio_id'       => $estadoEnvioId,
-                            'usuario_id'            => $usuarioTransporte['id_usuario'],
-                            'correo_estado_enviado' => 0,
-                            'updated_at'            => date('Y-m-d H:i:s'),
-                        ]);
-
-                        log_message('info', '📦 Envío registrado con correo ' . $correo . ', entrega estimada: ' . $fechaEntrega->format('Y-m-d'));
-
-                        // ✅ Enviar el correo con estado
-                        $envioModel->verificarEstados();
-
-                    } else {
-                        log_message('warning', '⚠️ No se encontró usuario con rol de transporte.');
-                    }
-
-                } catch (\Exception $e) {
-                    log_message('error', '❌ Error al enviar a API Factus: ' . $e->getMessage());
-                }
+            if (!$row) {
+                log_message('error', '❌ No se encontró factura temporal con referencia: ' . $referencia);
+                return $this->response->setStatusCode(200)->setBody('OK');
             }
 
-            return $this->response->setStatusCode(200)->setBody('OK');
+            $factura = json_decode($row['factura_json'], true);
+            $factura['reference_code'] = $referencia;
+
+            $facturaModel = new \App\Models\FacturaModel();
+            $token = $facturaModel->getToken();
+
+            if (!$token) {
+                log_message('error', '❌ Token no obtenido, no se puede enviar a la API');
+                return $this->response->setStatusCode(500)->setBody('Token no obtenido');
+            }
+
+            try {
+                $client = \Config\Services::curlrequest();
+                $response = $client->post('https://api-sandbox.factus.com.co/v1/bills/validate', [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Authorization' => 'Bearer ' . $token,
+                    ],
+                    'body' => json_encode($factura)
+                ]);
+
+                $responseBody = $response->getBody();
+                log_message('info', '✅ Factura enviada a API. Respuesta: ' . $responseBody);
+            } catch (\Exception $e) {
+                log_message('error', '❌ Error al enviar a API Factus: ' . $e->getMessage());
+            }
+
+            // ✅ Vaciar carrito con el usuario_id obtenido desde la factura temporal
+            $usuarioId = $row['usuario_id']; // <--- CAMBIO CLAVE
+            if ($usuarioId) {
+                log_message('debug', '🛒 Iniciando intento de vaciar carrito para usuario ID (desde DB): ' . $usuarioId);
+                $carritoModel = new \App\Models\CarritoModel();
+                $carritoModel->where('usuario_id', $usuarioId)->delete();
+                log_message('info', '🧹 Carrito eliminado para usuario ID: ' . $usuarioId);
+            } else {
+                log_message('warning', '⚠️ No se encontró usuario_id en la factura temporal.');
+            }
         }
 
+        return $this->response->setStatusCode(200)->setBody('OK');
+    }
 
 
 
-
-
-
-
+    // Redirección dependiendo el rol
     public function respuesta()
     {
-        return view('facturas/pago_exitoso'); 
+        log_message('debug', '✅ Se ejecutó el método respuesta() de Facturas');
+        $rol = session('rol');
+
+        $compra_exitosa = true;
+
+        return view('facturas/pago_exitoso', [
+            'rol' => $rol,
+            'compra_exitosa' => $compra_exitosa
+        ]);
     }
-  public function pagar($monto = 0)
+
+
+    public function pagar($monto = 0)
     {
         $monto = floatval($monto); 
         return view('facturas/formulario_pago', ['monto' => $monto]);
     }
 
-   public function guardarFacturaTemporal()
+    public function guardarFacturaTemporal()
     {
-        $data = $this->request->getPost();
-        $ref = $data['reference_code'];
+        $data       = $this->request->getPost();
+        $ref        = $data['reference_code'];
+        $usuarioId  = session('id_usuario'); // ✅ Recuperamos el usuario de la sesión
 
         $model = new \App\Models\FacturaTemporalModel();
+
         $model->insert([
             'reference_code' => $ref,
-            'factura_json' => json_encode($data),
+            'factura_json'   => json_encode($data),
+            'usuario_id'     => $usuarioId // ✅ Guardamos el ID del usuario para referencia futura
         ]);
 
         return $this->response->setJSON(['status' => 'ok']);
     }
-
+  
     public function notasCredito()
     {
         $usuarioModel = new \App\Models\UsuarioModel();
@@ -313,6 +287,9 @@ class Facturas extends BaseController
         ]);
     }
 
+    /**
+     * Registra una nueva nota crédito a través de la API Factus.
+     */
     public function registrar()
     {
         helper(['form']);
@@ -343,7 +320,9 @@ class Facturas extends BaseController
         }
     }
 
-
+/**
+     * Proporciona datos paginados de facturas para DataTables.
+     */
     public function ajaxData()
     {
         $start = $this->request->getPost('start');
@@ -385,6 +364,60 @@ class Facturas extends BaseController
             'data' => [],
         ]);
     }
+
+   public function todasExcel()
+{
+    $tokenModel = new \App\Models\TokenModel();
+    $token = $tokenModel->getToken();
+
+    if (!$token) {
+        return $this->response->setJSON(['error' => 'Token no disponible']);
+    }
+
+    $client = \Config\Services::curlrequest();
+
+    $perPage = 100; // Puedes ajustar este valor si el API lo permite
+    $page = 1;
+    $todas = [];
+    $totalPages = null;
+
+    try {
+        do {
+            $url = "https://api-sandbox.factus.com.co/v1/bills?per_page={$perPage}&page={$page}";
+
+            $response = $client->get($url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'Accept'        => 'application/json',
+                ],
+            ]);
+
+            $result = json_decode($response->getBody(), true);
+
+            // Si no hay datos, salimos del bucle
+            if (!isset($result['data']['data']) || empty($result['data']['data'])) {
+                break;
+            }
+
+            // Agregamos las facturas de esta página
+            $todas = array_merge($todas, $result['data']['data']);
+
+            // Obtenemos total de páginas (solo una vez)
+            if ($totalPages === null) {
+                $totalPages = $result['data']['pagination']['total_pages'] ?? 1;
+            }
+
+            $page++; // Pasamos a la siguiente página
+
+        } while ($page <= $totalPages);
+
+        return $this->response->setJSON($todas);
+
+    } catch (\Exception $e) {
+        log_message('error', 'Error en todasExcel(): ' . $e->getMessage());
+        return $this->response->setJSON(['error' => $e->getMessage()]);
+    }
+}
 
 
 

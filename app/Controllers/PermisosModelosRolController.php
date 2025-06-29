@@ -10,6 +10,9 @@ use App\Models\PermisosModelosRolModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
 
+/**
+ * Controlador para la gestión de asignación de permisos a los modelos por rol.
+ */
 class PermisosModelosRolController extends Controller
 {
     private $primaryKey;
@@ -17,6 +20,9 @@ class PermisosModelosRolController extends Controller
     private $data;
     private $model;
 
+    /**
+     * Constructor. Inicializa el modelo y otras variables del controlador.
+     */
     public function __construct()
     {
         $this->primaryKey = "id";
@@ -25,16 +31,22 @@ class PermisosModelosRolController extends Controller
         $this->model = "ModelosRolPermisosModel";
     }
 
+     /**
+     * Vista principal de modelos-rol-permisos.
+     * Carga datos necesarios para mostrar el listado y combos de modelos, roles y permisos.
+     */
     public function index()
     {
     $this->data['title'] = "MODELOS ROL PERMISOS";
 
     $rolId = session()->get('rol_id');
 
+    // Obtener módulos permitidos para el rol actual
     $modelosModel = new \App\Models\ModelosModel();
     $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
     $this->data['modulos'] = $modulosPermitidos;
 
+    // Permisos del usuario para la ruta actual
     $permisoRolModel = new \App\Models\PermisosModelosRolModel();
 
     // Ruta actual
@@ -45,18 +57,20 @@ class PermisosModelosRolController extends Controller
     $this->data['permisos_usuario'] = $permisos_usuario;
 
     $modelos = new \App\Models\ModelosModel();
+     // Cargar combos y registros
     $this->data['modelos'] = $modelos->findAll();
 
     $rol = new \App\Models\RolModel();
     $this->data['roles'] = $rol->findAll();
     $this->data['permisos'] = (new \App\Models\PermisosModel())->findAll();
     $this->data['modelosrol'] = $permisoRolModel->obtenerModelosRolConNombres();
+    // Obtener todos los registros existentes
     $this->data[$this->model] = $this->ModelosRolPermisosModel->orderBy($this->primaryKey, 'ASC')->findAll();
 
     return view('modelosrolpermisos/modelosrolpermisos_view', $this->data); 
     }
 
-
+    //Inserta un nuevo registro de permiso para modelo-rol vía AJAX.
     public function create()
     {
         if ($this->request->isAJAX()) {
@@ -80,6 +94,7 @@ class PermisosModelosRolController extends Controller
         echo json_encode($data);
     }
 
+    //Obtiene un registro individual de permisos modelo-rol por ID.
     public function singleModelosRolPermisos($id = null)
     {
         if ($this->request->isAJAX()) {
@@ -104,6 +119,7 @@ class PermisosModelosRolController extends Controller
         echo json_encode($data);
     }
 
+    // Actualiza un registro de permisos modelo-rol por ID.
     public function update()
 {
     
@@ -114,6 +130,7 @@ class PermisosModelosRolController extends Controller
         $modelosid = $this->request->getVar('Permisosid');
         $rolid = $this->request->getVar('ModelosRolId');
 
+        // Asegurar que los valores no sean arrays
         if (is_array($modelosid)) {
             $modelosid = $modelosid[0]; 
         }
@@ -145,6 +162,8 @@ class PermisosModelosRolController extends Controller
 
     echo json_encode($data);
 }
+
+//Elimina un registro de la tabla permisos_modelos_rol por su ID.
 public function delete($id = null)
 {
     if ($this->request->isAJAX()) {
@@ -163,6 +182,7 @@ public function delete($id = null)
     echo json_encode($data);
 }
 
+//Obtiene los datos enviados desde el formulario para insert/update.
     private function getDataModel()
     {
         return [
