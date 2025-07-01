@@ -1,7 +1,5 @@
 <?php
 
-//Controlador para gestionar el carrito de compras.
-//Permite agregar, eliminar productos y redirigir a métodos de pago.
 namespace App\Controllers;
 
 use App\Models\CarritoModel;
@@ -20,8 +18,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class CarritoController extends Controller
 {
-    // Muestra la vista del carrito del usuario actual.
-    //Verifica la sesión del usuario y carga los productos agregados al carrito.
+    // Mostrar vista del carrito
     public function carrito()
     {
         $session = session();
@@ -77,8 +74,7 @@ class CarritoController extends Controller
         ]);
     }
 
-    // Agrega un producto al carrito del usuario actual.
-    //Si el producto ya existe en el carrito, incrementa la cantidad.
+    // Agregar producto al carrito
     public function agregarAlCarrito()
     {
         $session = session();
@@ -117,8 +113,7 @@ class CarritoController extends Controller
         return redirect()->to('/carrito');
     }
 
-    // Elimina un producto del carrito por su ID.
-    //Soporta tanto peticiones AJAX como normales.
+    // Eliminar producto del carrito
     public function eliminarDelCarrito($carrito_id)
     {
         $carritoModel = new CarritoModel();
@@ -140,29 +135,27 @@ class CarritoController extends Controller
         }
     }
 
-    // Muestra la vista del método de pago contraentrega.
-    //Carga las categorías para el menú o barra lateral.
-    public function contraentrega()
+    // Vaciar carrito de compras
+    public function vaciar()
     {
-        $categoriaModel = new CategoriaModel();
-        $categorias = $categoriaModel->findAll();
-        return view('pago/contraentrega', [
-            'categorias' => $categorias
-        ]);
-    }
+        $usuarioId = session('id_usuario');
 
-    //Muestra la vista del método de pago con tarjeta.
-    //Carga las categorías para mantener coherencia visual.
-    public function tarjeta()
-    {
-        $categoriaModel = new CategoriaModel();
-        $categorias = $categoriaModel->findAll();
-        return view('pago/tarjeta', [
-            'categorias' => $categorias
-        ]);
-    }
+        if (!$usuarioId) {
+            return $this->response->setJSON(['error' => 'Usuario no autenticado'])->setStatusCode(401);
+        }
 
-       /**
+        $carritoModel = new \App\Models\CarritoModel();
+
+        try {
+            $carritoModel->where('usuario_id', $usuarioId)->delete();
+            log_message('info', '✅ Carrito vaciado desde CarritoController para usuario ID: ' . $usuarioId);
+            return $this->response->setJSON(['success' => true]);
+        } catch (\Exception $e) {
+            log_message('error', '❌ Error al vaciar carrito: ' . $e->getMessage());
+            return $this->response->setJSON(['error' => 'Error al vaciar carrito'])->setStatusCode(500);
+        }
+    }
+    /**
      * Muestra la vista para la entrega de productos.
      * Carga las categorías disponibles.
      */
