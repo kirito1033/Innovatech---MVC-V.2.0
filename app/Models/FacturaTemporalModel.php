@@ -22,11 +22,7 @@ class FacturaTemporalModel extends Model
 
     protected $useTimestamps = true;
     //Campos permitidos para inserción y actualización.
-    protected $allowedFields = ['reference_code', 'factura_json'];
     //Habilita la gestión automática de marcas de tiempo (created_at y updated_at).
-    protected $useTimestamps = true; 
-
-
      /**
      * Elimina las facturas temporales que fueron creadas hace más de una hora.
      * 
