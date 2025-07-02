@@ -160,3 +160,358 @@
 }
 
 
+
+/* Estilos personalizados para los botones de exportación */
+  .dt-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    gap: 10px;
+    margin-left: 15%;
+  }
+
+  .btn-excel {
+    background-color: #28a745 !important;
+    color: white !important;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    
+  }
+
+  .btn-pdf {
+    background-color: #dc3545 !important;
+    color: white !important;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+  }
+
+
+  /* Estilos que estaban en auth fotgot*/
+
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+     :root {
+      --primary-bg: #1e2a44; /* Dark blue for background */
+      --container-bg: #2a3652; /* Container background */
+      --text-color: #e6edf3; /* Soft white text */
+      --accent-color: #00b4b8; /* Teal accent */
+      --button-primary: #00c4cc; /* Primary button */
+      --button-hover: #008a8e; /* Button hover */
+      --border-color: #6b7280; /* Border gray */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+        background-color: #0b4454;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .login-container {
+      background: #020f1f;
+      backdrop-filter: blur(8px);
+      color: var(--text-color);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+    }
+
+    .login__logo img {
+      width: 180px;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--accent-color);
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--accent-color);
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    .form-control {
+      background-color: var(--container-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem;
+      border-radius: 8px;
+      width: 100%;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control::placeholder {
+      color: #a0aec0;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 6px rgba(0, 180, 184, 0.3);
+    }
+
+    .btn-ingresar {
+      background-color: var(--button-primary);
+      border: none;
+      width: 100%;
+      padding: 0.85rem;
+      margin-top: 1.25rem;
+      border-radius: 8px;
+      color: var(--text-color);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-ingresar:hover {
+      background-color: var(--button-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      display: block;
+      background-color: var(--container-bg);
+      border: 1px solid var(--border-color);
+      padding: 0.85rem;
+      margin-top: 1rem;
+      border-radius: 8px;
+      color: var(--accent-color);
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--button-hover);
+      color: var(--text-color);
+      transform: translateY(-2px);
+    }
+
+/*Estilo de reset */
+
+:root {
+      --encabezados-piedepagina: #020f1f;
+      --Color--texto: #ffffff;
+      --bright-turquoise: #04ebec;
+      --Color-enlaces-menu: #272727;
+      --atoll: #0a6069;
+      --blue-chill: #0f838c;
+      --gossamer: #048d94;
+      --tarawera: #0b4454;
+      --ebony-clay: #2c3443;
+      --gris-: #5a626b;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--tarawera);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: var(--Color--texto);
+    }
+
+    .form {
+      background-color: var(--encabezados-piedepagina);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .login__logo {
+      width: 200px;
+      margin-bottom: 20px;
+    }
+
+    .mb-3 {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
+    }
+
+    .mb-3 label {
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--bright-turquoise);
+    }
+
+    .mb-3 input[type="password"],
+    .mb-3 input[type="text"] {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--bright-turquoise);
+      background-color: transparent;
+      color: var(--Color--texto);
+      font-size: 0.95rem;
+    }
+
+    .mb-3 input::placeholder {
+      color: #cccccc;
+    }
+
+    .mb-3 input:focus {
+      outline: none;
+      border-color: var(--bright-turquoise);
+      background-color: transparent;
+      box-shadow: 0 0 5px var(--bright-turquoise);
+    }
+
+    #showPasswords {
+      accent-color: var(--bright-turquoise);
+    }
+
+    #error-message {
+      color: #ff6b6b;
+      font-weight: bold;
+      display: none;
+      margin-bottom: 10px;
+    }
+
+    button{
+      background-color: var(--blue-chill);
+      color: var(--Color--texto);
+      border: none;
+      padding: 15px 0;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      max-width: 250px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .btn-back{
+      background-color: var(--blue-chill);
+      color: var(--Color--texto);
+      border: none;
+      padding: 12px 0;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      max-width: 250px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    button:hover,
+    .btn-back:hover {
+      background-color: var(--gossamer);
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .show-password-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 250px;
+    }
+
+    .show-password-container label {
+      font-size: 0.95rem;
+      color: var(--bright-turquoise);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /*Estilos de token invalid */
+
+:root {
+      --encabezados-piedepagina: #020f1f;
+      --Color--texto: #ffffff;
+      --bright-turquoise: #04ebec;
+      --Color-enlaces-menu: #272727;
+      --atoll: #0a6069;
+      --blue-chill: #0f838c;
+      --gossamer: #048d94;
+      --tarawera: #0b4454;
+      --ebony-clay: #2c3443;
+      --gris-: #5a626b;
+    }
+
+    body {
+      background-color: var(--encabezados-piedepagina);
+      color: var(--Color--texto);
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h3 {
+      color: var(--bright-turquoise);
+      font-weight: 700;
+      margin-top: 20px;
+      margin-bottom: 16px;
+      font-size: 1.2rem;
+    }
+
+    a {
+      color: var(--bright-turquoise);
+      font-weight: 600;
+      text-decoration: underline;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: var(--gossamer);
+    }
+
+    .login__logo {
+      width: 250px;
+      margin-bottom: 10px;
+    }
+
+    /*Dashboard*/
+    #dashboard{
+      color: ffff;
+    }
