@@ -1,236 +1,49 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Configuración básica de codificación y escalado en móviles -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista Producto</title>
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap 5 para estilos y componentes -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
+    <!-- Iconos de Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --encabezados-piedepagina: #020f1f;
-            --Color--texto: #ffffff;
-            --bright-turquoise: #04ebec;
-            --Color-enlaces-menu: #272727;
-            --atoll: #0a6069;
-            --blue-chill: #0f838c;
-            --gossamer: #048d94;
-            --tarawera: #0b4454;
-            --ebony-clay: #2c3443;
-            --gris-: #5a626b;
-        }
 
-        /* Container for two-column layout */
-        .main-container {
-            display: flex;
-            width: 95%;
-            max-width: 1200px;
-            margin: 1.5rem auto;
-            gap: 1rem;
-        }
-
-        /* Filter Section Styles */
-        .filters-main {
-            background-color: var(--ebony-clay);
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: rgba(0, 0, 0, 0.19) 0px 8px 16px, rgba(0, 0, 0, 0.23) 0px 4px 4px;
-            height: fit-content;
-            flex: 0 0 25%;
-        }
-
-        .filters-main .card {
-            background-color: var(--tarawera);
-            border: none;
-            border-radius: 8px;
-            padding: 1rem;
-        }
-
-        .filters-main .card h5 {
-            color: var(--bright-turquoise);
-            font-weight: 600;
-            font-size: 1.2rem;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .filters-main .form-label {
-            color: var(--Color--texto);
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .filters-main .form-control,
-        .filters-main .form-select {
-            background-color: var(--blue-chill);
-            color: var(--Color--texto);
-            border: 1px solid var(--gossamer);
-            border-radius: 4px;
-            font-size: 0.8rem;
-            padding: 0.3rem 0.5rem;
-        }
-
-        .filters-main .form-control:focus,
-        .filters-main .form-select:focus {
-            background-color: var(--blue-chill);
-            border-color: var(--bright-turquoise);
-            box-shadow: 0 0 4px var(--bright-turquoise);
-            color: var(--Color--texto);
-        }
-
-        .filters-main .btn-primary {
-            background-color: var(--gossamer);
-            border-color: var(--gossamer);
-            font-size: 0.85rem;
-            font-weight: 500;
-            border-radius: 4px;
-            padding: 0.4rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .filters-main .btn-primary:hover {
-            background-color: var(--bright-turquoise);
-            border-color: var(--bright-turquoise);
-        }
-
-        /* Products Section Styles */
-        .productos-ofertas {
-            max-width: 68%;
-            background-color: var(--gossamer);
-            border: 1px solid var(--gris-);
-            border-radius: 8px;
-            padding: 1rem;
-            box-shadow: rgba(0, 0, 0, 0.19) 0px 8px 16px, rgba(0, 0, 0, 0.23) 0px 4px 4px;
-            flex: 0 0 75%;
-            overflow-x: hidden;
-          
-        }
-
-        .title-ofertas {
-            background-color: var(--tarawera);
-            color: var(--bright-turquoise);
-            font-weight: 600;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            font-size: 1.4rem;
-            box-shadow: rgba(0, 0, 0, 0.19) 0px 8px 16px, rgba(0, 0, 0, 0.23) 0px 4px 4px;
-            margin-bottom: 1rem;
-        }
-
-        .card {
-            max-width: 100%;
-            margin: 0 auto;
-            border-radius: 8px;
-            background-color: var(--ebony-clay);
-        }
-
-        .card .card-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #0a6069;
-        }
-
-        .card .card-text {
-            font-size: 0.85rem;
-            color: #111
-        }
-
-        .card .card-body {
-            padding: 1rem;
-        }
-
-        .card img {
-            max-height: 200px;
-            object-fit: cover;
-            border-radius: 8px 0 0 8px;
-            display: block;
-            margin: 0 auto;
-            margin-top: 5%;
-        }
-
-        .card:hover {
-            transform: scale(1.02);
-            transition: transform 0.3s ease-in-out;
-            box-shadow: 0 3px 9px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-outline-primary {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.6rem;
-            color: var(--bright-turquoise);
-            border-color: var(--bright-turquoise);
-        }
-
-        .btn-outline-primary:hover {
-            background-color: var(--bright-turquoise);
-            color: var(--tarawera);
-        }
-
-        .card-link {
-            display: block;
-            width: 90%;
-            height: 100%;
-            text-decoration: none;
-            color: inherit;
-            margin: auto; 
-        }
-
-        .text-precio {
-            font-weight: 700;
-            font-size: 1rem;
-            color: #0a6069;
-        }
-
-        /* Ensure no overflow */
-        .lista-productos {
-        
-            overflow-x: hidden;
-        }
-
-        .row.g-3 {
-            margin-right: 0;
-            margin-left: 0;
-        }
-
-        .row.g-3 > .col-12 {
-            padding-right: 0.5rem;
-            padding-left: 0.5rem;
-        }
-    </style>
 </head>
 <body>
+    <!-- Cabecera del sitio cargada como vista parcial -->
 <header>
     <?= $this->include('partials/header') ?>
 </header>
 
-<!-- Two-column layout container -->
+<!-- Contenedor principal de dos columnas -->
 <div class="main-container container">
-    <!-- Filters Main Section -->
+    <!-- Columna izquierda: Filtros de búsqueda de productos -->
     <main class="filters-main">
         <div class="card p-2 shadow-sm">
             <h5>Filtrar productos</h5>
+            <!-- Formulario GET para filtrar productos -->
             <form method="GET" action="">
-                <!-- Nombre -->
+                <!-- Filtro: Nombre del producto -->
                 <div class="mb-2">
                     <label for="nom" class="form-label">Nombre</label>
                     <input type="text" class="form-control" id="nom" name="nom" value="<?= esc($_GET['nom'] ?? '') ?>">
                 </div>
 
-                <!-- Precio mínimo -->
+                <!-- Filtro: Precio mínimo -->
                 <div class="mb-2">
                     <label for="precio_min" class="form-label">Precio mínimo</label>
                     <input type="number" class="form-control" id="precio_min" name="precio_min" value="<?= esc($_GET['precio_min'] ?? '') ?>">
                 </div>
 
-                <!-- Precio máximo -->
+                <!-- Filtro: Precio máximo -->
                 <div class="mb-2">
                     <label for="precio_max" class="form-label">Precio máximo</label>
                     <input type="number" class="form-control" id="precio_max" name="precio_max" value="<?= esc($_GET['precio_max'] ?? '') ?>">
                 </div>
 
-                <!-- Marca -->
+                <!-- Filtro: Marca -->
                 <div class="mb-2">
                     <label for="id_marca" class="form-label">Marca</label>
                     <select class="form-select" id="id_marca" name="id_marca">
@@ -243,7 +56,7 @@
                     </select>
                 </div>
 
-                <!-- Color -->
+                <!-- Filtro: Color -->
                 <div class="mb-2">
                     <label for="id_color" class="form-label">Color</label>
                     <select class="form-select" id="id_color" name="id_color">
@@ -256,7 +69,7 @@
                     </select>
                 </div>
 
-                <!-- RAM -->
+                <!-- Filtro: RAM -->
                 <div class="mb-2">
                     <label for="id_ram" class="form-label">RAM</label>
                     <select class="form-select" id="id_ram" name="id_ram">
@@ -269,7 +82,7 @@
                     </select>
                 </div>
 
-                <!-- Almacenamiento -->
+                <!-- Filtro: Almacenamiento -->
                 <div class="mb-2">
                     <label for="id_almacenamiento" class="form-label">Almacenamiento</label>
                     <select class="form-select" id="id_almacenamiento" name="id_almacenamiento">
@@ -282,7 +95,7 @@
                     </select>
                 </div>
 
-                <!-- Garantía -->
+                <!-- Filtro: Garantía -->
                 <div class="mb-2">
                     <label for="id_garantia" class="form-label">Garantía</label>
                     <select class="form-select" id="id_garantia" name="id_garantia">
@@ -297,7 +110,7 @@
                     </select>
                 </div>
 
-                <!-- Resolución -->
+                <!-- Filtro: Resolución -->
                 <div class="mb-2">
                     <label for="id_resolucion" class="form-label">Resolución</label>
                     <select class="form-select" id="id_resolucion" name="id_resolucion">
@@ -312,23 +125,26 @@
                     </select>
                 </div>
 
+                <!-- Botón para aplicar los filtros -->
                 <button type="submit" class="btn btn-primary mt-2 w-100">Buscar</button>
             </form>
         </div>
     </main>
 
-    <!-- Products Main Section -->
-  <!-- Products Main Section -->
+    <!-- Columna derecha: Listado de productos por categoría -->
 <main class="productos-ofertas">
     <div class="lista-productos">
         <?php foreach ($categorias as $categoria): ?>
             <?php
+            // Agrupa productos por categoría
             $productosPorCategoria = array_filter($productos, function($producto) use ($categoria) {
                 return $producto['id_categoria'] == $categoria['id'];
             });
             ?>
             <?php if (!empty($productosPorCategoria)): ?>
+                <!-- Título de categoría -->
                 <h2 class="mb-3 title-ofertas"><?= esc($categoria['nom']) ?></h2>
+                <!-- Grid de productos -->
                 <div class="row g-3">
                     <?php foreach ($productosPorCategoria as $producto): ?>
                         <?php if ($producto['id_estado'] != 1) continue; // Solo mostrar productos con estado 1 ?>
@@ -343,6 +159,7 @@
                                             <div class="card-body">
                                                 <h5 class="card-title"><?= esc($producto['nom']) ?></h5>
                                                 <p class="card-text"><?= esc($producto['descripcion']) ?></p>
+                                               <!-- Mostrar precio con o sin descuento -->
                                                 <p class="card-text">
                                                     <?php if ($producto['precio'] != $producto['precio_original']): ?>
                                                         <?php
@@ -374,6 +191,7 @@
 </main>
 </div>
 
+<!-- Pie de página del sitio -->
 <footer>
     <?php require_once("../app/Views/footer/footerApp.php")?>
 </footer>

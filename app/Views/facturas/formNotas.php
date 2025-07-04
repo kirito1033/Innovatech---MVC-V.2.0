@@ -1,4 +1,4 @@
-<!-- Búsqueda por número de factura -->
+<!-- Sección para buscar una factura existente por su número -->
 <div class="mb-3">
   <label for="numeroFactura">Número de Factura</label>
   <div class="input-group">
@@ -12,9 +12,10 @@
 
 <!-- SELECT de Tipos de Corrección -->
 
-<!-- FORMULARIO Nota Crédito -->
+<!-- Formulario para crear una Nota Crédito basada en una factura existente -->
 <form id="formNotaCredito" action="<?= base_url('notas-credito/registrar') ?>" method="post" class="p-4 shadow rounded">
 
+<!-- Selector de tipo de corrección según catálogo DIAN -->
     <div class="mb-3">
     <label for="correction_concept_code">Tipo de corrección</label>
     <select id="correction_concept_code" name="correction_concept_code" class="form-select" required>
@@ -28,28 +29,28 @@
     </select>
     </div>
 
-  <!-- Ocultos generales -->
+  <!-- Campos ocultos requeridos por la estructura de la nota crédito -->
   <input type="hidden" name="numbering_range_id" value="9">
   <input type="hidden" name="customization_id" value="20">
   <input type="hidden" name="bill_id">
   <input type="hidden" name="payment_method_code" value="49">
 
-  <!-- Período -->
+  <!-- Período de facturación relacionado con la factura original -->
   <input type="hidden" name="billing_period[start_date]">
   <input type="hidden" name="billing_period[start_time]">
   <input type="hidden" name="billing_period[end_date]">
   <input type="hidden" name="billing_period[end_time]">
 
-  <!-- Código de referencia -->
+  <!-- Referencia que se genera automáticamente -->
   <input type="hidden" name="reference_code">
 
-  <!-- Observación -->
+  <!-- Observaciones explicando el motivo de la nota crédito -->
   <div class="mb-3">
     <label for="observation">Motivo / Observación</label>
     <textarea name="observation" id="observation" class="form-control" required></textarea>
   </div>
 
-  <!-- Datos del Cliente -->
+  <!-- Datos del cliente asociados a la factura -->
   <h5 class="mb-3">Datos del Cliente</h5>
   <div class="mb-2"><label for="identification">Identificación</label>
     <input type="text" name="customer[identification]" id="identification" class="form-control" required>
@@ -67,7 +68,7 @@
     <input type="text" name="customer[phone]" id="phone" class="form-control">
   </div>
 
-  <!-- Ocultos del cliente -->
+  <!-- Datos ocultos adicionales del cliente -->
   <input type="hidden" name="customer[company]">
   <input type="hidden" name="customer[trade_name]">
   <input type="hidden" name="customer[dv]">
@@ -76,16 +77,18 @@
   <input type="hidden" name="customer[identification_document_id]">
   <input type="hidden" name="customer[municipality_id]">
 
-  <!-- Contenedor de productos -->
+  <!-- Contenedor donde se insertan los productos a devolver -->
   <div id="itemsContainer">
     <h5 class="mt-4">Producto(s) Devuelto(s)</h5>
   </div>
 
+  <!-- Botón para enviar la nota crédito al backend -->
   <button type="submit" class="btn btn-primary mt-3">
     <i class="bi bi-file-earmark-plus"></i> Crear Nota Crédito
   </button>
 </form>
 
+<!-- Script JS para obtener token y cargar factura desde Factus -->
 <script>
 let token = null;
 
@@ -100,6 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 });
 
+// Solicita un token JWT al backend para acceder a la API externa
 async function obtenerToken() {
   try {
     const response = await fetch('<?= base_url('api/token') ?>');
@@ -112,6 +116,7 @@ async function obtenerToken() {
   }
 }
 
+// Consulta la API de Factus con el número de factura ingresado
 function buscarFacturaPorNumero() {
   const numero = document.getElementById('numeroFactura').value.trim();
   const errorMsg = document.getElementById('errorFactura');
@@ -146,6 +151,7 @@ function buscarFacturaPorNumero() {
   });
 }
 
+// Llena el formulario con los datos obtenidos desde la API
 function cargarDatosFactura(factura) {
   console.log("📋 Cargando datos de factura:", factura);
 
@@ -183,7 +189,7 @@ function cargarDatosFactura(factura) {
   document.querySelector('input[name="customer[identification_document_id]"]').value = 3;
   document.querySelector('input[name="customer[municipality_id]"]').value = c.municipality?.id || '';
 
-  // Productos
+  // Renderiza los productos como items devueltos
   const itemsContainer = document.getElementById('itemsContainer');
   itemsContainer.innerHTML = '<h5 class="mt-4">Producto(s) Devuelto(s)</h5>';
 
