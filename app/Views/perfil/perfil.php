@@ -4,205 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Perfil</title>
+    <!-- Estilos y librerías externas -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <style>
-        :root {
-            --encabezados-piedepagina: #020f1f;
-            --Color--texto: #0a6069;
-            --bright-turquoise: #04ebec;
-            --atoll: #0a6069;
-            --tarawera: #0b4454;
-            --ebony-clay: #f2f2f2;
-            --gris: #5a626b;
-        }
-
-        body {
-            background-color: #f2f2f2;
-        }
-
-        /*-----------------  Contenedor  -----------------*/
-        .profile-container {
-            max-width: 1000px;
-            margin: 80px auto; /* espacio arriba */
-            font-family: 'Orbitron', sans-serif;
-            background: rgba(2, 15, 31, 0.95);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 0 25px rgba(4, 235, 236, 0.3);
-            position: relative; /* Cambiado desde absolute */
-        }
-
-        /*-----------------  Encabezado  -----------------*/
-        .profile-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .profile-header h2 {
-            color: var(--bright-turquoise);
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        /*-----------------  Imagen de Perfil  -----------------*/
-        .profile-picture-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        .profile-avatar {
-            width: 250px;
-            height: 250px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 4px solid var(--bright-turquoise);
-            box-shadow: 0 0 10px rgba(4, 235, 236, 0.5);
-        }
-
-        .edit-image-btn {
-            margin-right: 15px;
-            position: absolute;
-            bottom: 4px;
-            right: 4px;
-            background-color: var(--bright-turquoise);
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .bi-camera-fill {
-            margin-left: 10px;
-        }
-        .edit-image-btn:hover {
-            background-color:rgb(1, 159, 161);
-        }
-
-        /*-----------------  Inputs  -----------------*/
-        .form-label {
-            color: #f2f2f2;
-            font-size: 0.9rem;
-        }
-
-        .profile-info .form-control {
-            background: #0b4454; /* --tarawera */
-            border: 1px solid var(--bright-turquoise);
-            color: white;
-            border-radius: 12px;
-            padding: 10px;
-        }
-
-        .profile-info .form-control:disabled {
-            background-color: #0a6069; /* --atoll */
-            opacity: 0.6;
-        }
-
-        /*-----------------  Botones  -----------------*/
-        .btn-edit {
-            background: linear-gradient(90deg, #00c8ca, #0b4454);
-            border: none;
-        }
-
-        .btn-edit:hover {
-            background: linear-gradient(90deg, #00c8ca, #0b4454);
-        }
-
-        #editToggleBtn {
-            background: var(--bright-turquoise);
-            color: #000;
-            border: none;
-        }
-
-        #editToggleBtn:hover {
-            background: #00c8ca;
-            color: #000;
-        }
-
-        .edit-btn {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        /* Botón de Cancelar en modo edición */
-        .btn-cancel {
-            background: #0b4454 !important; /* Rojo estilo Bootstrap */
-            color: white !important;
-        }
-
-        .btn-cancel:hover {
-            background:rgb(8, 46, 56)!important;
-            color: #000;
-        }
-
-        /* Botón Guardar activo */
-        .btn-save-active {
-            background: #04ebec !important;
-            pointer-events: auto;
-            filter: none;
-            font-weight: bold;
-        }
-
-        .btn-save-active:hover {
-            background: rgb(3, 161, 161) !important;
-            color: #000;
-        }
-
-        /* Responsivo */
-        @media (max-width: 768px) {
-            .Usuario-card {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .Usuario-actions {
-                width: 100%;
-                flex-direction: row;
-                justify-content: space-between;
-                margin-top: 1rem;
-            }
-
-            .Usuario-info {
-                padding: 0.5rem 0;
-            }
-
-            .col-md-4 {
-                flex: 0 0 auto;
-                width: 320px;
-            }
-        }
-
-        /* Preload */
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        
-    </style>
 </head>
 <body>
-
+<!-- Encabezado con navbar -->
 <header>
     <?= $this->include('partials/header') ?>
 </header>
-<!-- Contenedor principal -->
+<!-- Contenedor principal del perfil -->
 <div class="profile-container">
     <div class="profile-header">
         <h2>Perfil de Usuario</h2>
         <br>
+        <!-- Imagen de perfil con botón para cambiarla -->
         <div class="profile-picture-wrapper mb-3">
             <img id="profileImage" src="/uploads/perfiles/profile.jpg" alt="Avatar" class="profile-avatar" />
             <button id="editProfileImageBtn" class="edit-image-btn" disabled
@@ -213,9 +32,11 @@
         </div>
     </div>
 
+    <!-- Formulario de información del perfil -->
     <form id="formPerfil">
         <input type="hidden" id="user-id" />
         <div class="row g-4 profile-info">
+            <!-- Campos de datos personales -->
             <div class="col-md-6">
                 <label for="name" class="form-label">Primer Nombre</label>
                 <input type="text" id="firstname" class="form-control" disabled />
@@ -274,6 +95,7 @@
             </div>
         </div>
 
+        <!-- Botones de acción -->
         <div class="edit-btn mt-4">
             <button type="button" class="btn btn-dark" id="editToggleBtn" onclick="toggleEditMode()">Editar Perfil</button>
             <button type="submit" class="btn btn-edit" id="saveProfileBtn" disabled>Guardar Cambios</button>
@@ -281,7 +103,7 @@
     </form>
 </div>
 
-<!-- Modal Imagen  -->
+<!-- Modal para subir imagen de perfil -->
 <div class="modal fade" id="modalImagenUsuario" tabindex="-1" aria-labelledby="imagenModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <form id="formImagenUsuario" enctype="multipart/form-data">
@@ -305,7 +127,7 @@
     </div>
 </div>
 
-<!-- Modal Contraseña  -->
+<!-- Modal para verificación de contraseña antes de editar -->
 <div class="modal fade" id="verificarPasswordModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-dark text-white">
@@ -329,10 +151,13 @@
 
 
 <script>
+    // Ejecutar cuando el DOM esté completamente cargado
     document.addEventListener("DOMContentLoaded", () => {
+        // Mostrar el spinner de carga
         const preload = document.getElementById("preload");
         preload.style.display = "flex";
 
+        // Captura de referencias a todos los campos del formulario
         const userIdInput     = document.getElementById("user-id");
         const firstnameInput  = document.getElementById("firstname");
         const secondnameInput = document.getElementById("secondname");
@@ -353,15 +178,16 @@
         const profileForm = document.getElementById("formPerfil");
 
 
-        let isEditing = false;
+        let isEditing = false; // Bandera para saber si se está en modo edición
 
-        // Cargar datos del usuario
+        // Obtener datos del perfil desde el backend
         fetch(`${window.location.origin}/perfil/datos`)
             .then(res => {
                 if (!res.ok) throw new Error("Error al obtener datos del perfil");
                 return res.json();
             })
             .then(data => {
+                // Asignar los valores recibidos a los inputs del formulario
                 firstnameInput.value  = data.primer_nombre     || '';
                 secondnameInput.value = data.segundo_nombre    || '';
                 lastname1Input.value  = data.primer_apellido   || '';
@@ -375,6 +201,7 @@
                 direccionInput.value  = data.direccion         || '';
                 userIdInput.value     = data.id_usuario        || '';
 
+                // Cargar imagen de perfil si existe, o imagen por defecto
                 const imgPath = data.foto_perfil 
                     ? `/uploads/perfiles/${data.foto_perfil}`
                     : `/uploads/perfiles/profile.jpg`;
@@ -384,21 +211,21 @@
                 console.error("Error cargando perfil:", err);
             })
             .finally(() => {
-                preload.style.display = "none"; // Ocultar spinner al terminar
+                preload.style.display = "none"; // Ocultar el spinner
             });
 
-        // Alternar modo edición
+        // Función para activar o desactivar el modo de edición del perfil
         window.toggleEditMode = () => {
             if (!isEditing) {
-                // Mostrar modal de verificación
+                // Mostrar modal para verificar contraseña
                 const modal = new bootstrap.Modal(document.getElementById('verificarPasswordModal'));
                 modal.show();
 
-                // Limpiar campo de contraseña y errores anteriores
+                // Limpiar el campo de contraseña anterior y errores
                 document.getElementById("verificarPassword").value = "";
                 document.getElementById("passwordError").classList.add("d-none");
 
-                // Acción al confirmar contraseña
+                // Acción al confirmar contraseña en el modal
                 document.getElementById("confirmarPasswordBtn").onclick = async () => {
                     const password = document.getElementById("verificarPassword").value;
 
@@ -415,15 +242,15 @@
 
                     if (res.ok && data.status === "success") {
                         modal.hide(); // Ocultar modal
+                        isEditing = true; // Activar modo edición
 
-                        // Activar modo edición
-                        isEditing = true;
-
+                        // Habilitar campos del formulario
                         [
                             firstnameInput, secondnameInput, lastname1Input, lastname2Input,
                             usernameInput, emailInput, phone1Input, phone2Input, direccionInput
                         ].forEach(input => input.disabled = false);
 
+                        // Habilitar botones
                         saveProfileBtn.disabled = false;
                         saveProfileBtn.classList.add("btn-save-active");
 
@@ -433,22 +260,24 @@
 
                         document.getElementById("editProfileImageBtn").disabled = false;
 
-                        // Si el campo de nueva contraseña existe, habilitarlo 
+                        // Habilitar cambio de contraseña si existe
                         const passwordInput = document.getElementById("newPassword");
                         if (passwordInput) {
                             passwordInput.disabled = false;
                         }
 
                     } else {
+                        // Mostrar error si la contraseña es incorrecta
                         document.getElementById("passwordError").innerText = data.message || "Contraseña incorrecta";
                         document.getElementById("passwordError").classList.remove("d-none");
                     }
                 };
 
             } else {
-                // Cancelar modo edición
+                // Si ya estaba editando, cancelar edición
                 isEditing = false;
 
+                // Deshabilitar campos del formulario
                 [
                     firstnameInput, secondnameInput, lastname1Input, lastname2Input,
                     usernameInput, emailInput, phone1Input, phone2Input, direccionInput
@@ -463,7 +292,7 @@
 
                 document.getElementById("editProfileImageBtn").disabled = true;
 
-                // Si hay campo de nueva contraseña, deshabilitarlo
+                // Deshabilitar contraseña si existía
                 const passwordInput = document.getElementById("newPassword");
                 if (passwordInput) {
                     passwordInput.disabled = true;
@@ -472,10 +301,11 @@
         };
 
 
-        // Enviar cambios al servidor
+        // Enviar cambios del perfil al servidor al enviar el formulario
         profileForm.addEventListener("submit", async (e) => {
             e.preventDefault();
 
+            // Preparar los datos actualizados
             const updatedData = {
                 primer_nombre:    firstnameInput.value,
                 segundo_nombre:   secondnameInput.value,
@@ -503,13 +333,13 @@
                 if (!res.ok) throw new Error(result.error || "Error al actualizar");
 
                 alert(result.mensaje || "Perfil actualizado");
-                toggleEditMode();
+                toggleEditMode(); // Salir del modo edición
             } catch (err) {
                 console.error("Error:", err.message);
             }
         });
 
-        // Carga de imagen de perfil
+        // Subida de nueva imagen de perfil
         document.getElementById("profileImageInput").addEventListener("change", async function () {
             const file = this.files[0];
             if (!file) return;
@@ -525,6 +355,7 @@
 
                 const result = await res.json();
                 if (res.ok && result.imagen) {
+                    // Mostrar la nueva imagen
                     document.getElementById("profileImage").src = `/uploads/perfiles/${result.imagen}`;
                     alert("Imagen actualizada");
                 } else {
@@ -536,7 +367,7 @@
         });
     });
 
-    // Modal
+    // Mostrar modal de cambio de imagen
     function showImageModal(id_usuario) {
         console.log(id_usuario);
         document.getElementById('UsuarioIdImagen').value = id_usuario;
@@ -545,11 +376,13 @@
         modal.show();
     }
 
+    // Evento para enviar imagen desde el modal
     document.getElementById("formImagenUsuario").addEventListener("submit", function(e) {
         e.preventDefault();
         const form = document.getElementById("formImagenUsuario");
         const formData = new FormData(form);
 
+        // Mostrar en consola los datos enviados (debug)
         for (let [key, value] of formData.entries()) {
             console.log(`${key}:`, value);
         }
@@ -564,7 +397,7 @@
         .then(data => {
             if (data.message === "success") {
                 alert("Imagen actualizada correctamente.");
-                location.reload(); // opcional para ver el cambio
+                location.reload(); // Recargar para reflejar cambio
             } else {
                 alert(data.message);
             }

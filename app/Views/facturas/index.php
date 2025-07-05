@@ -3,43 +3,52 @@
 <html lang="en">
 
 <head>
+  <!-- Configuración del documento -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+   <!-- Inclusión de archivos CSS desde vistas del proyecto (puede contener estilos personalizados o librerías) -->
   <?php require_once("../app/Views/assets/css/css.php") ?>
 
-  <!-- Bootstrap 5 CSS -->
+  <!-- Bootstrap 5 para estilos responsive -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- DataTables 1.10.21 CSS -->
+  <!-- DataTables para tablas dinámicas con paginación, búsqueda y orden -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
 
-  <!-- Tu CSS personalizado -->
+  <!-- Estilos personalizados del sistema -->
   <link href="../assets/css/style.css" rel="stylesheet">
+  
+  <!-- Librería para generar hashes MD5 (si se requiere en alguna parte del sistema) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
-  <!-- ZIP para Excel -->
+  
+  <!-- Librerías para exportar a Excel y PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
     <!-- PDFMake -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
-
+  <!-- Título de la página (dinámico) -->
   <title><?= $title ?></title>
 </head>
 
 <body>
-  <!-- Preload -->
+  <!-- Carga pantalla de carga -->
   <?php require_once('../app/Views/preload/preload.php') ?>
-  <!-- Navbar -->
+  <!-- Barra de navegación -->
   <?php require_once("../app/Views/nav/navbar.php") ?>
 
-  <!-- Container -->
+  <!-- Contenedor principal -->
   <div class="container">
+    <!-- Título de la vista -->
     <h3><?= $title ?></h3>
+
+    <!-- Botón para agregar nueva factura (abre modal) -->
     <button type="button" class="btn btn-primary" onclick="add()" style="font-size: 0.5em;"><img src ="../assets/img/icons/person-add.svg" style="color: white" ></button>
-    <!-- Table -->
+    <!-- Inclusión de la tabla de facturas -->
     <?php require_once("../app/Views/facturas/table.php") ?>
+
+    <!-- Botones para exportar -->
     <div class="d-flex justify-content-center my-3 gap-2">
     <button id="export-excel" class="btn btn-success">
       <i class="bi bi-file-earmark-excel"></i> Exportar a Excel
@@ -50,14 +59,16 @@
   </div>
 
 
-  <!-- Modal -->
+  <!-- Modal para agregar o editar facturas -->
   <div class="modal fade" id="my-modal" tabindex="-1" aria-labelledby="my-modalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
+        <!-- Encabezado del modal -->
         <div class="modal-header">
           <h5 class="modal-title" id="my-modalLabel"><?= $title ?></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <!-- Cuerpo del modal con el formulario -->
         <div class="modal-body">
           <?php require_once("../app/Views/facturas/form.php") ?>
         </div>
@@ -65,9 +76,11 @@
     </div>
   </div>
 
-
+  <!-- Inclusión de archivos JS personalizados -->
   <?php require_once("../app/Views/assets/js/js.php") ?>
 
+  <!-- jQuery y Bootstrap necesarios para DataTables y el funcionamiento del modal -->
+  
   <!-- jQuery 3.5.1 compatible con DataTables 1.10.21 -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
@@ -77,7 +90,7 @@
   <!-- DataTables JS -->
   <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 
-
+<!-- Inicialización de DataTable con datos desde el servidor -->
   <script>
    $(document).ready(function() {
   $('#table-index').DataTable({
@@ -107,6 +120,7 @@
   });
 });
 
+// Función para abrir el modal y generar un nuevo código de referencia
       function add() {
       var modal = new bootstrap.Modal(document.getElementById('my-modal'));
       modal.show();
@@ -120,10 +134,12 @@
       console.log('Código generado:', refInput.value);
     }
 
+    // Inicializa el código de referencia en localStorage si no existe
   if (!localStorage.getItem('last_reference_code')) {
     localStorage.setItem('last_reference_code', 'I900');
   }
 
+  // Genera el siguiente código incremental de referencia (ej. I901, I902...)
   function getNextReferenceCode() {
     let lastCode = localStorage.getItem('last_reference_code');
 
@@ -136,10 +152,11 @@
     return nextCode;
   }
 
-
-  
   </script>
+
+  <!-- Funciones para exportar la tabla a Excel y PDF -->
 <script>
+  // Exportación a Excel: genera un archivo ZIP que contiene el CSV
 document.getElementById('export-excel').addEventListener('click', function () {
   fetch("<?= base_url('facturas/todasExcel') ?>")
     .then(res => res.json())
@@ -162,6 +179,7 @@ document.getElementById('export-excel').addEventListener('click', function () {
     });
 });
 
+// Exportación a PDF con orientación horizontal
 document.getElementById('export-pdf').addEventListener('click', function () {
   fetch("<?= base_url('facturas/todasExcel') ?>")
     .then(res => res.json())

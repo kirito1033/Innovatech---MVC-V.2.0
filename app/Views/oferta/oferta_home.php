@@ -1,27 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Configuración básica de codificación y escalado en móviles -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista Producto</title>
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap 5 para estilos y componentes -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
+    <!-- Iconos de Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
-        :root {
-            --encabezados-piedepagina: #020f1f;
-            --Color--texto: #ffffff;
-            --bright-turquoise: #04ebec;
-            --Color-enlaces-menu: #272727;
-            --atoll: #0a6069;
-            --blue-chill: #0f838c;
-            --gossamer: #048d94;
-            --tarawera: #0b4454;
-            --ebony-clay: #2c3443;
-            --gris-: #5a626b;
-        }
-
         /* Container for two-column layout */
         .main-container {
             display: flex;
@@ -244,38 +232,41 @@
                 }
 
     </style>
+
 </head>
 <body>
+    <!-- Cabecera del sitio cargada como vista parcial -->
 <header>
     <?= $this->include('partials/header') ?>
 </header>
 
-<!-- Two-column layout container -->
+<!-- Contenedor principal de dos columnas -->
 <div class="main-container container">
-    <!-- Filters Main Section -->
+    <!-- Columna izquierda: Filtros de búsqueda de productos -->
     <main class="filters-main">
         <div class="card p-2 shadow-sm">
             <h5>Filtrar productos</h5>
+            <!-- Formulario GET para filtrar productos -->
             <form method="GET" action="">
-                <!-- Nombre -->
+                <!-- Filtro: Nombre del producto -->
                 <div class="mb-2">
                     <label for="nom" class="form-label">Nombre</label>
                     <input type="text" class="form-control" id="nom" name="nom" value="<?= esc($_GET['nom'] ?? '') ?>">
                 </div>
 
-                <!-- Precio mínimo -->
+                <!-- Filtro: Precio mínimo -->
                 <div class="mb-2">
                     <label for="precio_min" class="form-label">Precio mínimo</label>
                     <input type="number" class="form-control" id="precio_min" name="precio_min" value="<?= esc($_GET['precio_min'] ?? '') ?>">
                 </div>
 
-                <!-- Precio máximo -->
+                <!-- Filtro: Precio máximo -->
                 <div class="mb-2">
                     <label for="precio_max" class="form-label">Precio máximo</label>
                     <input type="number" class="form-control" id="precio_max" name="precio_max" value="<?= esc($_GET['precio_max'] ?? '') ?>">
                 </div>
 
-                <!-- Marca -->
+                <!-- Filtro: Marca -->
                 <div class="mb-2">
                     <label for="id_marca" class="form-label">Marca</label>
                     <select class="form-select" id="id_marca" name="id_marca">
@@ -288,7 +279,7 @@
                     </select>
                 </div>
 
-                <!-- Color -->
+                <!-- Filtro: Color -->
                 <div class="mb-2">
                     <label for="id_color" class="form-label">Color</label>
                     <select class="form-select" id="id_color" name="id_color">
@@ -301,7 +292,7 @@
                     </select>
                 </div>
 
-                <!-- RAM -->
+                <!-- Filtro: RAM -->
                 <div class="mb-2">
                     <label for="id_ram" class="form-label">RAM</label>
                     <select class="form-select" id="id_ram" name="id_ram">
@@ -314,7 +305,7 @@
                     </select>
                 </div>
 
-                <!-- Almacenamiento -->
+                <!-- Filtro: Almacenamiento -->
                 <div class="mb-2">
                     <label for="id_almacenamiento" class="form-label">Almacenamiento</label>
                     <select class="form-select" id="id_almacenamiento" name="id_almacenamiento">
@@ -327,7 +318,7 @@
                     </select>
                 </div>
 
-                <!-- Garantía -->
+                <!-- Filtro: Garantía -->
                 <div class="mb-2">
                     <label for="id_garantia" class="form-label">Garantía</label>
                     <select class="form-select" id="id_garantia" name="id_garantia">
@@ -342,7 +333,7 @@
                     </select>
                 </div>
 
-                <!-- Resolución -->
+                <!-- Filtro: Resolución -->
                 <div class="mb-2">
                     <label for="id_resolucion" class="form-label">Resolución</label>
                     <select class="form-select" id="id_resolucion" name="id_resolucion">
@@ -357,23 +348,26 @@
                     </select>
                 </div>
 
+                <!-- Botón para aplicar los filtros -->
                 <button type="submit" class="btn btn-primary mt-2 w-100">Buscar</button>
             </form>
         </div>
     </main>
 
-    <!-- Products Main Section -->
-  <!-- Products Main Section -->
+    <!-- Columna derecha: Listado de productos por categoría -->
 <main class="productos-ofertas">
     <div class="lista-productos">
         <?php foreach ($categorias as $categoria): ?>
             <?php
+            // Agrupa productos por categoría
             $productosPorCategoria = array_filter($productos, function($producto) use ($categoria) {
                 return $producto['id_categoria'] == $categoria['id'];
             });
             ?>
             <?php if (!empty($productosPorCategoria)): ?>
+                <!-- Título de categoría -->
                 <h2 class="mb-3 title-ofertas"><?= esc($categoria['nom']) ?></h2>
+                <!-- Grid de productos -->
                 <div class="row g-3">
                     <?php foreach ($productosPorCategoria as $producto): ?>
                         <?php if ($producto['id_estado'] != 1) continue; // Solo mostrar productos con estado 1 ?>
@@ -388,6 +382,7 @@
                                             <div class="card-body">
                                                 <h5 class="card-title"><?= esc($producto['nom']) ?></h5>
                                                 <p class="card-text"><?= esc($producto['descripcion']) ?></p>
+                                               <!-- Mostrar precio con o sin descuento -->
                                                 <p class="card-text">
                                                     <?php if ($producto['precio'] != $producto['precio_original']): ?>
                                                         <?php
@@ -419,6 +414,7 @@
 </main>
 </div>
 
+<!-- Pie de página del sitio -->
 <footer>
     <?php require_once("../app/Views/footer/footerApp.php")?>
 </footer>

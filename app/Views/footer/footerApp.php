@@ -1,9 +1,13 @@
+<!-- Pie de página con fondo oscuro, texto claro y separación superior -->
 <footer class="bg-dark text-light pt-4 mt-5">
+  <!-- Contenedor central -->
   <div class="container">
+    <!-- Fila principal con columnas responsivas -->
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3">
 
-      <!-- Información de contacto -->
+      <!-- 🧩 Columna 1: Información de contacto -->
       <div class="col mb-4">
+        <!-- Sección con ícono de información y número de contacto -->
         <div class="d-flex align-items-start mb-3">
           <i class="bi bi-info-circle fs-3 me-3 text-info"></i>
           <div>
@@ -11,10 +15,13 @@
             <p class="mb-0">PBX - WhatsApp: +57 324 575 0626</p>
           </div>
         </div>
+        <!-- Dirección física -->
         <div>
           <p class="fw-bold mb-1">Encuéntranos en:</p>
           <p class="mb-0">Cra 15 # 768 - 05 Local 262 Centro De Alta Tecnología<br>Bogotá - Colombia</p>
         </div>
+
+        <!-- Íconos de redes sociales (usa Font Awesome o Bootstrap Icons + clases personalizadas) -->
         <ul class="list-unstyled d-flex mt-3 gap-3 redes-footer">
           <li><a href="#" class="text-light fs-5 fab fa-facebook"></a></li>
           <li><a href="#" class="text-light fs-5 fab fa-whatsapp"></a></li>
@@ -25,7 +32,7 @@
         </ul>
       </div>
 
-      <!-- Enlaces de la tienda -->
+      <!-- 🛍️ Columna 2: Enlaces de la tienda -->
       <div class="col mb-4">
         <h5 class="mb-3">Tienda</h5>
         <ul class="list-unstyled">
@@ -36,7 +43,7 @@
         </ul>
       </div>
 
-      <!-- Preguntas frecuentes -->
+      <!-- ❓ Columna 3: Preguntas frecuentes -->
       <div class="col mb-4">
         <h5 class="mb-3">Preguntas Frecuentes</h5>
         <ul class="list-unstyled">
@@ -49,7 +56,7 @@
 
     </div>
 
-    <!-- Línea final -->
+    <!-- 🧾 Línea inferior con derechos de autor -->
     <div class="row border-top pt-3 mt-3">
       <div class="col text-center">
         <p class="mb-0 small">Copyright &copy; Inovatech - 2024. Todos los derechos reservados.</p>
