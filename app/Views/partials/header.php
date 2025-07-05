@@ -42,40 +42,55 @@
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
               </div>
               <div class="offcanvas-body">
-                <ul class="nav nav-pills flex-column offcanvas__nav-ul ">
-                  <li class="nav-item offcanvas__nav-ul-li">
-                    <a href="../Pages/index.html"><i class="bi bi-house"></i>Inicio</a>
-                  </li>
-                  <li class="nav-item offcanvas__nav-ul-li">
-                    <a href="Notificaciones.html"> <i class="bi bi-bell"></i>Notificaciones</a>
-                    <li class="nav-item offcanvas__nav-ul-li dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                        <i class="bi bi-dropbox"></i> Categorias
-                    </a>
-                    <ul class="dropdown-menu">
-                        <?php foreach ($categorias as $categoria): ?>
-                        <li><a class="dropdown-item" href="<?= base_url('categoria/' . $categoria['id']) ?>"><?= esc($categoria['nom']) ?></a></li>
-                        <?php endforeach; ?>
-                    </ul>
-                    </li>
-
-        </li>
-        <li class="nav-item">
-          <a href="miscompras.html"> <i class="bi bi-bag"></i>Mis compras</a>
-        </li>
-        <li class="nav-item offcanvas__nav-ul-li">
-          <a href="oferta.html"> <i class="bi bi-tags"></i>ofertas</a>
-        </li>
-        <li class="nav-item offcanvas__nav-ul-li">
-        <a href="<?= base_url('pqrs/Cpqrs') ?>"><i class="bi bi-info-circle icon"></i>Ayuda / PQR</a>
-        </li>
-        <li>
-
-        <li class="nav-item offcanvas__nav-ul-li">
-        <a href="<?= base_url('/logout') ?>"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</a>
-        </li>
+  <ul class="nav nav-pills flex-column offcanvas__nav-ul">
+    <li class="nav-item offcanvas__nav-ul-li">
+      <a href="<?= base_url('/') ?>"><i class="bi bi-house"></i> Inicio</a>
+    </li>
+    <li class="nav-item offcanvas__nav-ul-li">
+      <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">
+        <i class="bi bi-bell"></i> Notificaciones
+      </a>
+    </li>
+    <li class="nav-item offcanvas__nav-ul-li dropdown">
+      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+        <i class="bi bi-dropbox"></i> Categorías
+      </a>
+      <ul class="dropdown-menu">
+        <?php foreach ($categorias as $categoria): ?>
+          <li>
+            <a class="dropdown-item" href="<?= base_url('categoria/' . $categoria['id']) ?>">
+              <?= esc($categoria['nom']) ?>
+            </a>
+          </li>
+        <?php endforeach; ?>
       </ul>
-      </div>
+    </li>
+    <li class="nav-item offcanvas__nav-ul-li">
+      <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">
+        <i class="bi bi-bag"></i> Mis compras
+      </a>
+    </li>
+    <li class="nav-item offcanvas__nav-ul-li">
+      <a href="<?= base_url('ofertas/6') ?>"><i class="bi bi-tags"></i> Ofertas</a>
+    </li>
+    <li class="nav-item offcanvas__nav-ul-li">
+      <a href="<?= base_url('pqrs/Cpqrs') ?>"><i class="bi bi-info-circle icon"></i> Ayuda / PQR</a>
+    </li>
+
+    <?php if (isset($_SESSION['usuario'])): ?>
+      <li class="nav-item offcanvas__nav-ul-li">
+        <a href="<?= base_url('/perfil') ?>"><i class="bi bi-person-circle"></i> Mi perfil</a>
+      </li>
+      <li class="nav-item offcanvas__nav-ul-li">
+        <a href="<?= base_url('/logout') ?>"><i class="bi bi-box-arrow-left"></i> Cerrar sesión</a>
+      </li>
+    <?php else: ?>
+      <li class="nav-item offcanvas__nav-ul-li">
+        <a href="<?= base_url('/usuario/login') ?>"><i class="bi bi-box-arrow-left"></i> Iniciar sesión</a>
+      </li>
+    <?php endif; ?>
+  </ul>
+</div>
       </div>
       </form>
       <div class="header-pc">

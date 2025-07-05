@@ -65,7 +65,7 @@
         border: 1px solid var(--gris-);
         padding: 15px 18px;
         border-radius: 8px;
-        width: 30vh;
+        width: 100%;
         transition: all 0.3s ease;
     }
     .form-select{
@@ -74,7 +74,7 @@
         border: 1px solid var(--gris-);
         padding: 15px 18px;
         border-radius: 8px;
-        width: 35vh;
+        width: 100%;
         transition: all 0.3s ease;
     }
 
@@ -149,7 +149,40 @@
      .login__logo img {
             width: 250px;
         }
+    @media (max-width: 768px) {
+    .registrar-container {
+        padding: 20px;
+        width: 90%;
+    }
 
+    .form-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+    }
+
+    .form-floating {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .form-control,
+    .form-select {
+        width: 100%;
+        font-size: 0.9rem;
+        padding: 12px 14px;
+    }
+
+    .login__logo img {
+        width: 180px;
+    }
+
+    #boton1,
+    #boton-regresar {
+        width: 100%;
+        max-width: 100%;
+        font-size: 0.95rem;
+    }
+    }
 </style>
 </head>
 <body>

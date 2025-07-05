@@ -419,6 +419,4 @@ class Facturas extends BaseController
     }
 }
 
-
-
 }
