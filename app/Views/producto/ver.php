@@ -13,7 +13,7 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
-        :root {
+         :root {
             --encabezados-piedepagina: #020f1f;
             --Color--texto: #ffffff;
             --bright-turquoise: #04ebec;
@@ -21,7 +21,7 @@
             --atoll: #0a6069;
             --blue-chill: #0f838c;
             --gossamer: #048d94;
-            --tarawera: #0b4454; /* Nota: tarawera estaba duplicado, usé el último valor */
+            --tarawera: #0b4454;
             --ebony-clay: #2c3443;
             --gris-: #5a626b;
         }
@@ -30,7 +30,7 @@
             background-color: var(--Color--texto);
             padding: 3%;
             margin-top: 2%;
-            border: 1px solid #ffff;
+            border: 1px solid #fff;
             border-radius: 10px;
         }
 
@@ -80,7 +80,7 @@
         }
 
         table {
-            width: 470px;
+            width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
         }
@@ -128,11 +128,69 @@
             border-bottom: 1px solid #1114;
             margin-top: 2%;
         }
-        .ver-imagen-producto{
-            width: 100% !important;
-            height: 500px !important;
-            object-fit: cover !important;
-            border-radius: 10px 10px 0 0 !important;
+
+        .ver-imagen-producto {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
+
+       /* ===================== */
+        /* MEDIA QUERY RESPONSIVO */
+        /* ===================== */
+
+        @media (max-width: 767.98px) {
+            /* Las columnas principales (imagen, info, compra) se apilan */
+            .producto .row {
+                flex-direction: column !important;
+            }
+
+            .producto .row > div {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin-bottom: 1rem;
+            }
+
+            .ver-imagen-producto {
+                height: auto !important;
+                max-height: 300px;
+                object-fit: contain !important;
+            }
+
+            .titulo-producto {
+                font-size: 20px;
+                text-align: center;
+            }
+
+            .precio {
+                text-align: center;
+            }
+
+            .caracteristicas-gene ul {
+                padding-left: 1rem;
+            }
+
+            table {
+                width: 100% !important;
+            }
+
+            .comprar-col {
+                padding: 1rem;
+            }
+
+            .productos-carac h2 {
+                text-align: center;
+            }
+
+            .productos-carac table {
+                font-size: 14px;
+            }
+
+            .preguntas-col {
+                padding: 0 1rem;
+            }
         }
     </style>
 </head>

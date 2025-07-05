@@ -7,6 +7,152 @@
   <title>Restablecer contraseña</title>
 
 </head>
+ <style>
+    :root {
+      --encabezados-piedepagina: #020f1f;
+      --Color--texto: #ffffff;
+      --bright-turquoise: #04ebec;
+      --Color-enlaces-menu: #272727;
+      --atoll: #0a6069;
+      --blue-chill: #0f838c;
+      --gossamer: #048d94;
+      --tarawera: #0b4454;
+      --ebony-clay: #2c3443;
+      --gris-: #5a626b;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--tarawera);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: var(--Color--texto);
+    }
+
+    .form {
+      background-color: var(--encabezados-piedepagina);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .login__logo {
+      width: 200px;
+      margin-bottom: 20px;
+    }
+
+    .mb-3 {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
+    }
+
+    .mb-3 label {
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: var(--bright-turquoise);
+    }
+
+    .mb-3 input[type="password"],
+    .mb-3 input[type="text"] {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--bright-turquoise);
+      background-color: transparent;
+      color: var(--Color--texto);
+      font-size: 0.95rem;
+    }
+
+    .mb-3 input::placeholder {
+      color: #cccccc;
+    }
+
+    .mb-3 input:focus {
+      outline: none;
+      border-color: var(--bright-turquoise);
+      background-color: transparent;
+      box-shadow: 0 0 5px var(--bright-turquoise);
+    }
+
+    #showPasswords {
+      accent-color: var(--bright-turquoise);
+    }
+
+    #error-message {
+      color: #ff6b6b;
+      font-weight: bold;
+      display: none;
+      margin-bottom: 10px;
+    }
+
+    button{
+      background-color: var(--blue-chill);
+      color: var(--Color--texto);
+      border: none;
+      padding: 15px 0;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      max-width: 250px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .btn-back{
+      background-color: var(--blue-chill);
+      color: var(--Color--texto);
+      border: none;
+      padding: 12px 0;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      max-width: 250px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    button:hover,
+    .btn-back:hover {
+      background-color: var(--gossamer);
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .show-password-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 250px;
+    }
+
+    .show-password-container label {
+      font-size: 0.95rem;
+      color: var(--bright-turquoise);
+      cursor: pointer;
+      user-select: none;
+    }
+  </style>
 <body>
 
 <!-- Formulario para actualizar la contraseña del usuario -->

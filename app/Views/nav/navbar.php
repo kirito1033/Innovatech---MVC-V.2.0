@@ -1,13 +1,9 @@
 <?php
-// Retorna un icono de Bootstrap Icons asociado a la ruta/módulo.
 function getIcon($ruta) {
-  // Extrae el último segmento de la ruta eliminando la barra final si existe.
   $modulo = trim(basename($ruta), '/');
-
-  // Selecciona el ícono basado en el nombre del módulo
   switch ($modulo) {
     case '':
-      return 'bi-house'; // Página principal
+      return 'bi-house';
     case 'usuario':
       return 'bi-people';
     case 'rol':
@@ -69,7 +65,7 @@ function getIcon($ruta) {
        case 'modelorol':
       return 'bi-diagram-3';
     default:
-      return 'bi-folder2'; // Ícono genérico por defecto
+      return 'bi-folder2';
   }
 }
 ?>
@@ -290,57 +286,49 @@ function getIcon($ruta) {
     }
   }
   </style>
-   <!-- Carga los íconos de Bootstrap -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  
 </head>
 <body>
-  <!-- Botón hamburguesa para activar el menú lateral en modo responsive -->
   <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
 
-   <!-- SIDEBAR: Menú lateral izquierdo -->
+  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
-    <!-- Logo de la empresa o aplicación -->
     <div class="login__logo text-center mb-4">
       <img src="../assets/img/logo.png" alt="Logo Innovatech">
     </div>
 
-    <!--Agrupamiento y ordenamiento de módulos-->
     <?php
     $grupos = [];
 
-    // Agrupar módulos por su clave 'grupo'
+    // Agrupar módulos
     foreach ($modulos as $modulo) {
-      $grupo = $modulo['grupo'] ?? 'Sin grupo'; // Agrupa como 'Sin grupo' si no tiene asignado
+      $grupo = $modulo['grupo'] ?? 'Sin grupo';
       $grupos[$grupo][] = $modulo;
     }
 
-    // Ordenar alfabéticamente los nombres de los grupos
+    // Ordenar grupos alfabéticamente
     ksort($grupos);
 
-    // Ordenar alfabéticamente los módulos dentro de cada grupo
+    // Ordenar módulos dentro de cada grupo alfabéticamente por nombre
     foreach ($grupos as &$modulosGrupo) {
       usort($modulosGrupo, function ($a, $b) {
         $nombreA = ucfirst(trim(basename($a['Ruta']), '/'));
         $nombreB = ucfirst(trim(basename($b['Ruta']), '/'));
-        return strcasecmp($nombreA, $nombreB); // Comparación sin distinción entre mayúsculas/minúsculas
+        return strcasecmp($nombreA, $nombreB);
       });
     }
-    unset($modulosGrupo); // Limpieza de referencia
+    unset($modulosGrupo);
     ?>
 
-<!--Menú lateral dinámico por grupo-->
     <?php foreach ($grupos as $grupo => $modulosGrupo): ?>
       <div class="grupo">
-        <!-- Título del grupo con botón desplegable -->
         <button class="grupo-toggle">
           <?= htmlspecialchars($grupo) ?>
           <i class="bi bi-chevron-down"></i>
         </button>
-        <!-- Lista de módulos dentro del grupo -->
         <ul class="grupo-list">
           <?php foreach ($modulosGrupo as $modulo): ?>
             <li>
-              <!-- Enlace al módulo con ícono dinámico -->
               <a href="<?= base_url($modulo['Ruta']) ?>" style="text-align: left;">
                 <i class="bi <?= getIcon($modulo['Ruta']) ?>"></i>
                 <?= ucfirst(trim(basename($modulo['Ruta']), '/')) ?: 'Home' ?>
@@ -353,7 +341,7 @@ function getIcon($ruta) {
 
     <hr style="border-color: var(--gris-); margin: 15px 0;">
 
-    <!-- Enlaces al perfil y logout -->
+    <!-- PERFIL Y CERRAR SESIÓN -->
     <ul style="list-style: none; padding-left: 15px;">
       <li>
         <a href="<?= base_url('/perfil') ?>" style="text-align: left;">
@@ -375,20 +363,18 @@ function getIcon($ruta) {
 
   <!-- SCRIPT TOGGLE -->
   <script>
-    // Función para mostrar/ocultar la sidebar (en responsive)
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       sidebar.classList.toggle('active');
     }
 
-    // Controla el despliegue de cada grupo
     document.addEventListener('DOMContentLoaded', () => {
       const toggles = document.querySelectorAll('.grupo-toggle');
       toggles.forEach(toggle => {
         toggle.addEventListener('click', () => {
-          toggle.classList.toggle('active'); // Rota el ícono
+          toggle.classList.toggle('active');
           const list = toggle.nextElementSibling;
-          list.classList.toggle('show'); // Muestra u oculta la lista
+          list.classList.toggle('show');
         });
       });
     });
