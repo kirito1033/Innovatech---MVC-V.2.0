@@ -199,6 +199,51 @@
             padding-left: 0.5rem;
             margin-bottom: 0.7rem;
         }
+        @media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    width: 95%;
+    padding: 0 1rem;
+  }
+
+  .filters-main {
+    flex: 0 0 100%;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .productos-ofertas {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .card img {
+    max-height: 160px;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .title-ofertas {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  .card .card-title,
+  .card .card-text {
+    text-align: center;
+  }
+
+  .card-link {
+    width: 100%;
+  }
+
+  .btn-outline-primary {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+}
+
     </style>
 </head>
 <body>
@@ -338,7 +383,7 @@
                                 <div class="card mb-2 shadow-sm">
                                     <div class="row g-0">
                                         <div class="col-md-3">
-                                            <img src="<?= base_url('Uploads/' . $producto['imagen']) ?>" class="img-fluid rounded-start" alt="<?= esc($producto['nom']) ?>">
+                                             <img src="<?= base_url('uploads/' . esc($producto['imagen'] ?? 'placeholder.jpg')) ?>" class="img-fluid rounded-start" alt="<?= esc($producto['nom']) ?>">
                                         </div>
                                         <div class="col-md-9">
                                             <div class="card-body">

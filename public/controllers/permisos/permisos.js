@@ -14,6 +14,14 @@ var method = "";
 var data = "";
 var resultFetch = null;
 
+
+function closepreload(){
+    setTimeout(() => {
+      document.getElementById("preloadId").style.display = "none";
+    }, 2000);
+  }
+
+
 function show(id) {
   mainApp.disabledFormAll();
   mainApp.resetForm();
@@ -156,3 +164,4 @@ function reloadPage() {
     location.reload();
   }, 500)
 }
+closepreload()

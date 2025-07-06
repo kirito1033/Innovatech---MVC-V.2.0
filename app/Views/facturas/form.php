@@ -1,6 +1,7 @@
+<!-- Formulario principal para registrar la factura -->
 <form id="formFactura" action="<?= base_url('facturas/registrar') ?>" method="post" class="p-4 shadow rounded">
 
-      <!-- Datos ocultos -->
+      <!-- Campos ocultos con metadatos necesarios para la generación de la factura -->
       <input type="hidden" name="numbering_range_id" value="8">
       <input type="hidden" name="reference_code" id="reference_code">
       <input type="hidden" name="observation" value="Pago realizado en la tienda de innovatech">
@@ -12,7 +13,7 @@
       <input type="hidden" name="order_reference[issue_date]" value="">
 
 
-      <!-- Cliente -->
+      <!-- Sección: Datos del Cliente -->
       <h5 class="mb-3">Datos del Cliente</h5>
       <div class="mb-2">
         <label for="identification">Identificación</label>
@@ -48,7 +49,7 @@
       <input type="hidden" name="customer[identification_document_id]" value="3">
       <input type="hidden" name="customer[municipality_id]" value="980">
 
-      <!-- Ítems -->
+      <!-- Sección: Agregar productos -->
       <div class="mb-3 d-flex align-items-end gap-2">
         <div class="flex-grow-1">
             <label for="select-producto">Seleccionar producto</label>
@@ -64,15 +65,18 @@
         <button type="button" class="btn btn-success" onclick="agregarProducto()">Agregar</button>
         </div>
 
+        <!-- Contenedor dinámico donde se insertan los productos seleccionados -->
         <div id="productos-container"></div>
 
 
-      <!-- Botón -->
+      <!-- Botones de acción -->
       <button type="submit" class="btn btn-success">Enviar factura</button>
       <button type="button" class="btn btn-outline-primary " onclick="prepararPago()"><i class="bi bi-credit-card"></i> Pagar
 </button>
 
 </form>
+
+<!-- Formulario oculto para redirigir a la pasarela PayU-->
 <form id="formPayU" method="post" action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/">
   <input name="merchantId"    type="hidden" value="508029">
   <input name="accountId"     type="hidden" value="512321">
@@ -86,12 +90,21 @@
   <input name="test"          type="hidden" value="1">
   <input name="buyerEmail"    type="hidden" id="payu_email">
 
-  <!-- Rutas a crear -->
+  <!-- URLs de respuesta y confirmación -->
   <input name="responseUrl"   type="hidden" value="<?= base_url('facturas/respuesta') ?>">
-  <input name="confirmationUrl" type="hidden" value="https://2bd0-179-51-111-179.ngrok-free.app/facturas/confirmacion">
+  <input name="confirmationUrl" type="hidden" value="<?= base_url('facturas/confirmacion') ?>">
 </form>
+
+<!--Script: calcular total y generar firma digital para PayU-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 <script>
+
+function closepreload(){
+    setTimeout(() => {
+      document.getElementById("preloadId").style.display = "none";
+    }, 2000);
+}
+
 function calcularTotalFactura() {
   const precios = document.querySelectorAll('input[name^="items"][name$="[price]"]');
   const cantidades = document.querySelectorAll('input[name^="items"][name$="[quantity]"]');
@@ -107,22 +120,24 @@ function calcularTotalFactura() {
 }
 
 function prepararPago() {
-  const reference = 'ref_' + Date.now();
+  const reference = 'ref_' + Date.now(); // Genera referencia única
   const email = document.getElementById("email").value;
   const amount = calcularTotalFactura();
-  const apiKey = "4Vj8eK4rloUd272L48hsrarnUA";
+  const apiKey = "4Vj8eK4rloUd272L48hsrarnUA"; // Llave pública sandbox
   const merchantId = "508029";
   const currency = "COP";
 
+  // Genera firma digital requerida por PayU
   const signatureRaw = `${apiKey}~${merchantId}~${reference}~${amount}~${currency}`;
   const signature = md5(signatureRaw);
 
+  // Llena los campos del formulario PayU
   document.getElementById("payu_refcode").value = reference;
   document.getElementById("payu_amount").value = amount;
   document.getElementById("payu_signature").value = signature;
   document.getElementById("payu_email").value = email;
 
-  // 🔁 Guarda la factura en la DB
+  // Envía los datos a la base de datos antes de redirigir a PayU
   const form = document.getElementById("formFactura");
   const formData = new FormData(form);
   formData.append('reference_code', reference);
@@ -131,14 +146,14 @@ function prepararPago() {
     method: "POST",
     body: formData,
   }).then(() => {
-    document.getElementById("formPayU").submit();
+    document.getElementById("formPayU").submit(); // Redirige a pasarela
   });
 }
 
 
 </script>
 
-
+<!-- Script_ agregar productos dinámicamente-->
 <script>
   let itemIndex = 0;
 
@@ -170,7 +185,7 @@ function prepararPago() {
           <input type="number" step="any" name="items[${itemIndex}][price]" class="form-control" value="${producto.precio}">
         </div>
 
-        <!-- Ocultos -->
+        <!-- Campos ocultos con metadatos fiscales del producto -->
         <input type="hidden" name="items[${itemIndex}][scheme_id]" value="0">
         <input type="hidden" name="items[${itemIndex}][note]" value="">
         <input type="hidden" name="items[${itemIndex}][discount_rate]" value="0">

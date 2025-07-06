@@ -182,6 +182,21 @@ class Facturas extends BaseController
                 log_message('error', '❌ Error al enviar a API Factus: ' . $e->getMessage());
             }
 
+            // ✅ Guardar en facturas_compras si no existe ya
+            $compraModel = new \App\Models\FacturaCompraModel();
+            $existe = $compraModel->where('reference_code', $referencia)->first();
+
+            if (!$existe) {
+                $compraModel->insert([
+                    'usuario_id'     => $row['usuario_id'],
+                    'reference_code' => $referencia,
+                    'factura_json'   => $row['factura_json']
+                ]);
+                log_message('info', '💾 Compra guardada en facturas_compras para usuario: ' . $row['usuario_id']);
+            } else {
+                log_message('warning', '⚠️ Ya existe una factura en facturas_compras con esta referencia: ' . $referencia);
+            }
+            
             // ✅ Vaciar carrito con el usuario_id obtenido desde la factura temporal
             $usuarioId = $row['usuario_id']; // <--- CAMBIO CLAVE
             if ($usuarioId) {
@@ -418,7 +433,5 @@ class Facturas extends BaseController
         return $this->response->setJSON(['error' => $e->getMessage()]);
     }
 }
-
-
 
 }

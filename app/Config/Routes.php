@@ -305,7 +305,8 @@ $routes->get('perfil/datos', 'PerfilController::obtenerDatos');
 $routes->post('/perfil/actualizar-imagen', 'PerfilController::updateImage');
 $routes->post('/perfil/verificar-password', 'PerfilController::verificarPassword');
 
-
+// Mis Compras
+$routes->get('/mis-compras', 'UsuarioController::misCompras');
 
 $routes->group('userapi', ['filter' => 'roleaccess'],function($routes) {
     $routes->get("/", "ApiUserController::index");

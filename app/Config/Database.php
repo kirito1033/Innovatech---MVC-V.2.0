@@ -29,7 +29,7 @@ class Database extends Config
     //     'DSN'          => '',
     //     'hostname'     => 'localhost',
     //     'username'     => 'u847177988_novatech',
-    //     'password'     => 'Dj=9xgRe]',
+    //     'password'     => 'Novatech2025*',
     //     'database'     => 'u847177988_novatech',
     //     'DBDriver'     => 'MySQLi',
     //     'DBPrefix'     => '',

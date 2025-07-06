@@ -5,36 +5,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+      <!-- Carga los estilos CSS base del sistema (Bootstrap, personalizados, etc.) -->
     <?php require_once("../app/Views/assets/css/css.php") ?>
+
+    <!-- Carga estilos de DataTables para tablas dinámicas -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
 
+    <!-- Título dinámico de la pestaña -->
     <title><?= $title ?></title>
   </head>
 
   <body>
-		<!--Preload-->
+
+		<!-- Componente opcional de precarga (loader animado) -->
 		<?php require_once('../app/Views/preload/preload.php') ?>
-		<!--Navbar-->
+		
+    <!-- Barra de navegación superior -->
     <?php require_once("../app/Views/nav/navbar.php")?>
-		<!--Container-->
+		
+    <!-- Contenedor principal del contenido -->
 		<div class="container">
+
+     <!-- Título dinámico de la vista -->
       <h3><?= $title?></h3>
+
+      <!-- Botón para agregar una nueva ciudad. Al hacer clic ejecuta la función JavaScript `add()` -->
       <button type="button" class="btn btn-primary" onclick="add()" style="font-size: 0.5em;"><img src ="../assets/img/icons/person-add.svg" style="color: white" ></button>
-			<!--Container Table-->
+			
+      <!-- Carga la tabla que lista todas las ciudades -->
       <?php require_once("../app/Views/ciudad/table.php")?>
     </div>
-		<!--Footer-->
-
+		
+    <!-- Modal emergente para formulario de creación/edición -->
     <div class="modal fade" id="my-modal" tabindex="-1" aria-labelledby="my-modalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
+
+        <!-- Encabezado del modal con título dinámico y botón de cierre -->
           <div class="modal-header">
             <h5 class="modal-title" id="my-modalLabel"><?= $title ?></h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+
+          <!-- Cuerpo del modal que incluye el formulario para ciudades -->
 					<div class="modal-body">
           <?php require_once("../app/Views/ciudad/form.php") ?>
         </div>
+
+        <!-- Pie de página del modal con botones para cancelar o guardar -->
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="submit" form="my-form" class="btn btn-primary" id="btnSubmit">Send Data</button>
@@ -43,9 +61,12 @@
       </div>
     </div>
 
+    <!-- Archivos JavaScript necesarios: Bootstrap, funciones generales, etc. -->
     <?php require_once("../app/Views/assets/js/js.php") ?>
+     <!-- Inicialización de la tabla con DataTables y configuración de exportaciones -->
     <?php require_once("../app/Views/assets/js/dataTable.php") ?>
 
+     <!-- Script específico para manejar acciones CRUD en Ciudad (JS personalizado) -->
      <script src="<?=base_url("controllers/ciudad/ciudad.js") ?>"></script>
   </body>
 
