@@ -910,6 +910,7 @@
         }
       });
     }
+    closepreload();
   });
 
       // === Facturas por Estado ===
@@ -1241,6 +1242,13 @@ const renderBarChart = (id, labels, datos, label = 'Cantidad') => {
   renderBarChart('graficoMesEnvio', <?= json_encode($graficoMesEnvio['labels']) ?>, <?= json_encode($graficoMesEnvio['datos']) ?>);
   // 🌍 Envíos por Ciudad (Distribución de envíos según ciudad de destino)
   renderBarChart('graficoCiudadEnvio', <?= json_encode($graficoCiudadEnvio['labels']) ?>, <?= json_encode($graficoCiudadEnvio['datos']) ?>);
+
+  function closepreload(){
+    setTimeout(() => {
+      document.getElementById("preloadId").style.display = "none";
+    }, 2000);
+  }
+
 </script>
 
 

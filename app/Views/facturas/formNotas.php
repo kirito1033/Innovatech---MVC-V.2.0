@@ -90,6 +90,14 @@
 
 <!-- Script JS para obtener token y cargar factura desde Factus -->
 <script>
+
+  
+function closepreload(){
+    setTimeout(() => {
+      document.getElementById("preloadId").style.display = "none";
+    }, 2000);
+}
+
 let token = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -221,4 +229,5 @@ function cargarDatosFactura(factura) {
     itemsContainer.insertAdjacentHTML('beforeend', html);
   });
 }
+closepreload()
 </script>

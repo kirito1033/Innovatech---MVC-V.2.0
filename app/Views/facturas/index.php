@@ -208,6 +208,8 @@ document.getElementById('export-pdf').addEventListener('click', function () {
       }).download("facturas.pdf");
     });
 });
+
+closepreload()
 </script>
 
 </body>

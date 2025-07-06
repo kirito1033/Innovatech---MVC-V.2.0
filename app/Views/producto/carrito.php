@@ -278,7 +278,7 @@
                     
                     <!-- Imagen del producto -->
                     <div style="max-width: 250px; flex-shrink: 0;">
-                    <img src="<?= base_url('Uploads/' . $producto['imagen']) ?>" 
+                    <img src="<?= base_url('uploads/' . $producto['imagen']) ?>" 
                         alt="<?= esc($producto['nom']) ?>" 
                         class="producto-img me-3">
                     </div>
@@ -402,8 +402,8 @@
                 <input name="signature"     type="hidden" id="payu_signature">
                 <input name="test"          type="hidden" value="1">
                 <input name="buyerEmail"    type="hidden" id="payu_email">
-                <input name="responseUrl"   type="hidden" value="https://9371-181-59-3-98.ngrok-free.app/facturas/respuesta">
-                <input name="confirmationUrl" type="hidden" value="https://9371-181-59-3-98.ngrok-free.app/facturas/confirmacion">
+                <input name="responseUrl"   type="hidden" value="<?= base_url('facturas/respuesta') ?>">
+                <input name="confirmationUrl" type="hidden" value="<?= base_url('facturas/confirmacion') ?>">
             </form>
         </div>
     </div>

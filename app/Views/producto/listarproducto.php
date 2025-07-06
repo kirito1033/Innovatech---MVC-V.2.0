@@ -383,7 +383,7 @@
                                 <div class="card mb-2 shadow-sm">
                                     <div class="row g-0">
                                         <div class="col-md-3">
-                                            <img src="<?= base_url('Uploads/' . $producto['imagen']) ?>" class="img-fluid rounded-start" alt="<?= esc($producto['nom']) ?>">
+                                             <img src="<?= base_url('uploads/' . esc($producto['imagen'] ?? 'placeholder.jpg')) ?>" class="img-fluid rounded-start" alt="<?= esc($producto['nom']) ?>">
                                         </div>
                                         <div class="col-md-9">
                                             <div class="card-body">
