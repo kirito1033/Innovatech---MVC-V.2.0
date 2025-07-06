@@ -51,9 +51,10 @@
         }
 
 
-        .btn-sm {
-            font-size: 1rem;
-            padding: 0.4rem 0.9rem;
+        .btn.btn-pdf {
+          background-color: rgb(4, 179, 179) !important;
+          color: white !important;
+          border: none !important;
         }
 
         .container-xl-custom {
@@ -89,14 +90,13 @@
 
 <div class="container-xl-custom">
   <h1 class="titulo-compras mb-4">🧾 Historial de Compras</h1>
-  <div class="row"></div>
 
   <?php if (empty($compras)): ?>
     <div class="text-center success-box">
       <h2 class="mb-4">No has realizado compras aún.</h2>
     </div>
   <?php else: ?>
-    <ul class="list-group">
+    <div class="row">
       <?php foreach ($compras as $compra): ?>
         <?php
           $factura = json_decode($compra['factura_json'], true);
@@ -109,38 +109,31 @@
               }
           }
         ?>
-        <div class="card mb-2 p-3">
-          <p>
-            <strong class="titulos">Referencia:</strong>
-            <strong><span class="valor"><?= esc($compra['reference_code']) ?></span></strong>
-          </p>
-          <p>
-            <strong class="titulos">Fecha:</strong>
-            <strong><span class="valor"><?= date('Y-m-d H:i', strtotime($compra['created_at'])) ?></span></strong>
-          </p>
-          <p>
-            <strong class="titulos">Total:</strong>
-            <strong><span class="valor">$<?= number_format($total, 0, ',', '.') ?></span></strong>
-          </p>
+        <div class="col-6 col-md-4 col-lg-2 mb-3">
+          <div class="card h-100 p-3 shadow-sm">
+            <p><strong class="titulos">Número:</strong> <span class="valor"><?= esc($compra['numero']) ?></span></p>
+            <p><strong class="titulos">Referencia:</strong> <span class="valor"><?= esc($compra['reference_code']) ?></span></p>
+            <p><strong class="titulos">Fecha:</strong> <span class="valor"><?= date('Y-m-d H:i', strtotime($compra['created_at'])) ?></span></p>
+            <p><strong class="titulos">Total:</strong> <span class="valor">$<?= number_format($total, 0, ',', '.') ?></span></p>
 
-          <!-- Boton para descargar factura -->
-          <div class="btn-group" role="group" aria-label="Botones de acción">
-            <!-- Descargar PDF si está disponible -->
-            <?php if (isset($factura['number'])): ?>
-              <a href="<?= site_url('facturas/pdf/' . $factura['number']) ?>" 
-                  target="_blank" 
-                  class="btn btn-info btn-sm">
-                <i class="bi bi-file-earmark-pdf"></i> PDF
-              </a>
-            <?php else: ?>
-              <button class="btn btn-secondary btn-sm" disabled title="PDF no disponible">
-                <i class="bi bi-file-earmark-x"></i> PDF
-              </button>
-            <?php endif; ?>
+            <!-- Boton para descargar factura -->
+            <div class="btn-group" role="group" aria-label="Botones de acción">
+              <?php if (!empty($compra['numero'])): ?>
+                <a href="<?= site_url('facturas/pdf/' . $compra['numero']) ?>" 
+                    target="_blank" 
+                    class="btn btn-pdf btn-sm">
+                  <i class="bi bi-file-earmark-pdf"></i> PDF
+                </a>
+              <?php else: ?>
+                <button class="btn btn-secondary btn-sm" title="PDF no disponible">
+                  <i class="bi bi-file-earmark-x"></i> PDF
+                </button>
+              <?php endif; ?>
+            </div>
           </div>
         </div>
       <?php endforeach; ?>
-    </ul>
+    </div>
   <?php endif; ?>
 </div>
 

@@ -400,6 +400,8 @@ private function handleLoginError($message)
 
         $model = new \App\Models\FacturaCompraModel();
         $compras = $model->where('usuario_id', $usuarioId)->orderBy('created_at', 'DESC')->findAll();
+       log_message('info', '📦 Compras encontradas para usuario ID ' . $usuarioId . ': ' . print_r($compras, true));
+
 
         return view('/compras/miscompras', [
             'compras'    => $compras,

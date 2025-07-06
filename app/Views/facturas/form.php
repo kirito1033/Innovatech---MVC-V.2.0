@@ -91,8 +91,8 @@
   <input name="buyerEmail"    type="hidden" id="payu_email">
 
   <!-- URLs de respuesta y confirmación -->
-  <input name="responseUrl"   type="hidden" value="<?= base_url('facturas/respuesta') ?>">
-  <input name="confirmationUrl" type="hidden" value="https://6864-179-51-111-179.ngrok-free.app/facturas/confirmacion">
+                <input name="responseUrl"   type="hidden" value="https://9371-181-59-3-98.ngrok-free.app/facturas/respuesta">
+                <input name="confirmationUrl" type="hidden" value="https://9371-181-59-3-98.ngrok-free.app/facturas/confirmacion">
 </form>
 
 <!--Script: calcular total y generar firma digital para PayU-->
