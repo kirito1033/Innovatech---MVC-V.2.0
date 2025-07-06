@@ -139,91 +139,150 @@ class Facturas extends BaseController
 
 // Confirmación de transacción
     public function confirmacion()
-    {
-        log_message('debug', '🚀 Se ejecutó confirmacion() con estado: ' . $this->request->getPost('state_pol'));
-        $estado = $this->request->getPost('state_pol');
-        $referencia = $this->request->getPost('reference_sale');
+        {
+            $estado = $this->request->getPost('state_pol');
+            $referencia = $this->request->getPost('reference_sale');
 
-        log_message('info', '📥 Confirmación de PayU recibida. Estado: ' . $estado . ', Ref: ' . $referencia);
+            log_message('info', '📥 Confirmación de PayU recibida. Estado: ' . $estado . ', Ref: ' . $referencia);
 
-        if ($estado == 4) {
-            $temporalModel = new \App\Models\FacturaTemporalModel();
-            $row = $temporalModel->where('reference_code', $referencia)->first();
+            if ($estado == 4) {
+                $temporalModel = new \App\Models\FacturaTemporalModel();
+                $row = $temporalModel->where('reference_code', $referencia)->first();
 
-            if (!$row) {
-                log_message('error', '❌ No se encontró factura temporal con referencia: ' . $referencia);
-                return $this->response->setStatusCode(200)->setBody('OK');
-            }
+                if (!$row) {
+                    log_message('error', '❌ No se encontró factura temporal con referencia: ' . $referencia);
+                    return $this->response->setStatusCode(200)->setBody('OK');
+                }
 
-            $factura = json_decode($row['factura_json'], true);
-            $factura['reference_code'] = $referencia;
+                $factura = json_decode($row['factura_json'], true);
+                $factura['reference_code'] = $referencia;
 
-            $facturaModel = new \App\Models\FacturaModel();
-            $token = $facturaModel->getToken();
+                // ✅ Obtener el token desde el modelo
+                $facturaModel = new \App\Models\FacturaModel();
+                $token = $facturaModel->getToken();
 
-            if (!$token) {
-                log_message('error', '❌ Token no obtenido, no se puede enviar a la API');
-                return $this->response->setStatusCode(500)->setBody('Token no obtenido');
-            }
+                if (!$token) {
+                    log_message('error', '❌ Token no obtenido, no se puede enviar a la API');
+                    return $this->response->setStatusCode(500)->setBody('Token no obtenido');
+                }
 
-            try {
+                // ✅ Enviar a la API con el token
                 $client = \Config\Services::curlrequest();
-                $response = $client->post('https://api-sandbox.factus.com.co/v1/bills/validate', [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'Authorization' => 'Bearer ' . $token,
-                    ],
-                    'body' => json_encode($factura)
-                ]);
+                try {
+                    $response = $client->post('https://api-sandbox.factus.com.co/v1/bills/validate', [
+                        'headers' => [
+                            'Content-Type' => 'application/json',
+                            'Authorization' => 'Bearer ' . $token,
+                        ],
+                        'body' => json_encode($factura)
+                    ]);
 
-                $responseBody = $response->getBody();
-                log_message('info', '✅ Factura enviada a API. Respuesta: ' . $responseBody);
-            } catch (\Exception $e) {
-                log_message('error', '❌ Error al enviar a API Factus: ' . $e->getMessage());
+                    $responseBody = $response->getBody();
+                    log_message('info', '✅ Factura enviada a API. Respuesta: ' . $responseBody);
+
+                    $data = json_decode($responseBody, true);
+
+                    // ✅ Obtener dirección, correo y número de factura
+                    $direccion = $data['data']['customer']['address'] ?? 'Sin dirección';
+                    $ciudad = $data['data']['customer']['municipality']['name'] ?? '';
+                    $direccionCompleta = $direccion . ($ciudad ? ', ' . $ciudad : '');
+                    $correo = $data['data']['customer']['email'] ?? 'Sin correo';
+                    $numeroFactura = $data['data']['bill']['number'] ?? null;
+
+                    if (!$numeroFactura) {
+                        log_message('error', '❌ Número de factura no disponible en la respuesta.');
+                        return $this->response->setStatusCode(500)->setBody('Número de factura no disponible');
+                    }
+
+                    $envioModel = new \App\Models\EnvioModel();
+                    $usuarioModel = new \App\Models\UsuarioModel();
+
+                    // ❌ Prevenir duplicado por número
+                    $envioExistente = $envioModel->where('numero', $numeroFactura)->first();
+                    if ($envioExistente) {
+                        log_message('info', '⚠️ Envío ya existe para número: ' . $numeroFactura);
+                        return $this->response->setStatusCode(200)->setBody('OK');
+                    }
+
+                    $estadoEnvioId = 1; // Estado "pendiente"
+                    $rolTransporteId = 5;
+                    $usuarioTransporte = $usuarioModel->where('rol_id', $rolTransporteId)->first();
+
+                    if ($usuarioTransporte) {
+                        // Calcular fecha estimada de entrega (2 días hábiles, sin domingos)
+                        $fechaEntrega = new \DateTime();
+                        $diasAgregados = 0;
+                        while ($diasAgregados < 2) {
+                            $fechaEntrega->modify('+1 day');
+                            if ($fechaEntrega->format('w') != 0) { // 0 = domingo
+                                $diasAgregados++;
+                            }
+                        }
+
+                        // ✅ Insertar envío con correo_estado_enviado en 0
+                        $envioModel->insert([
+                            'numero'                => $numeroFactura,
+                             'direccion'             => $direccionCompleta,
+                            'correo'                => $correo,
+                            'fecha'                 => $fechaEntrega->format('Y-m-d'),
+                            'estado_envio_id'       => $estadoEnvioId,
+                            'usuario_id'            => $usuarioTransporte['id_usuario'],
+                            'correo_estado_enviado' => 0,
+                            'updated_at'            => date('Y-m-d H:i:s'),
+                        ]);
+
+                        log_message('info', '📦 Envío registrado con correo ' . $correo . ', entrega estimada: ' . $fechaEntrega->format('Y-m-d'));
+
+                        // ✅ Enviar el correo con estado
+                        $envioModel->verificarEstados();
+
+                    } else {
+                        log_message('warning', '⚠️ No se encontró usuario con rol de transporte.');
+                    }
+
+                    // ✅ Guardar en facturas_compras si no existe ya
+                    $compraModel = new \App\Models\FacturaCompraModel();
+                    $existe = $compraModel->where('reference_code', $referencia)->first();
+
+                    if (!$existe) {
+                        $compraModel->insert([
+                            'usuario_id'     => $row['usuario_id'],
+                            'reference_code' => $referencia,
+                            'factura_json'   => $row['factura_json'],
+                            'numero'   => $numeroFactura
+                        ]);
+                        log_message('info', '💾 Compra guardada en facturas_compras para usuario: ' . $row['usuario_id']);
+                    } else {
+                        log_message('warning', '⚠️ Ya existe una factura en facturas_compras con esta referencia: ' . $referencia);
+                    }
+
+                    // ✅ Vaciar carrito con el usuario_id obtenido desde la factura temporal
+                    $usuarioId = $row['usuario_id'];
+                    if ($usuarioId) {
+                        $carritoModel = new \App\Models\CarritoModel();
+                        $carritoModel->where('usuario_id', $usuarioId)->delete();
+                        log_message('info', '🧹 Carrito eliminado para usuario ID: ' . $usuarioId);
+                    } else {
+                        log_message('warning', '⚠️ No se encontró usuario_id en la factura temporal.');
+                    }
+
+                } catch (\Exception $e) {
+                    log_message('error', '❌ Error al enviar a API Factus: ' . $e->getMessage());
+                }
             }
 
-            // ✅ Guardar en facturas_compras si no existe ya
-            $compraModel = new \App\Models\FacturaCompraModel();
-            $existe = $compraModel->where('reference_code', $referencia)->first();
-
-            if (!$existe) {
-                $compraModel->insert([
-                    'usuario_id'     => $row['usuario_id'],
-                    'reference_code' => $referencia,
-                    'factura_json'   => $row['factura_json']
-                ]);
-                log_message('info', '💾 Compra guardada en facturas_compras para usuario: ' . $row['usuario_id']);
-            } else {
-                log_message('warning', '⚠️ Ya existe una factura en facturas_compras con esta referencia: ' . $referencia);
-            }
-            
-            // ✅ Vaciar carrito con el usuario_id obtenido desde la factura temporal
-            $usuarioId = $row['usuario_id']; // <--- CAMBIO CLAVE
-            if ($usuarioId) {
-                log_message('debug', '🛒 Iniciando intento de vaciar carrito para usuario ID (desde DB): ' . $usuarioId);
-                $carritoModel = new \App\Models\CarritoModel();
-                $carritoModel->where('usuario_id', $usuarioId)->delete();
-                log_message('info', '🧹 Carrito eliminado para usuario ID: ' . $usuarioId);
-            } else {
-                log_message('warning', '⚠️ No se encontró usuario_id en la factura temporal.');
-            }
+            return $this->response->setStatusCode(200)->setBody('OK');
         }
-
-        return $this->response->setStatusCode(200)->setBody('OK');
-    }
-
 
 
     // Redirección dependiendo el rol
     public function respuesta()
     {
-        log_message('debug', '✅ Se ejecutó el método respuesta() de Facturas');
-        $rol = session('rol');
-
+        $session = session();
+        $rolId = $session->get('rol_id');
         $compra_exitosa = true;
-
         return view('facturas/pago_exitoso', [
-            'rol' => $rol,
+            'rol' => $rolId,
             'compra_exitosa' => $compra_exitosa
         ]);
     }

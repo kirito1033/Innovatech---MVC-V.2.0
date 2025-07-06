@@ -25,7 +25,7 @@
       background-color: #fff;
       padding: 3rem;
       border-radius: 1rem;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      box-shadow: 0 0 20px rgb(4, 179, 179);
       max-width: 500px;
       width: 100%;
     }
@@ -62,8 +62,9 @@
   <div class="text-center success-box">
     <h2 class="mb-4">¡Gracias por tu compra!</h2>
     <p class="mb-4">Tu pago fue procesado exitosamente.</p>
-
-    <?php if (isset($rol) && $rol === 'admin') : ?>
+  <?phplog_message('info', '🧹 Carrito eliminado para usuario ID: ' . $usuarioId);?>
+    <?php if (isset($rol) && $rol === '1') : ?>
+      
       <a href="<?= base_url('/facturas') ?>" class="btn btn-custom-admin px-4">Volver a Facturas</a>
     <?php else : ?>
       <a href="<?= base_url('/mis-compras') ?>" class="btn btn-custom-client px-4">Volver al Inicio</a>

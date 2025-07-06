@@ -91,6 +91,8 @@
   <input name="buyerEmail"    type="hidden" id="payu_email">
 
   <!-- URLs de respuesta y confirmación -->
+                <input name="responseUrl"   type="hidden" value="https://9371-181-59-3-98.ngrok-free.app/facturas/respuesta">
+                <input name="confirmationUrl" type="hidden" value="https://9371-181-59-3-98.ngrok-free.app/facturas/confirmacion">
   <input name="responseUrl"   type="hidden" value="<?= base_url('facturas/respuesta') ?>">
   <input name="confirmationUrl" type="hidden" value="<?= base_url('facturas/confirmacion') ?>">
 </form>
