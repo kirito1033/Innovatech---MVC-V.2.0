@@ -170,7 +170,7 @@
 
       <div class="mb-3 text-start">
         <label for="password" class="form-label">Contraseña</label>
-        <input type="password" class="form-control" id="password" name="password" required>
+        <input type="password" class="form-control" id="password" name="password" required autocomplete="new-password">
       </div>
 
       <div class="mb-3 form-check text-start">

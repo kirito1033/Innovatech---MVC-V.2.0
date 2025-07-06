@@ -46,11 +46,7 @@
     <li class="nav-item offcanvas__nav-ul-li">
       <a href="<?= base_url('/') ?>"><i class="bi bi-house"></i> Inicio</a>
     </li>
-    <li class="nav-item offcanvas__nav-ul-li">
-      <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">
-        <i class="bi bi-bell"></i> Notificaciones
-      </a>
-    </li>
+ 
     <li class="nav-item offcanvas__nav-ul-li dropdown">
       <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
         <i class="bi bi-dropbox"></i> Categorías
@@ -97,9 +93,6 @@
         <ul class="nav nav-pills header-pc__nav-ul ">
           <li class="nav-item header-pc__nav-ul-li">
             <a class="header__pc-li-link" href="<?= base_url('/') ?>"><i class="bi bi-house"></i>Inicio</a>
-          </li>
-          <li class="nav-item header-pc__nav-ul-li">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo"> <i class="bi bi-bell"></i>Notificaciones</a>
           </li>
          <li class="nav-item dropdown header-pc__nav-ul-li">
     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">

@@ -12,7 +12,7 @@
           <i class="bi bi-info-circle fs-3 me-3 text-info"></i>
           <div>
             <p class="mb-1 fw-bold">¿Tienes preguntas? ¡Comunícate con nosotros!</p>
-            <p class="mb-0">PBX - WhatsApp: +57 324 575 0626</p>
+            <p class="mb-0">PBX - WhatsApp: +57 305 7809016</p>
           </div>
         </div>
         <!-- Dirección física -->
@@ -23,12 +23,12 @@
 
         <!-- Íconos de redes sociales (usa Font Awesome o Bootstrap Icons + clases personalizadas) -->
         <ul class="list-unstyled d-flex mt-3 gap-3 redes-footer">
-          <li><a href="#" class="text-light fs-5 fab fa-facebook"></a></li>
-          <li><a href="#" class="text-light fs-5 fab fa-whatsapp"></a></li>
-          <li><a href="#" class="text-light fs-5 fab fa-linkedin"></a></li>
-          <li><a href="#" class="text-light fs-5 fab fa-instagram"></a></li>
-          <li><a href="#" class="text-light fs-5 fab fa-tiktok"></a></li>
-          <li><a href="#" class="text-light fs-5 fab fa-youtube"></a></li>
+          <li><a href="https://www.facebook.com/profile.php?id=61578018122794" target="_blank" class="text-light fs-5 fab fa-facebook" title="Facebook"></a></li>
+          <li><a href="https://wa.me/573057809016" target="_blank" class="text-light fs-5 fab fa-whatsapp" title="WhatsApp"></a></li>
+          <li><a href="https://www.linkedin.com/in/inovatech-technology-company-582349373" target="_blank" class="text-light fs-5 fab fa-linkedin" title="LinkedIn"></a></li>
+          <li><a href="https://www.instagram.com/inovatech_technology_company/" target="_blank" class="text-light fs-5 fab fa-instagram" title="Instagram"></a></li>
+          <li><a href="https://www.tiktok.com/@inovatech_technol?_t=ZS-8xnmNz9yAfY&_r=1" target="_blank" class="text-light fs-5 fab fa-tiktok" title="TikTok"></a></li>
+          <li><a href="https://www.youtube.com/@InovaTech_Technology_company" target="_blank" class="text-light fs-5 fab fa-youtube" title="YouTube"></a></li>
         </ul>
       </div>
 
@@ -36,10 +36,10 @@
       <div class="col mb-4">
         <h5 class="mb-3">Tienda</h5>
         <ul class="list-unstyled">
-          <li><a href="index.html" class="text-light text-decoration-none">Inicio</a></li>
-          <li><a href="condiciones.html" class="text-light text-decoration-none">Términos y condiciones</a></li>
-          <li><a href="Chat-ayuda.html" class="text-light text-decoration-none">Soporte Online</a></li>
-          <li><a href="perfil.html" class="text-light text-decoration-none">Mi cuenta</a></li>
+          <li><a href="<?= base_url('/') ?>" class="text-light text-decoration-none">Inicio</a></li>
+          <li><a href="<?= base_url('condiciones') ?>" class="text-light text-decoration-none">Términos y condiciones</a></li>
+          <li><a href="https://wa.me/573057809016" target="_blank" class="text-light text-decoration-none">Soporte Online</a></li>
+          <li><a href="<?= base_url('perfil') ?>" class="text-light text-decoration-none">Mi cuenta</a></li>
         </ul>
       </div>
 
@@ -47,10 +47,10 @@
       <div class="col mb-4">
         <h5 class="mb-3">Preguntas Frecuentes</h5>
         <ul class="list-unstyled">
-          <li><a href="Preguntas-frecuente.html" class="text-light text-decoration-none">¿Qué métodos de pago puedo utilizar?</a></li>
-          <li><a href="Preguntas-frecuente.html" class="text-light text-decoration-none">¿Cuánto se demoran en entregar mi producto?</a></li>
-          <li><a href="Preguntas-frecuente.html" class="text-light text-decoration-none">¿Hacen envíos a todo el país?</a></li>
-          <li><a href="Preguntas-frecuente.html" class="text-light text-decoration-none">¿Cuánto tiempo de garantía tiene mi producto?</a></li>
+          <li><a href="<?= base_url('metodos-pago') ?>" class="text-light text-decoration-none">¿Qué métodos de pago puedo utilizar?</a></li>
+          <li><a href="<?= base_url('tiempo-entrega') ?>" class="text-light text-decoration-none">¿Cuánto se demoran en entregar mi producto?</a></li>
+          <li><a href="<?= base_url('envios-pais') ?>" class="text-light text-decoration-none">¿Hacen envíos a todo el país?</a></li>
+          <li><a href="<?= base_url('garantia-producto') ?>" class="text-light text-decoration-none">¿Cuánto tiempo de garantía tiene mi producto?</a></li>
         </ul>
       </div>
 

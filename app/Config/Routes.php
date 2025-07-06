@@ -418,3 +418,12 @@ $routes->get('envios/verificar-estados', 'EnvioController::verificarEstados');
 $routes->get('webhook',  'Webhook::index');      // Verificación GET
 $routes->post('webhook', 'Webhook::indexPost');  // Mensajes entrantes POST
 $routes->get('facturas/todasExcel', 'Facturas::todasExcel');
+
+
+$routes->get('test-email', 'TestEmailController::index');
+$routes->get('terminos', 'LoginTerminos::terminos');
+$routes->get('condiciones', 'LoginTerminos::condiciones');
+$routes->get('metodos-pago', 'LoginTerminos::metodosPago');
+$routes->get('tiempo-entrega', 'LoginTerminos::tiempoEntrega');
+$routes->get('envios-pais', 'LoginTerminos::enviosPais');
+$routes->get('garantia-producto', 'LoginTerminos::garantiaProducto');

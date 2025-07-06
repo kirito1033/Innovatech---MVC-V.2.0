@@ -124,7 +124,9 @@ strong {
 <body>
     <div class="condiciones-uso container my-5">
         <div class="condiciones-logo text-center mb-4">
+            <a href="<?= base_url('/') ?>">
            <img src ="../assets/img/logo.png" style="color: white" class="login__logo">
+           </a>
         </div>
         <h2 class="text-center mb-4">Condiciones de Uso</h2>
         <p class="text-center"><strong>Última actualización: 5 de junio de 2025</strong></p>
