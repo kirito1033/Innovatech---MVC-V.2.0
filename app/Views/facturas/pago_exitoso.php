@@ -66,7 +66,7 @@
     <?php if (isset($rol) && $rol === 'admin') : ?>
       <a href="<?= base_url('/facturas') ?>" class="btn btn-custom-admin px-4">Volver a Facturas</a>
     <?php else : ?>
-      <a href="<?= base_url('/') ?>" class="btn btn-custom-client px-4">Volver al Inicio</a>
+      <a href="<?= base_url('/mis-compras') ?>" class="btn btn-custom-client px-4">Volver al Inicio</a>
     <?php endif; ?>
   </div>
 

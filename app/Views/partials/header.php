@@ -66,7 +66,7 @@
       </ul>
     </li>
     <li class="nav-item offcanvas__nav-ul-li">
-      <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">
+      <a href="<?= base_url('/mis-compras') ?>">
         <i class="bi bi-bag"></i> Mis compras
       </a>
     </li>
@@ -117,7 +117,9 @@
         </ul>
     </li>
           <li class="nav-item header-pc__nav-ul-li">
-          <a href="#" data-bs-toggle="modal" data-bs-target="#modalEnDesarrollo">  <i class="bi bi-bag"></i>Mis compras</a>
+            <a href="<?= base_url('/mis-compras') ?>">
+              <i class="bi bi-bag"></i> Mis compras
+            </a>
           </li>
           <li class="nav-item header-pc__nav-ul-li">
             <a href="<?= base_url('ofertas/6') ?>"><i class="bi bi-tags"></i>Ofertas</a>
