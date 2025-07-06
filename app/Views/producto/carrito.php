@@ -402,8 +402,8 @@
                 <input name="signature"     type="hidden" id="payu_signature">
                 <input name="test"          type="hidden" value="1">
                 <input name="buyerEmail"    type="hidden" id="payu_email">
-                <input name="responseUrl"   type="hidden" value="https://6864-179-51-111-179.ngrok-free.app/facturas/respuesta">
-                <input name="confirmationUrl" type="hidden" value="https://6864-179-51-111-179.ngrok-free.app/facturas/confirmacion">
+                <input name="responseUrl"   type="hidden" value="https://9371-181-59-3-98.ngrok-free.app/facturas/respuesta">
+                <input name="confirmationUrl" type="hidden" value="https://9371-181-59-3-98.ngrok-free.app/facturas/confirmacion">
             </form>
         </div>
     </div>

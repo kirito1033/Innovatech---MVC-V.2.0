@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UsuarioModel;
+use App\Models\CategoriaModel;
 use App\Models\EstadoUsuarioModel;
 use App\Models\RolModel;
 use CodeIgniter\Controller;
@@ -389,4 +390,20 @@ private function handleLoginError($message)
 
             return $usuario;
         }
+    // Controlador Mis Compras
+    public function misCompras()
+    {
+        $categoriaModel = new CategoriaModel();
+        $categorias = $categoriaModel->findAll();
+
+        $usuarioId = session('id_usuario');
+
+        $model = new \App\Models\FacturaCompraModel();
+        $compras = $model->where('usuario_id', $usuarioId)->orderBy('created_at', 'DESC')->findAll();
+
+        return view('/compras/miscompras', [
+            'compras'    => $compras,
+            'categorias' => $categorias
+        ]);
+    }
 }
