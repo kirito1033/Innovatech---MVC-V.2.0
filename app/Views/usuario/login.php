@@ -158,7 +158,9 @@
   <div class="login-container">
     <form id="loginForm">
       <div class="login__logo">
+        <a href="<?= base_url('/') ?>">
         <img src="../assets/img/logo.png" alt="Logo Innovatech">
+        </a>
       </div>
 
       <h1>Iniciar sesión</h1>

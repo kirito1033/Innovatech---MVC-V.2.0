@@ -21,4 +21,25 @@ class LoginTerminos extends Controller
         //Retorna la vista que contiene las condiciones de uso
         return view('usuario/condiciones');
     }
+
+    public function metodosPago()
+    {
+        return view('preguntas frecuentes/metodos-pago');
+    }
+
+    public function tiempoEntrega()
+    {
+        return view('preguntas frecuentes/tiempo-entrega');
+    }
+
+     public function enviosPais()
+    {
+        return view('preguntas frecuentes/envios-pais');
+    }
+
+     public function garantiaProducto()
+    {
+        return view('preguntas frecuentes/garantia-producto');
+    }
+    
 }
