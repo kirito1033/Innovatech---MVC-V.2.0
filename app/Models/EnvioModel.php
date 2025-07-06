@@ -65,7 +65,7 @@ class EnvioModel extends Model
 
             if ($estadoActual && !empty($envio['correo'])) {
                 $estadoNombre = $estadoActual['nom'];
-                $linkFactura = 'http://localhost:8080/facturas/pdf/' . $envio['numero'];
+                $linkFactura = 'https://rosybrown-ape-589569.hostingersite.com/facturas/pdf/' . $envio['numero'];
 
                 // Configurar el correo
                 $emailService->setFrom('innovatechdynamic@gmail.com', 'Innovatech');

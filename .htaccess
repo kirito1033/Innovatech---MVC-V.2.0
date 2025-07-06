@@ -1,0 +1,11 @@
+# Encender el motor de reescritura
+RewriteEngine On
+
+# Establece la base del proyecto si es necesario (puede omitirse si no hay subcarpetas)
+RewriteBase /
+
+# Redirige la raíz directamente a /public/
+RewriteRule ^$ public/ [L]
+
+# Redirige cualquier otra ruta a /public/ manteniendo la estructura
+RewriteRule (.*) public/$1 [L]
