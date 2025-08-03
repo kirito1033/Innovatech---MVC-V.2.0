@@ -25,32 +25,12 @@ class Database extends Config
      * @var array<string, mixed>
      */
 
-    // public array $default = [
-    //     'DSN'          => '',
-    //     'hostname'     => 'localhost',
-    //     'username'     => 'u847177988_novatech',
-    //     'password'     => 'Novatech2025*',
-    //     'database'     => 'u847177988_novatech',
-    //     'DBDriver'     => 'MySQLi',
-    //     'DBPrefix'     => '',
-    //     'pConnect'     => false,
-    //     'DBDebug'      => true,
-    //     'charset'      => 'utf8mb4',
-    //     'DBCollat'     => 'utf8mb4_general_ci',
-    //     'swapPre'      => '',
-    //     'encrypt'      => false,
-    //     'compress'     => false,
-    //     'strictOn'     => false,
-    //     'failover'     => [],
-    //     'port'         => 3306,
-    //     'numberNative' => false,
-    // ];
     public array $default = [
         'DSN'          => '',
-        'hostname'     => 'ba5y5n8oyxxeexbybziu-mysql.services.clever-cloud.com',
-        'username'     => 'uf1lw7xxtlsrtze8',
-        'password'     => 'IIEnygccnY3sIaPnXQQU',
-        'database'     => 'ba5y5n8oyxxeexbybziu',
+        'hostname'     => 'localhost',
+        'username'     => 'u847177988_novatech',
+        'password'     => 'Novatech2025*',
+        'database'     => 'u847177988_novatech',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
@@ -65,6 +45,7 @@ class Database extends Config
         'port'         => 3306,
         'numberNative' => false,
     ];
+  
 
     // public array $default = [
     //     'DSN'          => '',

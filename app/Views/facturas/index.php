@@ -92,6 +92,14 @@
 
 <!-- Inicialización de DataTable con datos desde el servidor -->
   <script>
+
+  function closepreload(){
+      setTimeout(() => {
+        document.getElementById("preloadId").style.display = "none";
+      }, 2000);
+    }
+
+
    $(document).ready(function() {
   $('#table-index').DataTable({
       processing: true,
@@ -208,8 +216,7 @@ document.getElementById('export-pdf').addEventListener('click', function () {
       }).download("facturas.pdf");
     });
 });
-
-closepreload()
+  closepreload()
 </script>
 
 </body>

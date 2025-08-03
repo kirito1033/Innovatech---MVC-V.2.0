@@ -1,5 +1,5 @@
 <!-- Contenedor general del preload (pantalla de carga), inicialmente oculto con la clase "d-none" -->
-<div class="preload d-none" id="preloadId">
+<div class="preload" id="preloadId">
   <!-- Contenido centrado horizontalmente -->
   <div class="text-center">
     <!-- Spinner (círculo animado) que indica carga en proceso -->
