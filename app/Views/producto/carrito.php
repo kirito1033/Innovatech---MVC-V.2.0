@@ -271,7 +271,9 @@
             <?php foreach ($productoscarrito as $producto): ?>
                 <div class="producto-card producto-carrito d-flex mb-3 p-3 border rounded shadow-sm align-items-center" 
                     id="producto-<?= $producto['carrito_id'] ?>"
+                     data-producto-id="<?= $producto['producto_id'] ?>"
                     data-id="<?= $producto['carrito_id'] ?>"
+                    
                     data-nombre="<?= esc($producto['nom']) ?>"
                     data-precio="<?= $producto['precio'] ?>"
                     data-cantidad="<?= $producto['cantidad'] ?>">
@@ -331,7 +333,7 @@
                 <input type="hidden" name="observation" value="">
                 <input type="hidden" name="payment_form" value="1">
                 <input type="hidden" name="payment_due_date" value="2024-12-30">
-                <input type="hidden" name="payment_method_code" value="10">
+                <input type="hidden" name="payment_method_code" value="49">
                 <input type="hidden" name="operation_type" value="10">
                 <input type="hidden" name="order_reference[reference_code]" value="ref-001">
                 <input type="hidden" name="order_reference[issue_date]" value="">
@@ -403,7 +405,7 @@
                 <input name="test"          type="hidden" value="1">
                 <input name="buyerEmail"    type="hidden" id="payu_email">
                 <input name="responseUrl"   type="hidden" value="<?= base_url('facturas/respuesta') ?>">
-                <input name="confirmationUrl" type="hidden" value="<?= base_url('facturas/confirmacion') ?>">
+                <input name="confirmationUrl" type="hidden" value="https://f3cd273a3eef.ngrok-free.app/facturas/confirmacion">
             </form>
         </div>
     </div>
@@ -574,6 +576,7 @@
 
         productos.forEach(producto => {
             const id = producto.dataset.id;
+            const idProducto = producto.dataset.productoId;
             const nombre = producto.dataset.nombre;
             const precio = parseFloat(producto.dataset.precio);
             const cantidad = parseInt(cantidades[id] || producto.dataset.cantidad || 1);
@@ -582,7 +585,7 @@
                 <div class="border rounded p-3 mb-3">
                     <h6>Producto: ${nombre}</h6>
                     <input type="hidden" name="items[${itemIndex}][name]" value="${nombre}">
-                    <input type="hidden" name="items[${itemIndex}][code_reference]" value="${id}">
+                    <input type="hidden" name="items[${itemIndex}][code_reference]" value="${idProducto}">
                     <input type="hidden" name="items[${itemIndex}][quantity]" value="${cantidad}">
                     <input type="hidden" name="items[${itemIndex}][price]" value="${precio}">
                     <input type="hidden" name="items[${itemIndex}][scheme_id]" value="0">

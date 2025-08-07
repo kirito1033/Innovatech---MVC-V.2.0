@@ -37,7 +37,7 @@ $routes->group('estadousuario',['filter' => 'roleaccess'], function($routes){
 
 $routes->post("register/add", "UsuarioController::create");
 
-$routes->group('usuario',['filter' => 'roleaccess'], function($routes){
+$routes->group('usuario', function($routes){
     $routes->get("/", "UsuarioController::index");
     $routes->get("show", "UsuarioController::index");
     $routes->get("edit/(:num)", "UsuarioController::singleUsuario/$1");

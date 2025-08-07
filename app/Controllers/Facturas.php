@@ -140,6 +140,7 @@ class Facturas extends BaseController
 // Confirmación de transacción
     public function confirmacion()
         {
+            $productosModel = new \App\Models\ProductosModel();
             $estado = $this->request->getPost('state_pol');
             $referencia = $this->request->getPost('reference_sale');
 
@@ -156,7 +157,30 @@ class Facturas extends BaseController
 
                 $factura = json_decode($row['factura_json'], true);
                 $factura['reference_code'] = $referencia;
+                log_message('debug', '🧾 Contenido de factura decodificada: ' . print_r($factura, true));
+                if (isset($factura['items']) && is_array($factura['items'])) {
+                foreach ($factura['items'] as $item) {
+                    $productoId = $item['code_reference'] ?? null;
+                    $cantidadComprada = (int)($item['quantity'] ?? 1);
 
+                    if ($productoId) {
+                        // Obtener el producto
+                        $producto = $productosModel->find($productoId);
+
+                        if ($producto) {
+                            $nuevaExistencia = max(0, $producto['existencias'] - $cantidadComprada);
+
+                            $productosModel->update($productoId, [
+                                'existencias' => $nuevaExistencia
+                            ]);
+
+                            log_message('info', "🛒 Inventario actualizado: Producto ID $productoId, cantidad descontada: $cantidadComprada, nuevas existencias: $nuevaExistencia");
+                        } else {
+                            log_message('warning', "⚠️ Producto no encontrado en inventario. ID: $productoId");
+                        }
+                    }
+                }
+            }
                 // ✅ Obtener el token desde el modelo
                 $facturaModel = new \App\Models\FacturaModel();
                 $token = $facturaModel->getToken();
