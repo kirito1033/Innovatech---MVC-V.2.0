@@ -20,7 +20,6 @@
 		<?php require_once('../app/Views/preload/preload.php') ?>
 		<!-- Barra de navegación superior -->
     <?php require_once("../app/Views/nav/navbar.php")?>
-	    
     <!-- Contenedor principal del dashboard -->
     <div class="container my-4 text-center" >
     <h1  class="text-white">Dashboard</h1>

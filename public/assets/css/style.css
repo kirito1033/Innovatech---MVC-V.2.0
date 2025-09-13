@@ -23,25 +23,24 @@
 
 .container {
   border-radius: 8px;
-
 }
 .btn-warning {
-        background-color: var(--atoll); /* Darker teal for primary buttons */
-        color: var(--Color--texto);
-        border: 1px solid var(--atoll);
+  background-color: var(--atoll); /* Darker teal for primary buttons */
+  color: var(--Color--texto);
+  border: 1px solid var(--atoll);
 }
 .btn-warning:hover{
-        background-color: #0d7884; /* Darker teal for primary buttons */
-                color: var(--Color--texto);
-        border: 1px solid #0d7884;
+  background-color: #0d7884; /* Darker teal for primary buttons */
+  color: var(--Color--texto);
+  border: 1px solid #0d7884;
 }
 .btn-danger{
- background-color: #2c3443;
+  background-color: #2c3443;
   color: var(--Color--texto);
   border: 1px solid #2c3443;
 }
 .btn-danger:hover{
-   background-color: #48556c;
+  background-color: #48556c;
   border: 1px solid #48556c;
 }
 .btn-primary{
@@ -59,20 +58,17 @@
 .btn-success{
   background-color: var(--gris-) ; /* Gray for secondary buttons */
   color: var(--Color--texto);
-   border: 1px solid var(--gris-);
+  border: 1px solid var(--gris-);
   }
 .btn-success:hover{
-   background-color: #808b97 ; /* Gray for secondary buttons */
-   border: 1px solid #808b97;
+  background-color: #808b97 ; /* Gray for secondary buttons */
+  border: 1px solid #808b97;
 }
 
 /* Tabla (mismo estilo que antes) */
 #table-index {
-
   border-collapse: separate;
   border-spacing: 0;
-
-
 }
 
 #table-index th {
@@ -157,4 +153,26 @@
 }
 .dataTables_info{
    color: #ffffff !important;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+/* Opcional: mejora visual en móviles */
+@media (max-width: 991px) {
+  #table-index th,
+  #table-index td {
+    white-space: nowrap;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+
+  #table-index {
+    font-size: 0.9rem;
+  }
 }

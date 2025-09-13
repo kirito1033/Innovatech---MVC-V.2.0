@@ -70,19 +70,19 @@
         .productos-carrito {
             display: flex;
             flex-direction: column;
-            gap: 1.2rem;
+            /*gap: 1.2rem;*/
         }
 
         .producto-card {
             display: flex;
             align-items: center;
-            justify-content: space-between;
             background-color: #ffffff;
             color: #333;
             border-radius: 12px;
             padding: 1rem;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
             border: 1px solid #dce1e5;
+             /* gap: 1rem;espacio fijo entre columnas */
         }
 
         .producto-img {
@@ -227,10 +227,18 @@
         }
 
         /* Responsivo */
-        @media (max-width: 768px) {
+        @media (max-width: 766px) {
             .producto-card {
                 flex-direction: column;
                 align-items: flex-start;
+            }
+
+            .mensaje-vacio {
+                margin-top: 2rem !important;
+            }
+
+            .resumen-carrito {
+                margin-top: 2rem !important;
             }
 
             .producto-actions {
@@ -250,6 +258,36 @@
             }
         }
 
+        
+        @media (min-width: 768px) {
+            .producto-card {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .producto-img {
+                max-width: 200px;
+                flex: 0 0 auto;
+            }
+
+            .producto-info {
+                flex: 1 1 60%;
+                min-width: 250px;
+                padding: 0 1rem;
+            }
+
+            .producto-actions {
+                flex: 0 0 130px;
+                align-items: flex-end;
+                justify-content: center;
+            }
+
+            .cantidad-control {
+                flex-wrap: nowrap;
+            }
+        }
+
+
         /* Preload */
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -265,55 +303,57 @@
 
 <div class="container-xl-custom">
     <h1 class="titulo-carrito mb-4">Carrito de Compras</h1>
-    <div class="row">
+    <div class="row gx-4">
         <!-- Columna izquierda: productos -->
-        <div id="productos-carrito" class="col-md-8 productos-carrito">
-            <?php foreach ($productoscarrito as $producto): ?>
-                <div class="producto-card producto-carrito d-flex mb-3 p-3 border rounded shadow-sm align-items-center" 
-                    id="producto-<?= $producto['carrito_id'] ?>"
-                     data-producto-id="<?= $producto['producto_id'] ?>"
-                    data-id="<?= $producto['carrito_id'] ?>"
-                    
-                    data-nombre="<?= esc($producto['nom']) ?>"
-                    data-precio="<?= $producto['precio'] ?>"
-                    data-cantidad="<?= $producto['cantidad'] ?>">
-                    
-                    <!-- Imagen del producto -->
-                    <div style="max-width: 250px; flex-shrink: 0;">
-                    <img src="<?= base_url('uploads/' . $producto['imagen']) ?>" 
-                        alt="<?= esc($producto['nom']) ?>" 
-                        class="producto-img me-3">
-                    </div>
+        <div class="col-md-8">
+            <div id="productos-carrito" class="col-md-8 productos-carrito">
+                <?php foreach ($productoscarrito as $producto): ?>
+                    <div class="producto-card producto-carrito d-flex mb-3 p-3 border rounded shadow-sm align-items-center" 
+                        id="producto-<?= $producto['carrito_id'] ?>"
+                        data-producto-id="<?= $producto['producto_id'] ?>"
+                        data-id="<?= $producto['carrito_id'] ?>"
+                        
+                        data-nombre="<?= esc($producto['nom']) ?>"
+                        data-precio="<?= $producto['precio'] ?>"
+                        data-cantidad="<?= $producto['cantidad'] ?>">
+                        
+                        <!-- Imagen del producto -->
+                        <div style="max-width: 250px; flex-shrink: 0;">
+                        <img src="<?= base_url('uploads/' . $producto['imagen']) ?>" 
+                            alt="<?= esc($producto['nom']) ?>" 
+                            class="producto-img me-3">
+                        </div>
 
-                    <!-- Información del producto -->
-                    <div class="producto-info flex-grow-1">
-                        <h5 class="mb-1"><?= esc($producto['nom']) ?></h5>
-                        <p class="producto-texto mb-1"><?= esc(substr($producto['descripcion'], 0, 60)) ?>...</p>
-                        <p class="producto-precio mb-1">$<?= number_format($producto['precio'], 0, ',', '.') ?> x <span id="cantidad-<?= $producto['carrito_id'] ?>"><?= $producto['cantidad'] ?></span></p>
+                        <!-- Información del producto -->
+                        <div class="producto-info flex-grow-1">
+                            <h5 class="mb-1"><?= esc($producto['nom']) ?></h5>
+                            <p class="producto-texto mb-1"><?= esc(substr($producto['descripcion'], 0, 60)) ?>...</p>
+                            <p class="producto-precio mb-1">$<?= number_format($producto['precio'], 0, ',', '.') ?> x <span id="cantidad-<?= $producto['carrito_id'] ?>"><?= $producto['cantidad'] ?></span></p>
 
-                        <!-- Controles de cantidad -->
-                        <div class="cantidad-control d-flex align-items-center gap-2 mt-2">
-                            <button type="button" class="btn btn-outline-warning btn-sm"
-                                onclick="cambiarCantidad(<?= $producto['carrito_id'] ?>, -1)">−</button>
-                            <span id="cantidad-<?= $producto['carrito_id'] ?>"><?= $producto['cantidad'] ?></span>
-                            <button type="button" class="btn btn-outline-warning btn-sm"
-                                onclick="cambiarCantidad(<?= $producto['carrito_id'] ?>, 1)">+</button>
+                            <!-- Controles de cantidad -->
+                            <div class="cantidad-control d-flex align-items-center gap-2 mt-2">
+                                <button type="button" class="btn btn-outline-warning btn-sm"
+                                    onclick="cambiarCantidad(<?= $producto['carrito_id'] ?>, -1)">−</button>
+                                <span id="cantidad-<?= $producto['carrito_id'] ?>"><?= $producto['cantidad'] ?></span>
+                                <button type="button" class="btn btn-outline-warning btn-sm"
+                                    onclick="cambiarCantidad(<?= $producto['carrito_id'] ?>, 1)">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Acciones -->
+                        <div class="producto-actions d-flex flex-column gap-2 ms-3">
+                            <button onclick="eliminarProducto(<?= $producto['carrito_id'] ?>)" class="btn btn-delete btn-sm">
+                                <i class="bi bi-trash"></i>Eliminar
+                            </button>
+
+
+                            <a href="<?= base_url('producto/ver/' . $producto['producto_id']) ?>" class="btn btn-show btn-sm">
+                                <i class="bi bi-eye"></i>Ver más
+                            </a>
                         </div>
                     </div>
-
-                    <!-- Acciones -->
-                    <div class="producto-actions d-flex flex-column gap-2 ms-3">
-                        <button onclick="eliminarProducto(<?= $producto['carrito_id'] ?>)" class="btn btn-delete btn-sm">
-                            <i class="bi bi-trash"></i>Eliminar
-                        </button>
-
-
-                        <a href="<?= base_url('producto/ver/' . $producto['producto_id']) ?>" class="btn btn-show btn-sm">
-                            <i class="bi bi-eye"></i>Ver más
-                        </a>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
 
             <!-- Columna mensaje del carrito vacío -->
             <div id="mensaje-vacio" class="col-md-8 mensaje-vacio" style="display: none;">

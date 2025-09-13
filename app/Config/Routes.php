@@ -178,7 +178,7 @@ $routes->group('estadopqrs',['filter' => 'roleaccess'], function($routes){
 
 
 });
-$routes->group('pqrs',['filter' => 'roleaccess'], function($routes){
+$routes->group('pqrs', function($routes){
     $routes->get("/", "PqrsController::index");
     $routes->get("show", "PqrsController::index");
     $routes->get("edit/(:num)", "PqrsController::singlePqrs/$1");
