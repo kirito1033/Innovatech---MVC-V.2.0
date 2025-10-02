@@ -2,7 +2,7 @@
     <input type="hidden" class="form-control" id="id_usuario" name="id_usuario" value=null>
     <input type="hidden" class="form-control" id="updated_at" name="updated_at" value=null>
     <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" placeholder="Primer Nombre">
+        <input type="text" class="form-control" id="primer_nombre" name="primer_nombre" placeholder="Primer Nombre" required>
         <label for="primer_nombre">Primer Nombre</label>
     </div>
     <div class="form-floating mb-3">
@@ -10,7 +10,7 @@
         <label for="segundo_nombre">Segundo Nombre</label>
     </div>
     <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" placeholder="Primer Apellido">
+        <input type="text" class="form-control" id="primer_apellido" name="primer_apellido" placeholder="Primer Apellido" required>
         <label for="primer_apellido">Primer Apellido</label>
     </div>
     <div class="form-floating mb-3">
@@ -27,7 +27,7 @@
         <label for="tipo_documento_id">Tipo de Documento</label>
     </div>
     <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="documento" name="documento" placeholder="Documento">
+        <input type="number" class="form-control" id="documento" name="documento" placeholder="Documento">
         <label for="documento">Documento</label>
     </div>
     <div class="form-floating mb-3">
@@ -35,11 +35,11 @@
         <label for="correo">Correo</label>
     </div>
     <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="telefono1" name="telefono1" placeholder="Teléfono 1">
+        <input type="tel" class="form-control" id="telefono1" name="telefono1" placeholder="Teléfono 1">
         <label for="telefono1">Teléfono 1</label>
     </div>
     <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="telefono2" name="telefono2" placeholder="Teléfono 2">
+        <input type="tel" class="form-control" id="telefono2" name="telefono2" placeholder="Teléfono 2">
         <label for="telefono2">Teléfono 2</label>
     </div>
     <div class="form-floating mb-3">
@@ -51,7 +51,7 @@
         <label for="usuario">Usuario</label>
     </div>
     <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="password" name="password" placeholder="Contraseña">
+        <input type="password" class="form-control" id="password" name="password" placeholder="Contraseña">
         <label for="password">Contraseña</label>
     </div>
     <div class="form-floating mb-3">

@@ -360,10 +360,6 @@ $routes->group('pedidoproveedor',function($routes) {
 });
 
 
-
-$routes->get('pedidoproveedor/listarFacturas', 'PedidoProveedorController::listarFacturas');
-
-
 $routes->get("ofertas/(:num)", "ProductoController::listarOfertas/$1");
 
 $routes->get('olvide-password', 'AuthController::showForgotForm');
@@ -381,8 +377,6 @@ $routes->group('admin', ['filter' => 'roleaccess'], function($routes){
 
 $routes->get('no-autorizado', 'DashboardController::error');
 
-$routes->get('no-autorizado', 'DashboardController::error');
-
 $routes->get('carrito', 'ProductoController::carrito');
 
 $routes->get('pedidoproveedor/generarNumeroFactura', 'PedidoProveedorController::generarNumeroFactura');
@@ -390,6 +384,7 @@ $routes->get('pedidoproveedor/generarNumeroFactura', 'PedidoProveedorController:
 
 $routes->get('pedido/factura/(:num)', 'PedidoProveedorController::generarFacturaPDF/$1');
 $routes->get('pedidoproveedor/enviarFacturaCorreo/(:num)', 'PedidoProveedorController::enviarFacturaCorreo/$1');
+
 
 $routes->get('facturas', 'Facturas::index');
 $routes->get('facturas/verQR/(:any)', 'Facturas::verQR/$1'); 
@@ -415,8 +410,8 @@ $routes->get('api/token', 'ApiController::token');
 $routes->post('facturas/ajaxData', 'Facturas::ajaxData');
 $routes->get('envios/verificar-estados', 'EnvioController::verificarEstados');
 
-$routes->get('webhook',  'Webhook::index');      // Verificación GET
-$routes->post('webhook', 'Webhook::indexPost');  // Mensajes entrantes POST
+$routes->get('webhook',  'Webhook::index');     
+$routes->post('webhook', 'Webhook::indexPost'); 
 $routes->get('facturas/todasExcel', 'Facturas::todasExcel');
 
 

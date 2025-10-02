@@ -235,7 +235,7 @@
 
             <div class="form-floating mb-3">
             <label for="documento">Documento</label>
-                <input type="text" class="form-control" id="documento" name="documento" placeholder="Documento" required>
+                <input type="number" class="form-control" id="documento" name="documento" placeholder="Documento" required>
                
             </div>
 
@@ -247,13 +247,13 @@
 
             <div class="form-floating mb-3">
             <label for="telefono1">Teléfono 1</label>
-                <input type="text" class="form-control" id="telefono1" name="telefono1" placeholder="Teléfono 1" required>
+                <input type="tel" class="form-control" id="telefono1" name="telefono1" placeholder="Teléfono 1" required>
               
             </div>
 
             <div class="form-floating mb-3">
             <label for="telefono2">Teléfono 2</label>
-                <input type="text" class="form-control" id="telefono2" name="telefono2" placeholder="Teléfono 2">
+                <input type="tel" class="form-control" id="telefono2" name="telefono2" placeholder="Teléfono 2" >
                 
             </div>
 

@@ -14,25 +14,6 @@ use App\Models\SistemaOperativoModel;
 use App\Models\ResolucionModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\PedidoProveedorModel;
-
-/**
- * Controlador para gestionar el módulo de producto.
- */
-class ProductoController extends Controller
-{
-    private $primaryKey;
-    private $productosModel;
-    private $almacenamientoAleatorioModel;
-    private $almacenamientoModel;
-    private $categoriaModel;
-    private $colorModel;
-    private $estadoProductoModel;
-    private $garantiaModel;
-    private $marcaModel;
-    private $sistemaOperativoModel;
-    private $resolucionModel;
-    private $data;
 
     // Método constructor
     public function __construct()
