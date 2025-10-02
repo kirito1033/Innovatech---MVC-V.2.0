@@ -427,3 +427,11 @@ $routes->get('metodos-pago', 'LoginTerminos::metodosPago');
 $routes->get('tiempo-entrega', 'LoginTerminos::tiempoEntrega');
 $routes->get('envios-pais', 'LoginTerminos::enviosPais');
 $routes->get('garantia-producto', 'LoginTerminos::garantiaProducto');
+
+// Carrito API
+$routes->group('api', function($routes) {
+    $routes->get('carrito', 'CarritoController::obtenerCarrito');
+    $routes->post('carrito/agregar', 'CarritoController::agregarApi');
+    $routes->delete('carrito/(:num)', 'CarritoController::eliminarApi/$1');
+    $routes->delete('carrito', 'CarritoController::vaciarApi');
+});
