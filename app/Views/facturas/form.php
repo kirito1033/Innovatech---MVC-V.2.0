@@ -202,5 +202,93 @@ function prepararPago() {
    // Función para obtener el siguiente código en formato I###
 
 </script>
+<script>
+document.getElementById("formFactura").addEventListener("submit", function (e) {
+  e.preventDefault();
+  let valid = true;
+
+  // Limpia errores previos
+  document.querySelectorAll(".error-message").forEach(el => el.remove());
+
+  // Helper para mostrar errores
+  function mostrarError(campo, mensaje) {
+    const small = document.createElement("small");
+    small.classList.add("error-message");
+    small.style.color = "red";
+    small.textContent = mensaje;
+    campo.parentNode.appendChild(small);
+    campo.classList.add("is-invalid");
+  }
+
+  // Limpia estilos previos
+  document.querySelectorAll(".is-invalid").forEach(el => el.classList.remove("is-invalid"));
+
+  // Campos
+  const identification = document.getElementById("identification");
+  const names = document.getElementById("names");
+  const address = document.getElementById("address");
+  const email = document.getElementById("email");
+  const phone = document.getElementById("phone");
+
+  // Validar identificación (solo números, 10 dígitos)
+  if (!/^\d{10}$/.test(identification.value.trim())) {
+    mostrarError(identification, "La identificación debe tener entre 10 dígitos.");
+    valid = false;
+  }
+
+  // Validar nombres (solo letras y espacios)
+  if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(names.value.trim())) {
+    mostrarError(names, "El nombre solo puede contener letras y espacios.");
+    valid = false;
+  }
+
+  // Validar dirección (mínimo 5 caracteres)
+  if (address.value.trim().length < 5) {
+    mostrarError(address, "Ingrese una dirección válida (mínimo 5 caracteres).");
+    valid = false;
+  }
+
+  // Validar correo
+  const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!regexCorreo.test(email.value.trim())) {
+    mostrarError(email, "Ingrese un correo electrónico válido.");
+    valid = false;
+  }
+
+  // Validar teléfono (10 dígitos)
+  if (!/^\d{10}$/.test(phone.value.trim())) {
+    mostrarError(phone, "El teléfono debe tener 10 dígitos.");
+    valid = false;
+  }
+
+  // Validar que haya al menos un producto
+  const productos = document.querySelectorAll('#productos-container > div');
+  if (productos.length === 0) {
+    alert("Debes agregar al menos un producto antes de enviar la factura.");
+    valid = false;
+  } else {
+    // Validar cada producto (cantidad y precio)
+    productos.forEach(prod => {
+      const cantidad = prod.querySelector('input[name$="[quantity]"]');
+      const precio = prod.querySelector('input[name$="[price]"]');
+
+      if (!cantidad.value || cantidad.value <= 0) {
+        mostrarError(cantidad, "Cantidad inválida (debe ser mayor que 0).");
+        valid = false;
+      }
+
+      if (!precio.value || precio.value <= 0) {
+        mostrarError(precio, "Precio inválido (debe ser mayor que 0).");
+        valid = false;
+      }
+    });
+  }
+
+  // Si todo está OK, enviar el formulario
+  if (valid) {
+    this.submit();
+  }
+});
+</script>
 
   </div>

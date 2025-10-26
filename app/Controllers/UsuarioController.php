@@ -77,6 +77,27 @@ class UsuarioController extends Controller
      */
     public function create()
     {
+        $validation = \Config\Services::validation();
+
+        $validation->setRules([
+            'primer_nombre' => 'required|min_length[2]',
+            'primer_apellido' => 'required|min_length[2]',
+            'correo' => 'required|valid_email|is_unique[usuario.correo]',
+            'documento' => 'required|numeric|min_length[10]|max_length[10]',
+            'telefono1' => 'required|numeric|min_length[10]|max_length[10]',
+            'telefono2' => 'required|numeric|min_length[10]|max_length[10]',
+            'usuario' => 'required|min_length[4]|is_unique[usuario.usuario]',
+            'password' => [
+                'rules' => 'required|min_length[8]|regex_match[/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/]',
+                'errors' => [
+                    'regex_match' => 'La contraseña debe tener al menos una mayúscula, un número y un carácter especial.'
+                ]
+            ],
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
+            return redirect()->back()->with('errors', $validation->getErrors())->withInput();
+        }
         
         $isAjax = $this->request->isAJAX();
         $dataModel = $this->getDataModel();
