@@ -16,7 +16,7 @@ class App extends BaseConfig
      *
      * E.g., http://example.com/
      */
-    public string $baseURL = 'https://rosybrown-ape-589569.hostingersite.com/';
+    public string $baseURL = 'https://innovatech-mvc-v-2-0.onrender.com';
   
 
     /**

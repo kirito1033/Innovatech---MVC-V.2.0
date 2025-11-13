@@ -200,50 +200,49 @@
             margin-bottom: 0.7rem;
         }
         @media (max-width: 768px) {
-  .main-container {
-    flex-direction: column;
-    width: 95%;
-    padding: 0 1rem;
-  }
+        .main-container {
+            flex-direction: column;
+            width: 95%;
+            padding: 0 1rem;
+        }
 
-  .filters-main {
-    flex: 0 0 100%;
-    width: 100%;
-    margin-bottom: 1rem;
-  }
+        .filters-main {
+            flex: 0 0 100%;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
 
-  .productos-ofertas {
-    flex: 0 0 100%;
-    width: 100%;
-    max-width: 100%;
-  }
+        .productos-ofertas {
+            flex: 0 0 100%;
+            width: 100%;
+            max-width: 100%;
+        }
 
-  .card img {
-    max-height: 160px;
-    border-radius: 8px 8px 0 0;
-  }
+        .card img {
+            max-height: 160px;
+            border-radius: 8px 8px 0 0;
+        }
 
-  .title-ofertas {
-    font-size: 1.2rem;
-    text-align: center;
-  }
+        .title-ofertas {
+            font-size: 1.2rem;
+            text-align: center;
+        }
 
-  .card .card-title,
-  .card .card-text {
-    text-align: center;
-  }
+        .card .card-title,
+        .card .card-text {
+            text-align: center;
+        }
 
-  .card-link {
-    width: 100%;
-  }
+        .card-link {
+            width: 100%;
+        }
 
-  .btn-outline-primary {
-    display: block;
-    width: 100%;
-    text-align: center;
-  }
-}
-
+        .btn-outline-primary {
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        }
     </style>
 </head>
 <body>
