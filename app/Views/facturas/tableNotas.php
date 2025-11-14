@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.open(blobUrl, '_blank');
 
     } catch (err) {
-      console.error("❌ Error al abrir PDF:", err);
+      //console.error("❌ Error al abrir PDF:", err);
       alert("No se pudo abrir la nota crédito en PDF.");
     }
   };
@@ -146,7 +146,7 @@ async function abrirQRNotaCredito(numeroNota) {
     });
 
     const data = await response.json();
-    console.log("QR:", data);
+    //console.log("QR:", data);
 
     const qrUrl = data?.data?.credit_note?.qr;
 
@@ -157,7 +157,7 @@ async function abrirQRNotaCredito(numeroNota) {
       alert("QR no disponible para esta nota.");
     }
   } catch (err) {
-    console.error("❌ Error al obtener QR:", err);
+    //console.error("❌ Error al obtener QR:", err);
     alert("No se pudo abrir el QR de la nota crédito.");
   }
 }

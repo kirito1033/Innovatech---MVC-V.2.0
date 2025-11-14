@@ -116,10 +116,10 @@ async function obtenerToken() {
   try {
     const response = await fetch('<?= base_url('api/token') ?>');
     const data = await response.json();
-    console.log("✅ Token recibido:", data.token);
+    //console.log("✅ Token recibido:", data.token);
     return data.token || null;
   } catch (error) {
-    console.error('❌ Error al obtener token:', error);
+    //console.error('❌ Error al obtener token:', error); 
     return null;
   }
 }
@@ -131,12 +131,12 @@ function buscarFacturaPorNumero() {
   errorMsg.style.display = 'none';
 
   if (!numero || !token) {
-    console.warn("⚠️ Número o token inválido");
+    //console.warn("⚠️ Número o token inválido");
     return;
   }
 
   const url = `https://api-sandbox.factus.com.co/v1/bills/show/${encodeURIComponent(numero)}`;
-  console.log("🔍 Consultando factura en:", url);
+  //console.log("🔍 Consultando factura en:", url);
 
   fetch(url, {
     headers: {
@@ -146,7 +146,7 @@ function buscarFacturaPorNumero() {
   })
   .then(res => res.json())
   .then(data => {
-    console.log("📦 Respuesta factura:", data);
+    //console.log("📦 Respuesta factura:", data);
     if (!data || !data.data) {
       errorMsg.style.display = 'block';
       return;
@@ -154,25 +154,25 @@ function buscarFacturaPorNumero() {
     cargarDatosFactura(data.data);
   })
   .catch(err => {
-    console.error('❌ Error al buscar factura:', err);
+    //console.error('❌ Error al buscar factura:', err);
     errorMsg.style.display = 'block';
   });
 }
 
 // Llena el formulario con los datos obtenidos desde la API
 function cargarDatosFactura(factura) {
-  console.log("📋 Cargando datos de factura:", factura);
+  //console.log("📋 Cargando datos de factura:", factura);
 
   const bill = factura.bill;
   if (!bill) {
-    console.warn("⚠️ No se encontró el objeto 'bill' dentro de la respuesta:", factura);
+    //console.warn("⚠️ No se encontró el objeto 'bill' dentro de la respuesta:", factura);
     return;
   }
 
   // General
   document.querySelector('input[name="bill_id"]').value = bill.id || '';
   document.querySelector('input[name="reference_code"]').value = `NC-REF-${bill.id || 'undefined'}`;
-  console.log("✅ bill_id:", bill.id);
+  //console.log("✅ bill_id:", bill.id);
 
   const bp = factura.billing_period || {};
   document.querySelector('input[name="billing_period[start_date]"]').value = bp.start_date || '';

@@ -62,7 +62,6 @@
   <div class="text-center success-box">
     <h2 class="mb-4">¡Gracias por tu compra!</h2>
     <p class="mb-4">Tu pago fue procesado exitosamente.</p>
-  <?phplog_message('info', '🧹 Carrito eliminado para usuario ID: ' . $usuarioId);?>
     <?php if (isset($rol) && $rol === '1') : ?>
       
       <a href="<?= base_url('/facturas') ?>" class="btn btn-custom-admin px-4">Volver a Facturas</a>
