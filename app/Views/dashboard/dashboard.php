@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
 
     <!-- Título de la pestaña del navegador -->
-    <title>Dasboard</title>
+    <title>Dashboard</title>
   </head>
 
   <body>
@@ -80,7 +80,7 @@
             <div class="card-header bg-light fw-bold">Usuarios por Rol</div>
             <div class="card-body">
               <!-- Canvas donde se renderizará el gráfico con Chart.js -->
-              <canvas id="graficoUsuarios" height="250"></canvas>
+              <canvas id="graficoUsuariosPorRol" height="250"></canvas>
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@
           <div class="card shadow-sm">
             <div class="card-header bg-light fw-bold">Distribución de Estados</div>
             <div class="card-body">
-              <canvas id="graficoEstado" height="250"></canvas>
+              <canvas id="graficoEstadoUsuarios" height="250"></canvas>
             </div>
           </div>
         </div>
@@ -248,82 +248,65 @@
     </div>
   </div>
 </div>
- <div class="container my-5">
-<h2>Facturas</h2>
-<!-- KPIs de facturación -->
-<div class="row g-3 mb-4">
-  <!-- Total de facturas emitidas -->
-  <div class="col-md-3">
-    <div class="card text-white bg-primary shadow-sm h-100 text-center">
-      <div class="card-body">
-        <h6 class="card-title">Total Facturas</h6>
-        <h3 class="card-text"><?= $totalFacturas ?></h3>
+<div class="container my-5">
+  <h2>Facturas</h2>
+
+  <!-- KPIs de Facturación -->
+  <div class="row g-3 mb-4">
+
+    <div class="col-md-3">
+      <div class="card text-white bg-primary shadow-sm h-100 text-center">
+        <div class="card-body">
+          <h6 class="card-title">Total Facturas</h6>
+          <h3><?= $totalFacturas ?? 0 ?></h3>
+        </div>
       </div>
     </div>
+
+    <div class="col-md-3">
+      <div class="card text-white bg-success shadow-sm h-100 text-center">
+        <div class="card-body">
+          <h6 class="card-title">Productos Vendidos</h6>
+          <h3><?= $totalProductos ?? 0 ?></h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card text-white bg-warning shadow-sm h-100 text-center">
+        <div class="card-body">
+          <h6 class="card-title">Ganancias Totales</h6>
+          <h3>$<?= number_format($totalGanancias ?? 0, 0, ',', '.') ?></h3>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- Cantidad de tipos distintos de facturas -->
-  <div class="col-md-3">
-    <div class="card text-white bg-success shadow-sm h-100 text-center">
-      <div class="card-body">
-        <h6 class="card-title">Tipos de Factura</h6>
-        <h3 class="card-text"><?= count($totalesPorTipoFactura) ?></h3>
-      </div>
-    </div>
-  </div>
+  <!-- Gráficos -->
+  <div class="row g-4">
 
-  <!-- Número de estados distintos de facturas (ej: pagada, pendiente, anulada) -->
-  <div class="col-md-3">
-    <div class="card text-white bg-warning shadow-sm h-100 text-center">
-      <div class="card-body">
-        <h6 class="card-title">Estados Factura</h6>
-        <h3 class="card-text"><?= count($totalesPorEstadoFactura) ?></h3>
+    <!-- Ventas por Mes -->
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-light fw-bold">Ventas por Mes</div>
+        <div class="card-body">
+          <canvas id="graficoVentasMes" height="250"></canvas>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Cantidad de formas de pago distintas utilizadas -->
-  <div class="col-md-3">
-    <div class="card text-white bg-info shadow-sm h-100 text-center">
-      <div class="card-body">
-        <h6 class="card-title">Formas de Pago</h6>
-        <h3 class="card-text"><?= count($totalesPorPagoFactura) ?></h3>
+    <!-- Productos Más Vendidos -->
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-light fw-bold">Top Productos Vendidos</div>
+        <div class="card-body">
+          <canvas id="graficoProductosTop" height="250"></canvas>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-<!-- Gráficos de facturación -->
-<div class="row g-4">
-  <!-- Facturas por estado (chart) -->
-  <div class="col-md-4">
-    <div class="card shadow-sm h-100">
-      <div class="card-header bg-light fw-bold">Facturas por Estado</div>
-      <div class="card-body">
-        <canvas id="graficoFacturasEstado" height="250"></canvas>
-      </div>
-    </div>
-  </div>
 
-   <!-- Facturas por tipo -->
-  <div class="col-md-4">
-    <div class="card shadow-sm h-100">
-      <div class="card-header bg-light fw-bold">Facturas por Tipo</div>
-      <div class="card-body">
-        <canvas id="graficoFacturasTipo" height="250"></canvas>
-      </div>
-    </div>
   </div>
-
-  <!-- Facturas por forma de pago -->
-  <div class="col-md-4">
-    <div class="card shadow-sm h-100">
-      <div class="card-header bg-light fw-bold">Formas de Pago</div>
-      <div class="card-body">
-        <canvas id="graficoFacturasPago" height="250"></canvas>
-      </div>
-    </div>
-  </div>
-</div>
 </div>
 
 <!-- Sección de PQRS -->
@@ -581,16 +564,86 @@
 <script>
   // Espera a que el DOM esté completamente cargado
   window.addEventListener("DOMContentLoaded", () => {
+    // =======================
+    // FACTURACIÓN - CHARTS
+    // =======================
+
+    // Ventas por Mes
+    const ctxVentasMes = document.getElementById('graficoVentasMes');
+    if (ctxVentasMes) {
+        new Chart(ctxVentasMes, {
+            type: 'line',
+            data: {
+            labels: <?= json_encode($graficoVentasMes['labels']) ?>,
+            datasets: [{
+                label: 'Ventas',
+                data: <?= json_encode($graficoVentasMes['data']) ?>,
+                borderColor: '#198754',
+                backgroundColor: 'rgba(25, 135, 84, 0.2)',
+                tension: 0.4,
+                fill: true
+            }]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: {
+                display: true,
+                text: 'Ventas Mensuales',
+                font: { size: 14 }
+                }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+            }
+        });
+        }
+
+        // Productos Más Vendidos
+        const ctxProductosTop = document.getElementById('graficoProductosTop');
+        if (ctxProductosTop) {
+        new Chart(ctxProductosTop, {
+            type: 'bar',
+            data: {
+            labels: <?= json_encode($graficoProductosTop['labels']) ?>,
+            datasets: [{
+                label: 'Unidades Vendidas',
+                data: <?= json_encode($graficoProductosTop['data']) ?>,
+                backgroundColor: '#0d6efd',
+                borderRadius: 5
+            }]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: {
+                display: true,
+                text: 'Top Productos',
+                font: { size: 14 }
+                }
+            },
+            scales: {
+                y: { beginAtZero: true }
+            }
+            }
+        });
+    }
+
     // === Gráfico de Barras: Usuarios por Rol ===
-    const ctxBar = document.getElementById('graficoUsuarios');
+    const ctxBar = document.getElementById('graficoUsuariosPorRol');
     if (ctxBar) {
       new Chart(ctxBar, {
         type: 'bar', // Tipo de gráfico
         data: {
-          labels: <?= json_encode($graficoUsuarios['labels']) ?>, // Nombres de los roles (por ejemplo: Admin, Cliente, etc.)
+          labels: <?= json_encode($graficoUsuariosPorRol['datos']) ?>, // Nombres de los roles (por ejemplo: Admin, Cliente, etc.)
           datasets: [{
             label: '', // Sin etiqueta de leyenda
-            data: <?= json_encode($graficoUsuarios['totales']) ?>, // Totales de usuarios por cada rol
+            data: <?= json_encode($graficoUsuariosPorRol['datos']) ?>, // Totales de usuarios por cada rol
             backgroundColor: ['#4e79a7', '#f28e2c', '#e15759', '#76b7b2'], // Colores de las barras
             borderRadius: 4, // Bordes redondeados
             barThickness: 20 // Grosor de cada barra
@@ -624,14 +677,14 @@
     }
 
     // === Gráfico Doughnut: Estado de Usuarios (Activos vs Inactivos) ===
-    const ctxPie = document.getElementById('graficoEstado');
+    const ctxPie = document.getElementById('graficoEstadoUsuarios');
     if (ctxPie) {
       new Chart(ctxPie, {
         type: 'doughnut', // Gráfico tipo dona
         data: {
-          labels: <?= json_encode($graficoEstado['labels']) ?>, // Labels como: Activos, Inactivos
+          labels: <?= json_encode($graficoEstadoUsuarios['labels']) ?>, // Labels como: Activos, Inactivos
           datasets: [{
-            data: <?= json_encode($graficoEstado['datos']) ?>, // Totales correspondientes
+            data: <?= json_encode($graficoEstadoUsuarios['datos']) ?>, // Totales correspondientes
             backgroundColor: ['#28a745', '#dc3545'] // Colores para cada estado
           }]
         },
@@ -663,10 +716,10 @@
       new Chart(ctxMes, {
         type: 'bar', // Gráfico de barras
         data: {
-          labels: <?= json_encode($graficoMes['labels']) ?>, // Meses (Ej: Enero, Febrero...)
+          labels: <?= json_encode($graficoMesAPI['labels']) ?>, // Meses (Ej: Enero, Febrero...)
           datasets: [{
             label: 'Usuarios',
-            data: <?= json_encode($graficoMes['datos']) ?>, // Número de usuarios registrados por mes
+            data: <?= json_encode($graficoMesAPI['datos']) ?>, // Número de usuarios registrados por mes
             backgroundColor: '#4e79a7',
             borderRadius: 4,
             barThickness: 20
@@ -909,6 +962,7 @@
         }
       });
     }
+
     closepreload();
   });
 
@@ -1235,12 +1289,16 @@ const renderBarChart = (id, labels, datos, label = 'Cantidad') => {
     });
   };
 
+
+    
+
   // 📦 Envíos por Estado (Ej: Entregado, En proceso, Cancelado, etc.)
   renderBarChart('graficoEstadoEnvio', <?= json_encode($graficoEstadoEnvio['labels']) ?>, <?= json_encode($graficoEstadoEnvio['datos']) ?>);
   // 📆 Envíos por Mes (Cantidad de envíos realizados cada mes)
   renderBarChart('graficoMesEnvio', <?= json_encode($graficoMesEnvio['labels']) ?>, <?= json_encode($graficoMesEnvio['datos']) ?>);
   // 🌍 Envíos por Ciudad (Distribución de envíos según ciudad de destino)
   renderBarChart('graficoCiudadEnvio', <?= json_encode($graficoCiudadEnvio['labels']) ?>, <?= json_encode($graficoCiudadEnvio['datos']) ?>);
+
 
   function closepreload(){
     setTimeout(() => {

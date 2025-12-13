@@ -290,7 +290,7 @@ class UsuarioController extends Controller
                 'status' => 'success',
                 'message' => 'Autenticación exitosa',
                 'token' => $token,
-                'redirect' => $user['rol_id'] == 1 ? '/admin/dasboard' : '/',
+                'redirect' => $user['rol_id'] == 1 ? '/admin/dashboard' : '/',
                 'user' => [
                     'id' => $user['id_usuario'],
                     'usuario' => $user['usuario'],

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Models\ModelosModel;
 use App\Models\UsuarioModel;
 use App\Models\RolModel;
@@ -22,85 +23,96 @@ use App\Models\PqrsModel;
 use App\Models\TipoPqrsModel;
 use App\Models\EstadoPqrsModel;
 use App\Models\OfertasModel;
+use App\Models\FacturaCompraModel;
+use App\Models\FacturaModel;
+use App\Models\EnvioModel;
+use App\Models\EstadoEnvioModel;
 
-//Controlador del Dashboard principal del sistema.
-// Recolecta datos de usuarios, productos, ofertas, envíos, facturas y PQRS para generar gráficos y KPIs.
-class DashboardController extends BaseController
+/**
+ * Controlador del Dashboard principal del sistema.
+ * Recolecta datos de usuarios, productos, ofertas, envíos, facturas y PQRS para generar gráficos y KPIs.
+ */
+class Dashboard extends BaseController
 {
     /**
      * Muestra la vista principal del dashboard con estadísticas generales.
-     * Genera KPIs y gráficos para:
-     * - Usuarios (por rol, estado, API)
-     * - Productos (por categoría, marca, estado, SO, almacenamiento, color)
-     * - Ofertas (por estado, mes, rango de descuento)
-     * - PQRS (por tipo, estado, mes, usuario)
-     * - Facturas (por estado, tipo, forma de pago)
-     * - Envíos (por estado, mes, ciudad)
      */
     public function index()
     {
-        // 1. Obtener los módulos permitidos según el rol del usuario actual
-
+        // ========== MODELOS ==========
         $rolId = session()->get('rol_id');
         $modelosModel = new ModelosModel();
-        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
-
-         // 2. KPIs de usuarios por rol
         $usuarioModel = new UsuarioModel();
         $rolModel = new RolModel();
         $apiUserModel = new ApiUserModel();
-        $productoModel = new \App\Models\ProductosModel();
-        $categoriaModel = new \App\Models\CategoriaModel();
-        $marcaModel = new \App\Models\MarcaModel();
-        $estadoProductoModel = new \App\Models\EstadoProductoModel();
-        $soModel = new \App\Models\SistemaOperativoModel();
-        $almacenamientoModel = new \App\Models\AlmacenamientoModel();
-        $colorModel = new \App\Models\ColorModel();
+        $productoModel = new ProductosModel();
+        $categoriaModel = new CategoriaModel();
+        $marcaModel = new MarcaModel();
+        $estadoProductoModel = new EstadoProductoModel();
+        $soModel = new SistemaOperativoModel();
+        $almacenamientoModel = new AlmacenamientoModel();
+        $colorModel = new ColorModel();
+        $pqrsModel = new PqrsModel();
+        $tipoPqrsModel = new TipoPqrsModel();
+        $estadoPqrsModel = new EstadoPqrsModel();
+        $ofertaModel = new OfertasModel();
+        $facturaCompraModel = new FacturaCompraModel();
+        $facturaModel = new FacturaModel();
+        $envioModel = new EnvioModel();
+        $estadoEnvioModel = new EstadoEnvioModel();
 
-        // === Usuarios por Rol ===
+        // ========== 1. MÓDULOS PERMITIDOS ==========
+        $modulosPermitidos = $modelosModel->getModelosByRol($rolId);
+
+        // ========== 2. KPIs Y GRÁFICAS DE USUARIOS ==========
         $usuariosPorRol = $usuarioModel
             ->select('rol_id, COUNT(*) as total')
             ->groupBy('rol_id')
             ->findAll();
 
         $roles = $rolModel->findAll();
-        $labels = [];
-        $totales = [];
+        $labelsRol = [];
+        $datosRol = [];
 
         foreach ($usuariosPorRol as $item) {
             foreach ($roles as $rol) {
                 if ($rol['id'] == $item['rol_id']) {
-                    $labels[] = $rol['nom'];
-                    $totales[] = $item['total'];
+                    $labelsRol[] = $rol['nom'];
+                    $datosRol[] = $item['total'];
                     break;
                 }
             }
         }
 
-        // 3. Usuarios activos / inactivos
         $activos = $usuarioModel->where('estado_usuario_id', 1)->countAllResults();
         $inactivos = $usuarioModel->where('estado_usuario_id', 4)->countAllResults();
 
-        // 4. Usuarios API activos / inactivos
+        // KPIs Usuarios por rol
+        $totalUsuarios = $usuarioModel->countAllResults();
+        $totalAdmin = $usuarioModel->where('rol_id', 1)->countAllResults();
+        $totalClientes = $usuarioModel->where('rol_id', 3)->countAllResults();
+        $totalSoporte = $usuarioModel->where('rol_id', 2)->countAllResults();
+
+        // === Usuarios API por mes ===
         $apiActivos = $apiUserModel->where('api_status', "Active")->countAllResults();
         $apiInactivos = $apiUserModel->where('api_status', "Inactive")->countAllResults();
         $totalUsuariosApi = $apiUserModel->countAllResults();
 
-        // 5. Usuarios API por mes
         $apiPorMes = $apiUserModel
             ->select("DATE_FORMAT(created_at, '%Y-%m') as mes, COUNT(*) as total")
             ->groupBy("mes")
             ->orderBy("mes", "ASC")
             ->findAll();
 
-        $labelsMes = [];
-        $datosMes = [];
+        $labelsMesAPI = [];
+        $datosMesAPI = [];
         foreach ($apiPorMes as $row) {
-            $labelsMes[] = $row['mes'];
-            $datosMes[] = $row['total'];
+            $labelsMesAPI[] = $row['mes'];
+            $datosMesAPI[] = $row['total'];
         }
 
-        // 6. Productos por categoría
+        // ========== 3. KPIs Y GRÁFICAS DE PRODUCTOS ==========
+        // Por categoría
         $productosCategoria = $productoModel
             ->select('id_categoria, COUNT(*) as total')
             ->groupBy('id_categoria')
@@ -118,7 +130,7 @@ class DashboardController extends BaseController
             }
         }
 
-        // 7. Productos por marca
+        // Por marca
         $productosMarca = $productoModel
             ->select('id_marca, COUNT(*) as total')
             ->groupBy('id_marca')
@@ -136,7 +148,7 @@ class DashboardController extends BaseController
             }
         }
 
-        // 8. Productos por estado
+        // Por estado
         $productosEstado = $productoModel
             ->select('id_estado, COUNT(*) as total')
             ->groupBy('id_estado')
@@ -153,8 +165,8 @@ class DashboardController extends BaseController
                 }
             }
         }
-        
-        // 9. Productos por sistema operativo
+
+        // Por sistema operativo
         $productosSO = $productoModel
             ->select('id_sistema_operativo, COUNT(*) as total')
             ->groupBy('id_sistema_operativo')
@@ -172,7 +184,7 @@ class DashboardController extends BaseController
             }
         }
 
-        // 10. Productos por almacenamiento
+        // Por almacenamiento
         $productosAlm = $productoModel
             ->select('id_almacenamiento, COUNT(*) as total')
             ->groupBy('id_almacenamiento')
@@ -190,7 +202,7 @@ class DashboardController extends BaseController
             }
         }
 
-        // 11. Productos por color
+        // Por color
         $productosColor = $productoModel
             ->select('id_color, COUNT(*) as total')
             ->groupBy('id_color')
@@ -208,26 +220,47 @@ class DashboardController extends BaseController
             }
         }
 
-        // 12. KPIs de productos
+        // KPIs Productos
         $totalProductos = $productoModel->countAllResults();
-        $totalDisponibles = $productoModel->where('id_estado', 1)->countAllResults(); // Ajustar el ID si necesario
+        $totalDisponibles = $productoModel->where('id_estado', 1)->countAllResults();
         $categoriasUnicas = count($categorias);
         $marcasUnicas = count($marcas);
 
-        // 13. KPIs de facturas (incluyendo por estado, tipo y forma de pago)
-      
-       $facturaModel = new \App\Models\FacturaModel();
-        $facturas = $facturaModel->getFacturas();
-        // Se calcula el total, y se agrupan por tipo, estado y forma de pago.
-        
-        $totalFacturas = 0;
+        // ========== 4. KPIs Y GRÁFICAS DE FACTURAS COMPRA ==========
+        $totalFacturas = $facturaCompraModel->totalFacturas();
+        $totalProductosVendidos = $facturaCompraModel->totalProductosVendidos();
+        $totalGanancias = $facturaCompraModel->totalGanancias();
+
+        // Gráfico: Ventas por mes
+        $ventasMesDB = $facturaCompraModel->ventasPorMes();
+        $graficoVentasMes = [
+            'labels' => array_column($ventasMesDB, 'mes'),
+            'data'   => array_map('floatval', array_column($ventasMesDB, 'total')),
+        ];
+
+        // Gráfico: Productos más vendidos
+        $productosTopDB = $facturaCompraModel->productosMasVendidos();
+        $graficoProductosTop = [
+            'labels' => array_map(
+                fn($p) => trim($p['nombre'], '"'),
+                $productosTopDB
+            ),
+            'data' => array_map(
+                'intval',
+                array_column($productosTopDB, 'total')
+            ),
+        ];
+
+        // ========== 5. KPIs Y GRÁFICAS DE FACTURAS (API) ==========
+        $facturasAPI = $facturaModel->getFacturas();
+        $totalFacturasAPI = 0;
         $totalesPorEstado = [];
         $totalesPorTipo = [];
         $totalesPorPago = [];
 
-        if (!isset($facturas['error']) && isset($facturas['data']['data'])) {
-            foreach ($facturas['data']['data'] as $factura) {
-                $totalFacturas++;
+        if (!isset($facturasAPI['error']) && isset($facturasAPI['data']['data'])) {
+            foreach ($facturasAPI['data']['data'] as $factura) {
+                $totalFacturasAPI++;
 
                 // Agrupar por estado
                 $estado = $factura['status'] ?? 'Desconocido';
@@ -244,39 +277,35 @@ class DashboardController extends BaseController
             }
         }
 
-        // 14. KPIs y gráficas para PQRS (tipo, estado, mes, usuario)
-        $pqrsModel = new PqrsModel();
-        $tipoPqrsModel = new TipoPqrsModel();
-        $estadoPqrsModel = new EstadoPqrsModel();
-        $usuarioModel = new UsuarioModel();
-        
-        // Totales por tipo
+        // ========== 6. KPIs Y GRÁFICAS DE PQRS ==========
+        // Por tipo
         $totalPqrsPorTipo = $pqrsModel->select('tipo_pqrs_id, COUNT(*) as total')
             ->groupBy('tipo_pqrs_id')
             ->findAll();
 
-        $labelsTipo = [];
-        $datosTipo = [];
+        $labelsTipoPqrs = [];
+        $datosTipoPqrs = [];
         foreach ($totalPqrsPorTipo as $item) {
             $tipo = $tipoPqrsModel->find($item['tipo_pqrs_id']);
-            $labelsTipo[] = $tipo['nom'] ?? 'Desconocido';
-            $datosTipo[] = $item['total'];
+            $labelsTipoPqrs[] = $tipo['nom'] ?? 'Desconocido';
+            $datosTipoPqrs[] = $item['total'];
         }
-       // Esto suma todos los estados PQRS
-        // Totales por estado
+
+        // Por estado
         $totalPqrsPorEstado = $pqrsModel->select('estado_pqrs_id, COUNT(*) as total')
             ->groupBy('estado_pqrs_id')
             ->findAll();
 
-        $labelsEstado = [];
-        $datosEstado = [];
+        $labelsEstadoPqrs = [];
+        $datosEstadoPqrs = [];
         foreach ($totalPqrsPorEstado as $item) {
             $estado = $estadoPqrsModel->find($item['estado_pqrs_id']);
-            $labelsEstado[] = $estado['nom'] ?? 'Desconocido';
-            $datosEstado[] = $item['total'];
+            $labelsEstadoPqrs[] = $estado['nom'] ?? 'Desconocido';
+            $datosEstadoPqrs[] = $item['total'];
         }
-        $totalPqrs = array_sum($datosEstado); 
-        // Totales por mes
+        $totalPqrs = array_sum($datosEstadoPqrs);
+
+        // Por mes
         $totalPqrsPorMes = $pqrsModel->select("MONTH(created_at) as mes, COUNT(*) as total")
             ->groupBy("mes")
             ->orderBy("mes", "ASC")
@@ -291,7 +320,7 @@ class DashboardController extends BaseController
         }
 
         // Top 5 usuarios con más PQRS
-        $topUsuarios = $pqrsModel->select('usuario_id, COUNT(*) as total')
+        $topUsuariosPqrs = $pqrsModel->select('usuario_id, COUNT(*) as total')
             ->groupBy('usuario_id')
             ->orderBy('total', 'DESC')
             ->limit(5)
@@ -299,43 +328,34 @@ class DashboardController extends BaseController
 
         $labelsUsuarioPqrs = [];
         $datosUsuarioPqrs = [];
-        foreach ($topUsuarios as $item) {
+        foreach ($topUsuariosPqrs as $item) {
             $usuario = $usuarioModel->find($item['usuario_id']);
             $labelsUsuarioPqrs[] = $usuario['primer_nombre'] ?? 'Desconocido';
             $datosUsuarioPqrs[] = $item['total'];
         }
-        // 15. Ofertas: KPIs y estadísticas por estado, mes y descuento
-        $OfertaModel = new OfertasModel();
 
-        // Total de ofertas
-        $totalOfertas = $OfertaModel->countAllResults();
+        // ========== 7. KPIs Y GRÁFICAS DE OFERTAS ==========
+        $totalOfertas = $ofertaModel->countAllResults();
+        $ofertasActivas = $ofertaModel->where('estado', 'Activa')->countAllResults();
+        $ofertasInactivas = $ofertaModel->where('estado', 'Inactiva')->countAllResults();
+        $promedioDescuento = (float) ($ofertaModel->selectAvg('descuento')->first()['descuento'] ?? 0);
 
-        // Ofertas activas e inactivas
-        $ofertasActivas = $OfertaModel->where('estado', "Activa")->countAllResults();
-        $ofertasInactivas = $OfertaModel->where('estado', "Inactiva")->countAllResults();
-
-        // === Gráfico: Ofertas por Estado ===
-        $estadoOfertas = $OfertaModel
+        // Por estado
+        $estadoOfertas = $ofertaModel
             ->select('estado, COUNT(*) as total')
             ->groupBy('estado')
             ->findAll();
 
         $labelsEstadoOferta = [];
         $datosEstadoOferta = [];
-
         foreach ($estadoOfertas as $item) {
             $estado = $item['estado'] == 1 ? 'Activa' : 'Inactiva';
             $labelsEstadoOferta[] = $estado;
             $datosEstadoOferta[] = $item['total'];
         }
 
-        $graficoEstadoOferta = [
-            'labels' => $labelsEstadoOferta,
-            'datos' => $datosEstadoOferta
-        ];
-
-        // === Gráfico: Ofertas por Mes ===
-        $ofertasPorMes = $OfertaModel
+        // Por mes
+        $ofertasPorMes = $ofertaModel
             ->select("DATE_FORMAT(created_at, '%M') as mes, COUNT(*) as total")
             ->groupBy("mes")
             ->orderBy("MIN(created_at)", "ASC")
@@ -343,18 +363,12 @@ class DashboardController extends BaseController
 
         $labelsMesOferta = [];
         $datosMesOferta = [];
-
         foreach ($ofertasPorMes as $item) {
-            $labelsMesOferta[] = $item['mes']; // Ej: "Enero", "Febrero", etc.
+            $labelsMesOferta[] = $item['mes'];
             $datosMesOferta[] = $item['total'];
         }
 
-        $graficoMesOferta = [
-            'labels' => $labelsMesOferta,
-            'datos' => $datosMesOferta
-        ];
-
-        // === Gráfico: Ofertas por Rango de Descuento ===
+        // Por rango de descuento
         $rangos = [
             '0-10%' => [0, 10],
             '11-20%' => [11, 20],
@@ -363,8 +377,7 @@ class DashboardController extends BaseController
             '51-100%' => [51, 100]
         ];
 
-        $ofertas = $OfertaModel->select('descuento')->findAll();
-
+        $ofertas = $ofertaModel->select('descuento')->findAll();
         $conteoPorRango = array_fill_keys(array_keys($rangos), 0);
 
         foreach ($ofertas as $oferta) {
@@ -377,29 +390,14 @@ class DashboardController extends BaseController
             }
         }
 
-        $graficoRangoDescuento = [
-            'labels' => array_keys($conteoPorRango),
-            'datos' => array_values($conteoPorRango)
-        ];
-        $totalOfertas      = $OfertaModel->countAllResults();
-        $ofertasActivas    = $OfertaModel->where('estado', 'Activa')->countAllResults();
-        $ofertasInactivas  = $OfertaModel->where('estado', 'Inactiva')->countAllResults();
-        $promedioDescuento = (float) ($OfertaModel->selectAvg('descuento')->first()['descuento'] ?? 0);
-        // 16. Envíos: KPIs, estados, meses y ciudades
-        $envioModel = new \App\Models\EnvioModel();
-        $estadoEnvioModel = new \App\Models\EstadoEnvioModel();
-        $usuarioModel = new \App\Models\UsuarioModel();
-
-        // Total general
+        // ========== 8. KPIs Y GRÁFICAS DE ENVÍOS ==========
         $totalEnvios = $envioModel->countAllResults();
-
-        // KPIs por estado
-        $enviosEntregados   = $envioModel->where('estado_envio_id', 4)->countAllResults(); // Ajusta el ID si es diferente
-        $enviosEnProceso    = $envioModel->where('estado_envio_id', 2)->countAllResults();
-        $enviosCancelados   = $envioModel->where('estado_envio_id', 5)->countAllResults();
+        $enviosEntregados = $envioModel->where('estado_envio_id', 4)->countAllResults();
+        $enviosEnProceso = $envioModel->where('estado_envio_id', 2)->countAllResults();
+        $enviosCancelados = $envioModel->where('estado_envio_id', 5)->countAllResults();
         $enviosPorConfirmar = $envioModel->where('estado_envio_id', 1)->countAllResults();
 
-        // Gráfico por estado
+        // Por estado
         $enviosPorEstado = $envioModel
             ->select('estado_envio_id, COUNT(*) as total')
             ->groupBy('estado_envio_id')
@@ -407,49 +405,35 @@ class DashboardController extends BaseController
 
         $labelsEstadoEnvio = [];
         $datosEstadoEnvio = [];
-
         foreach ($enviosPorEstado as $item) {
             $estado = $estadoEnvioModel->find($item['estado_envio_id']);
             $labelsEstadoEnvio[] = $estado['nom'] ?? 'Desconocido';
             $datosEstadoEnvio[] = $item['total'];
         }
 
-        $graficoEstadoEnvio = [
-            'labels' => $labelsEstadoEnvio,
-            'datos' => $datosEstadoEnvio
-        ];
-
-        // Gráfico por mes
+        // Por mes
         $enviosPorMes = $envioModel
             ->select("MONTH(fecha) as mes, COUNT(*) as total")
             ->groupBy("mes")
             ->orderBy("mes", "ASC")
             ->findAll();
 
-        $meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
         $labelsMesEnvio = [];
         $datosMesEnvio = [];
-
         foreach ($enviosPorMes as $item) {
             $labelsMesEnvio[] = $meses[$item['mes'] - 1];
             $datosMesEnvio[] = $item['total'];
         }
 
-        $graficoMesEnvio = [
-            'labels' => $labelsMesEnvio,
-            'datos' => $datosMesEnvio
-        ];
-
-        // Gráfico por ciudad
+        // Por ciudad
         $enviosPorCiudad = $envioModel
             ->select('direccion, COUNT(*) as total')
-            ->groupBy('direccion') // Asumiendo que la ciudad está en la dirección
+            ->groupBy('direccion')
             ->limit(5)
             ->findAll();
 
         $labelsCiudad = [];
         $datosCiudad = [];
-
         foreach ($enviosPorCiudad as $item) {
             $labelsCiudad[] = $item['direccion'];
             $datosCiudad[] = $item['total'];
@@ -457,132 +441,156 @@ class DashboardController extends BaseController
 
         // Últimos 10 envíos
         $ultimosEnvios = $envioModel->orderBy('fecha', 'DESC')->limit(10)->findAll();
-          $data = [
 
-                'totalEnvios' => $totalEnvios,
-                'enviosEntregados'   => $enviosEntregados,
-                'enviosEnProceso'    => $enviosEnProceso,
-                'enviosCancelados'   => $enviosCancelados,
-                'enviosPorConfirmar' => $enviosPorConfirmar,
+        // ========== DATOS FINALES PARA LA VISTA ==========
+        $data = [
+            // Módulos
+            'modulos' => $modulosPermitidos,
 
-                'graficoEstadoEnvio' => $graficoEstadoEnvio,
-                'graficoMesEnvio'    => $graficoMesEnvio,
+            // KPIs Usuarios
+            'totalUsuarios' => $totalUsuarios,
+            'totalAdmin' => $totalAdmin,
+            'totalClientes' => $totalClientes,
+            'totalSoporte' => $totalSoporte,
+            'totalUsuariosApi' => $totalUsuariosApi,
 
-                'ultimosEnvios'      => $ultimosEnvios,
+            // Gráficas Usuarios
+            'graficoUsuariosPorRol' => [
+                'labels' => $labelsRol,
+                'datos' => $datosRol
+            ],
+            'graficoEstadoUsuarios' => [
+                'labels' => ['Activo', 'Inactivo'],
+                'datos' => [$activos, $inactivos]
+            ],
+            'graficoEstadoAPI' => [
+                'labels' => ['Activo', 'Inactivo'],
+                'datos' => [$apiActivos, $apiInactivos]
+            ],
+            'graficoMesAPI' => [
+                'labels' => $labelsMesAPI,
+                'datos' => $datosMesAPI
+            ],
 
-                // ─── KPI Ofertas ─────────────────────────────────────────────
-                'totalOfertas'     => $totalOfertas,
-                'ofertasActivas'   => $ofertasActivas,
-                'ofertasInactivas' => $ofertasInactivas,
-                'promedioDescuento'=> $promedioDescuento,
+            // KPIs Productos
+            'totalProductos' => $totalProductos,
+            'totalDisponibles' => $totalDisponibles,
+            'categoriasUnicas' => $categoriasUnicas,
+            'marcasUnicas' => $marcasUnicas,
 
-                // ─── Gráficas Ofertas (ya estaban) ───────────────────────────
-                'graficoEstadoOferta'   => $graficoEstadoOferta,
-                'graficoMesOferta'      => $graficoMesOferta,
-                'graficoRangoDescuento' => $graficoRangoDescuento,
-                'graficoRangoDescuento' => $graficoRangoDescuento,
-                'modulos' => $modulosPermitidos,
-                'totalPqrs' => $totalPqrs,
-                
-                
-                // KPIs Usuarios
-                'totalUsuarios' => count($usuarioModel->findAll()),
-                'totalAdmin' => $usuarioModel->where('rol_id', 1)->countAllResults(),
-                'totalClientes' => $usuarioModel->where('rol_id', 3)->countAllResults(),
-                'totalSoporte' => $usuarioModel->where('rol_id', 2)->countAllResults(),
+            // Gráficas Productos
+            'graficoCategoria' => [
+                'labels' => $labelsCategoria,
+                'datos' => $datosCategoria
+            ],
+            'graficoMarca' => [
+                'labels' => $labelsMarca,
+                'datos' => $datosMarca
+            ],
+            'graficoEstadoProducto' => [
+                'labels' => $labelsEstadoProducto,
+                'datos' => $datosEstadoProducto
+            ],
+            'graficoSO' => [
+                'labels' => $labelsSO,
+                'datos' => $datosSO
+            ],
+            'graficoAlmacenamiento' => [
+                'labels' => $labelsAlm,
+                'datos' => $datosAlm
+            ],
+            'graficoColor' => [
+                'labels' => $labelsColor,
+                'datos' => $datosColor
+            ],
 
-                // KPIs API
-                'totalUsuariosApi' => $totalUsuariosApi,
+            // KPIs Facturas Compra
+            'totalFacturas' => $totalFacturas,
+            'totalProductosVendidos' => $totalProductosVendidos,
+            'totalGanancias' => $totalGanancias,
 
-                // KPIs Productos
-                'totalProductos' => $totalProductos,
-                'totalDisponibles' => $totalDisponibles,
-                'categoriasUnicas' => $categoriasUnicas,
-                'marcasUnicas' => $marcasUnicas,
+            // Gráficas Facturas Compra
+            'graficoVentasMes' => $graficoVentasMes,
+            'graficoProductosTop' => $graficoProductosTop,
 
-                // KPIs Facturas
-                'totalFacturas' => $totalFacturas,
-                'totalesPorEstadoFactura' => $totalesPorEstado,
-                'totalesPorTipoFactura' => $totalesPorTipo,
-                'totalesPorPagoFactura' => $totalesPorPago,
+            // KPIs Facturas API
+            'totalFacturasAPI' => $totalFacturasAPI,
+            'totalesPorEstadoFactura' => $totalesPorEstado,
+            'totalesPorTipoFactura' => $totalesPorTipo,
+            'totalesPorPagoFactura' => $totalesPorPago,
 
-                // Gráficas Usuarios
-                'graficoUsuarios' => [
-                    'labels' => $labels,
-                    'totales' => $totales
-                ],
-                'graficoEstado' => [
-                    'labels' => ['Activo', 'Inactivo'],
-                    'datos' => [$activos, $inactivos]
-                ],
-                'graficoEstadoAPI' => [
-                    'labels' => ['Activo', 'Inactivo'],
-                    'datos' => [$apiActivos, $apiInactivos]
-                ],
-                'graficoMes' => [
-                    'labels' => $labelsMes,
-                    'datos' => $datosMes
-                ],
+            // KPIs PQRS
+            'totalPqrs' => $totalPqrs,
 
-                // Gráficas Productos
-                'graficoCategoria' => [
-                    'labels' => $labelsCategoria,
-                    'datos' => $datosCategoria
-                ],
-                'graficoMarca' => [
-                    'labels' => $labelsMarca,
-                    'datos' => $datosMarca
-                ],
-                'graficoEstadoProducto' => [
-                    'labels' => $labelsEstadoProducto,
-                    'datos' => $datosEstadoProducto
-                ],
-                'graficoSO' => [
-                    'labels' => $labelsSO,
-                    'datos' => $datosSO
-                ],
-                'graficoAlmacenamiento' => [
-                    'labels' => $labelsAlm,
-                    'datos' => $datosAlm
-                ],
-                'graficoColor' => [
-                    'labels' => $labelsColor,
-                    'datos' => $datosColor
-                ],
-                'graficoTipoPqrs' => [
-                    'labels' => $labelsTipo,
-                    'datos' => $datosTipo
-                ],
-                'graficoEstadoPqrs' => [
-                    'labels' => $labelsEstado,
-                    'datos' => $datosEstado
-                    
-                ],
-                
-                'graficoMesPqrs' => [
-                    'labels' => $labelsMesPqrs,
-                    'datos' => $datosMesPqrs
-                ],
-                'graficoUsuarioPqrs' => [
-                    
-                    'labels' => $labelsUsuarioPqrs,
-                    'datos' => $datosUsuarioPqrs
-                ],
-                'graficoCiudadEnvio' => [
-                    'labels' => $labelsCiudad,
-                    'datos' => $datosCiudad
-                ],
-                
-            ];
+            // Gráficas PQRS
+            'graficoTipoPqrs' => [
+                'labels' => $labelsTipoPqrs,
+                'datos' => $datosTipoPqrs
+            ],
+            'graficoEstadoPqrs' => [
+                'labels' => $labelsEstadoPqrs,
+                'datos' => $datosEstadoPqrs
+            ],
+            'graficoMesPqrs' => [
+                'labels' => $labelsMesPqrs,
+                'datos' => $datosMesPqrs
+            ],
+            'graficoUsuarioPqrs' => [
+                'labels' => $labelsUsuarioPqrs,
+                'datos' => $datosUsuarioPqrs
+            ],
 
-        
-        return view('dasboard/dasboard', $data);
+            // KPIs Ofertas
+            'totalOfertas' => $totalOfertas,
+            'ofertasActivas' => $ofertasActivas,
+            'ofertasInactivas' => $ofertasInactivas,
+            'promedioDescuento' => $promedioDescuento,
+
+            // Gráficas Ofertas
+            'graficoEstadoOferta' => [
+                'labels' => $labelsEstadoOferta,
+                'datos' => $datosEstadoOferta
+            ],
+            'graficoMesOferta' => [
+                'labels' => $labelsMesOferta,
+                'datos' => $datosMesOferta
+            ],
+            'graficoRangoDescuento' => [
+                'labels' => array_keys($conteoPorRango),
+                'datos' => array_values($conteoPorRango)
+            ],
+
+            // KPIs Envíos
+            'totalEnvios' => $totalEnvios,
+            'enviosEntregados' => $enviosEntregados,
+            'enviosEnProceso' => $enviosEnProceso,
+            'enviosCancelados' => $enviosCancelados,
+            'enviosPorConfirmar' => $enviosPorConfirmar,
+
+            // Gráficas Envíos
+            'graficoEstadoEnvio' => [
+                'labels' => $labelsEstadoEnvio,
+                'datos' => $datosEstadoEnvio
+            ],
+            'graficoMesEnvio' => [
+                'labels' => $labelsMesEnvio,
+                'datos' => $datosMesEnvio
+            ],
+            'graficoCiudadEnvio' => [
+                'labels' => $labelsCiudad,
+                'datos' => $datosCiudad
+            ],
+            'ultimosEnvios' => $ultimosEnvios,
+        ];
+
+        return view('dashboard/dashboard', $data);
     }
 
-    //Muestra la vista de error de acceso no autorizado.
+    /**
+     * Muestra la vista de error de acceso no autorizado.
+     */
     public function error()
     {
-        
         return view('errors/no_autorizado');
     }
 }

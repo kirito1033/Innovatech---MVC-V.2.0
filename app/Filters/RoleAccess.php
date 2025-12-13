@@ -28,10 +28,21 @@ class RoleAccess implements FilterInterface
             return redirect()->to('/logout')->with('error', 'Tu cuenta fue desactivada. Inicia sesión nuevamente o contacta al administrador.');
         }
 
-        // Verificación de rutas por rol
+        // Obtener datos del rol y usuario
         $rolId = $session->get('rol_id');
         $rutaActual = service('request')->getUri()->getPath();
 
+        // DEBUG: Descomenta para ver qué está pasando
+        // log_message('debug', "Rol ID: {$rolId}, Ruta Actual: {$rutaActual}");
+
+        // ========== OPCIÓN 1: Si el usuario es ADMIN (rol_id = 1) ==========
+        // Los admins deben acceder a TODO
+        if ((int)$rolId === 1) {
+            return; // Admin tiene acceso completo
+        }
+
+        // ========== OPCIÓN 2: Para otros roles ==========
+        // Verificar permisos en la BD
         $builder = $db->table('modelos')
             ->select('modelos.Ruta')
             ->join('modelos_rol', 'modelos.id = modelos_rol.Modelosid')
@@ -39,13 +50,18 @@ class RoleAccess implements FilterInterface
 
         $resultados = $builder->get()->getResultArray();
 
+        // Verificar si la ruta actual está en la lista de rutas permitidas
         foreach ($resultados as $fila) {
-            if (strpos($rutaActual, $fila['Ruta']) === 0) {
+            $rutaPermitida = trim($fila['Ruta']);
+            
+            // Comparación más flexible
+            if (strpos($rutaActual, $rutaPermitida) === 0 || $rutaActual === $rutaPermitida) {
                 return; // Tiene acceso
             }
         }
 
-        return redirect()->to('/no-autorizado');
+        // Si llegó aquí, no tiene acceso
+        return redirect()->to('/no-autorizado')->with('error', 'No tienes permisos para acceder a esta sección');
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
